@@ -1,801 +1,235 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import os
-import re
-import json
-import pdfplumber
-from docx import Document
 
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-os.makedirs(DATA_DIR, exist_ok=True)
+# --------------------------------------------------
+# DATA FILES
+# --------------------------------------------------
 
+DATA_FOLDER = "data"
 
-# =========================================================
-# MSBTE K-SCHEME COMPUTER ENGINEERING SUBJECTS
-# =========================================================
-
-SEMESTERS = {
-
-    "Semester 1": {
-        "academic_year": "2025-26",
-        "subjects": [
-            ("311001", "Fundamentals of ICT"),
-            ("311002", "Engineering Workshop Practice"),
-            ("311003", "Yoga and Meditation"),
-            ("311008", "Engineering Graphics"),
-            ("311302", "Basic Mathematics"),
-            ("311303", "Communication Skills (English)"),
-            ("311305", "Basic Science")
-        ]
-    },
-
-    "Semester 2": {
-        "academic_year": "2025-26",
-        "subjects": [
-            ("312001", "Linux Basics"),
-            ("312002", "Professional Communication"),
-            ("312003", "Social and Life Skills"),
-            ("312004", "Web Page Designing"),
-            ("312301", "Applied Mathematics"),
-            ("312302", "Basic Electrical and Electronics Engineering"),
-            ("312303", "Programming in C")
-        ]
-    },
-
-    "Semester 3": {
-        "academic_year": "2026-27",
-        "subjects": [
-            ("313301", "Data Structure Using C"),
-            ("313302", "Database Management System"),
-            ("313303", "Digital Techniques"),
-            ("313304", "Object Oriented Programming Using C++")
-        ]
-    },
-
-    "Semester 4": {
-        "academic_year": "2026-27",
-        "subjects": [
-            ("314301", "Environmental Education and Sustainability"),
-            ("314317", "Java Programming"),
-            ("314318", "Data Communication and Computer Network"),
-            ("314319", "Information Security"),
-            ("314320", "Mathematics for Machine Learning"),
-            ("314321", "Microprocessor Programming"),
-            ("314316", "Probability and Statistics")
-        ]
-    },
-
-    "Semester 5": {
-        "academic_year": "2027-28",
-        "subjects": [
-            ("315319", "Operating System"),
-            ("315323", "Software Engineering"),
-            ("315324", "Advanced Database Management"),
-            ("315325", "Cloud Computing"),
-            ("315326", "Data Analytics"),
-            ("315321", "Advanced Computer Network"),
-            ("315330", "AI & ML Algorithm"),
-            ("315329", "Natural Language Processing"),
-            ("315327", "Cloud Computing for Data Science"),
-            ("315332", "Software Engineering and Testing"),
-            ("315301", "Management")
-        ]
-    },
-
-    "Semester 6": {
-        "academic_year": "2027-28",
-        "subjects": [
-            ("316313", "Emerging Trends in Computer Engineering and IT"),
-            ("316314", "Software Testing"),
-            ("316315", "Digital Forensic and Hacking Techniques"),
-            ("316316", "Machine Learning"),
-            ("316317", "Network and Information Security"),
-            ("316318", "Big Data Analytics"),
-            ("316319", "Principles of Image Processing"),
-            ("316320", "Advanced Algorithm in AI & ML"),
-            ("316321", "Data Warehousing with Mining Techniques"),
-            ("316322", "Image Processing"),
-            ("316323", "Reinforcement Learning"),
-            ("316324", "Software Engineering and Testing for Big Data"),
-            ("316325", "Wireless and Mobile Network")
-        ]
-    }
+YEAR_FILES = {
+    "1st Year": "first_year.xlsx",
+    "2nd Year": "second_year.xlsx",
+    "3rd Year": "third_year.xlsx"
 }
 
 
-# =========================================================
-# FILE NAME FOR EACH SEMESTER
-# =========================================================
+# --------------------------------------------------
+# LOAD STUDENT DATA
+# --------------------------------------------------
 
-def semester_file(semester):
+def load_students(year):
 
-    safe = semester.lower().replace(" ", "_")
+    filename = YEAR_FILES.get(year)
 
-    return os.path.join(
-        DATA_DIR,
-        safe + ".json"
-    )
+    if not filename:
+        return pd.DataFrame()
 
+    filepath = os.path.join(DATA_FOLDER, filename)
 
-# =========================================================
-# SUBJECT COLUMN MATCHING
-# =========================================================
-
-def normalize_text(value):
-
-    if value is None:
-        return ""
-
-    value = str(value).strip().lower()
-
-    value = re.sub(
-        r"[^a-z0-9]+",
-        "_",
-        value
-    )
-
-    return value.strip("_")
-
-
-def subject_aliases(code, name):
-
-    aliases = [
-        code,
-        name,
-        normalize_text(name),
-        normalize_text(code)
-    ]
-
-    words = name.split()
-
-    if words:
-        initials = "".join(
-            word[0]
-            for word in words
-            if word
-        )
-
-        aliases.append(initials)
-
-    return [
-        normalize_text(x)
-        for x in aliases
-    ]
-
-
-# =========================================================
-# GRADE
-# =========================================================
-
-def calculate_grade(percentage):
-
-    percentage = float(percentage)
-
-    if percentage >= 90:
-        return "A+"
-
-    if percentage >= 80:
-        return "A"
-
-    if percentage >= 70:
-        return "B+"
-
-    if percentage >= 60:
-        return "B"
-
-    if percentage >= 50:
-        return "C"
-
-    if percentage >= 40:
-        return "D"
-
-    return "F"
-
-
-# =========================================================
-# PROCESS STUDENT
-# =========================================================
-
-def process_student(row, semester):
-
-    subjects = SEMESTERS[semester]["subjects"]
-
-    result = {}
-
-    # -----------------------------------------------------
-    # BASIC INFORMATION
-    # -----------------------------------------------------
-
-    def get_value(names):
-
-        normalized = {
-            normalize_text(k): v
-            for k, v in row.items()
-        }
-
-        for name in names:
-
-            key = normalize_text(name)
-
-            if key in normalized:
-                return normalized[key]
-
-        return ""
-
-    result["Student_ID"] = get_value([
-        "Student_ID",
-        "Student ID",
-        "ID",
-        "Roll No",
-        "Roll Number",
-        "Roll"
-    ])
-
-    result["Name"] = get_value([
-        "Name",
-        "Student Name",
-        "Student_Name"
-    ])
-
-    result["Gender"] = get_value([
-        "Gender",
-        "Sex"
-    ])
-
-    result["Class"] = get_value([
-        "Class",
-        "Division"
-    ])
-
-    result["Academic_Year"] = SEMESTERS[
-        semester
-    ]["academic_year"]
-
-    result["Semester"] = semester
-
-    # -----------------------------------------------------
-    # SUBJECT MARKS
-    # -----------------------------------------------------
-
-    total = 0
-    count = 0
-
-    for code, subject_name in subjects:
-
-        aliases = subject_aliases(
-            code,
-            subject_name
-        )
-
-        value = ""
-
-        for key, original_value in row.items():
-
-            normalized_key = normalize_text(key)
-
-            if normalized_key in aliases:
-
-                value = original_value
-                break
-
-            # code/name partial matching
-            if (
-                normalize_text(code) in normalized_key
-                or
-                normalize_text(subject_name) in normalized_key
-            ):
-                value = original_value
-                break
-
-        try:
-            mark = float(value)
-
-        except:
-            mark = 0
-
-        mark = max(
-            0,
-            min(100, mark)
-        )
-
-        result[code] = mark
-
-        total += mark
-        count += 1
-
-    # -----------------------------------------------------
-    # TOTAL / PERCENTAGE
-    # -----------------------------------------------------
-
-    result["Total"] = round(
-        total,
-        2
-    )
-
-    if count > 0:
-
-        percentage = (
-            total / (count * 100)
-        ) * 100
-
-    else:
-        percentage = 0
-
-    result["Percentage"] = round(
-        percentage,
-        2
-    )
-
-    # -----------------------------------------------------
-    # ATTENDANCE
-    # -----------------------------------------------------
-
-    attendance = get_value([
-        "Attendance",
-        "Attendance %",
-        "Attendance Percentage",
-        "Attendance_Percentage"
-    ])
+    if not os.path.exists(filepath):
+        return pd.DataFrame()
 
     try:
-        attendance = float(
-            attendance
-        )
-    except:
-        attendance = 0
+        df = pd.read_excel(filepath)
 
-    attendance = max(
-        0,
-        min(100, attendance)
-    )
+        df.columns = df.columns.astype(str).str.strip()
 
-    result["Attendance"] = round(
-        attendance,
-        2
-    )
+        # Calculate Total
+        subjects = ["OSY", "STE", "ACN", "DAN"]
 
-    result["Attendance_Status"] = (
-        "Good"
-        if attendance >= 75
-        else "Low"
-    )
+        existing_subjects = [
+            col for col in subjects if col in df.columns
+        ]
 
-    result["Grade"] = calculate_grade(
-        percentage
-    )
+        if existing_subjects:
+            df["Total"] = df[existing_subjects].sum(axis=1)
 
-    return result
+            df["Percentage"] = (
+                df["Total"] /
+                (len(existing_subjects) * 100)
+            ) * 100
 
+        # Attendance
+        if "Attendance" in df.columns:
 
-# =========================================================
-# LOAD DATA
-# =========================================================
+            df["Attendance"] = pd.to_numeric(
+                df["Attendance"],
+                errors="coerce"
+            ).fillna(0)
 
-def load_data(semester):
+            df["Attendance Status"] = df["Attendance"].apply(
+                lambda x: "Good" if x >= 75 else "Low"
+            )
 
-    path = semester_file(
-        semester
-    )
+        # Grade
+        if "Percentage" in df.columns:
 
-    if not os.path.exists(path):
-        return []
+            def get_grade(p):
 
-    try:
+                if p >= 90:
+                    return "A+"
+                elif p >= 80:
+                    return "A"
+                elif p >= 70:
+                    return "B"
+                elif p >= 60:
+                    return "C"
+                elif p >= 50:
+                    return "D"
+                else:
+                    return "F"
 
-        with open(
-            path,
-            "r",
-            encoding="utf-8"
-        ) as f:
+            df["Grade"] = df["Percentage"].apply(get_grade)
 
-            return json.load(f)
+        df = df.fillna("")
 
-    except:
-        return []
+        return df
 
+    except Exception as e:
 
-# =========================================================
-# SAVE DATA
-# =========================================================
+        print("ERROR:", e)
 
-def save_data(
-    semester,
-    students
-):
-
-    path = semester_file(
-        semester
-    )
-
-    with open(
-        path,
-        "w",
-        encoding="utf-8"
-    ) as f:
-
-        json.dump(
-            students,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+        return pd.DataFrame()
 
 
-# =========================================================
+# --------------------------------------------------
 # HOME
-# =========================================================
+# --------------------------------------------------
 
 @app.route("/")
 def home():
 
-    return render_template(
-        "index.html"
-    )
+    return render_template("index.html")
 
 
-# =========================================================
-# SUBJECT API
-# =========================================================
+# --------------------------------------------------
+# STUDENTS API
+# --------------------------------------------------
 
-@app.route(
-    "/api/subjects"
-)
-def subjects():
+@app.route("/api/students")
+def students():
 
-    semester = request.args.get(
-        "semester",
-        "Semester 3"
-    )
+    year = request.args.get("year", "1st Year")
 
-    if semester not in SEMESTERS:
+    df = load_students(year)
 
-        return jsonify({
-            "success": False,
-            "message": "Invalid semester"
-        })
-
-    return jsonify({
-        "success": True,
-        "academic_year":
-            SEMESTERS[semester]["academic_year"],
-        "subjects": [
-            {
-                "code": code,
-                "name": name
-            }
-            for code, name
-            in SEMESTERS[semester]["subjects"]
-        ]
-    })
+    return jsonify(df.to_dict(orient="records"))
 
 
-# =========================================================
-# GET STUDENTS
-# =========================================================
+# --------------------------------------------------
+# STUDENT SEARCH
+# --------------------------------------------------
 
-@app.route(
-    "/api/students"
-)
-def students_api():
+@app.route("/api/search")
+def search_student():
 
-    semester = request.args.get(
-        "semester",
-        "Semester 3"
-    )
+    year = request.args.get("year", "1st Year")
+    query = request.args.get("q", "").strip().lower()
 
-    if semester not in SEMESTERS:
+    df = load_students(year)
 
+    if df.empty:
         return jsonify([])
 
-    return jsonify(
-        load_data(semester)
-    )
+    if query == "":
+        return jsonify(df.to_dict(orient="records"))
+
+    result = df[
+        df.astype(str)
+        .apply(
+            lambda row:
+            row.str.lower().str.contains(
+                query,
+                na=False
+            ).any(),
+            axis=1
+        )
+    ]
+
+    return jsonify(result.to_dict(orient="records"))
 
 
-# =========================================================
-# ADD STUDENT
-# =========================================================
+# --------------------------------------------------
+# DASHBOARD STATISTICS
+# --------------------------------------------------
 
-@app.route(
-    "/api/add_student",
-    methods=["POST"]
-)
-def add_student():
+@app.route("/api/stats")
+def statistics():
 
-    data = request.get_json()
+    year = request.args.get("year", "1st Year")
 
-    semester = data.get(
-        "Semester",
-        "Semester 3"
-    )
+    df = load_students(year)
 
-    if semester not in SEMESTERS:
+    if df.empty:
 
         return jsonify({
-            "success": False,
-            "message": "Invalid semester"
+            "total_students": 0,
+            "average_percentage": 0,
+            "top_performer": "-",
+            "average_attendance": 0
         })
 
-    students = load_data(
-        semester
-    )
+    total_students = len(df)
 
-    processed = process_student(
-        data,
-        semester
-    )
+    average_percentage = 0
 
-    if not processed["Student_ID"]:
-        return jsonify({
-            "success": False,
-            "message": "Student ID is required."
-        })
+    if "Percentage" in df.columns:
+        average_percentage = round(
+            pd.to_numeric(
+                df["Percentage"],
+                errors="coerce"
+            ).mean(),
+            2
+        )
 
-    # duplicate ID
-    for student in students:
+    top_performer = "-"
 
-        if str(
-            student.get("Student_ID")
-        ).lower() == str(
-            processed["Student_ID"]
-        ).lower():
+    if (
+        "Percentage" in df.columns
+        and "Name" in df.columns
+        and len(df) > 0
+    ):
 
-            return jsonify({
-                "success": False,
-                "message": "Student ID already exists."
-            })
+        temp = df.copy()
 
-    students.append(
-        processed
-    )
+        temp["Percentage"] = pd.to_numeric(
+            temp["Percentage"],
+            errors="coerce"
+        )
 
-    save_data(
-        semester,
-        students
-    )
+        top = temp.loc[
+            temp["Percentage"].idxmax()
+        ]
+
+        top_performer = str(top["Name"])
+
+    average_attendance = 0
+
+    if "Attendance" in df.columns:
+
+        average_attendance = round(
+            pd.to_numeric(
+                df["Attendance"],
+                errors="coerce"
+            ).mean(),
+            2
+        )
 
     return jsonify({
-        "success": True,
-        "message": "Student added successfully."
+        "total_students": total_students,
+        "average_percentage": average_percentage,
+        "top_performer": top_performer,
+        "average_attendance": average_attendance
     })
 
 
-# =========================================================
-# EXCEL / WORD / PDF UPLOAD
-# =========================================================
-
-@app.route(
-    "/api/upload",
-    methods=["POST"]
-)
-def upload_file():
-
-    file = request.files.get(
-        "file"
-    )
-
-    semester = request.form.get(
-        "semester",
-        "Semester 3"
-    )
-
-    if not file:
-
-        return jsonify({
-            "success": False,
-            "message": "Please select a file."
-        })
-
-    if semester not in SEMESTERS:
-
-        return jsonify({
-            "success": False,
-            "message": "Invalid semester."
-        })
-
-    filename = file.filename.lower()
-
-    try:
-
-        # =================================================
-        # EXCEL
-        # =================================================
-
-        if filename.endswith(
-            ".xlsx"
-        ):
-
-            df = pd.read_excel(
-                file
-            )
-
-            rows = df.to_dict(
-                orient="records"
-            )
-
-        # =================================================
-        # WORD
-        # =================================================
-
-        elif filename.endswith(
-            ".docx"
-        ):
-
-            document = Document(
-                file
-            )
-
-            rows = []
-
-            for table in document.tables:
-
-                if len(table.rows) < 2:
-                    continue
-
-                headers = [
-                    cell.text.strip()
-                    for cell
-                    in table.rows[0].cells
-                ]
-
-                for row in table.rows[1:]:
-
-                    values = [
-                        cell.text.strip()
-                        for cell
-                        in row.cells
-                    ]
-
-                    if len(values) != len(headers):
-                        continue
-
-                    rows.append(
-                        dict(
-                            zip(
-                                headers,
-                                values
-                            )
-                        )
-                    )
-
-                if rows:
-                    break
-
-        # =================================================
-        # PDF
-        # =================================================
-
-        elif filename.endswith(
-            ".pdf"
-        ):
-
-            rows = []
-
-            with pdfplumber.open(
-                file
-            ) as pdf:
-
-                for page in pdf.pages:
-
-                    tables = page.extract_tables()
-
-                    for table in tables:
-
-                        if not table:
-                            continue
-
-                        headers = [
-                            str(x or "").strip()
-                            for x in table[0]
-                        ]
-
-                        for values in table[1:]:
-
-                            if not values:
-                                continue
-
-                            if len(values) != len(headers):
-                                continue
-
-                            rows.append(
-                                dict(
-                                    zip(
-                                        headers,
-                                        values
-                                    )
-                                )
-                            )
-
-        else:
-
-            return jsonify({
-                "success": False,
-                "message":
-                    "Only Excel, Word and PDF files are allowed."
-            })
-
-        if not rows:
-
-            return jsonify({
-                "success": False,
-                "message":
-                    "No table/student data found in file."
-            })
-
-        students = load_data(
-            semester
-        )
-
-        added = 0
-        skipped = 0
-
-        existing_ids = {
-            str(
-                x.get("Student_ID")
-            ).lower()
-            for x in students
-        }
-
-        for row in rows:
-
-            student = process_student(
-                row,
-                semester
-            )
-
-            sid = str(
-                student.get(
-                    "Student_ID",
-                    ""
-                )
-            ).strip()
-
-            if not sid:
-                skipped += 1
-                continue
-
-            if sid.lower() in existing_ids:
-                skipped += 1
-                continue
-
-            students.append(
-                student
-            )
-
-            existing_ids.add(
-                sid.lower()
-            )
-
-            added += 1
-
-        save_data(
-            semester,
-            students
-        )
-
-        return jsonify({
-            "success": True,
-            "message":
-                f"{added} student(s) imported successfully. "
-                f"{skipped} skipped."
-        })
-
-    except Exception as e:
-
-        return jsonify({
-            "success": False,
-            "message":
-                "File processing error: "
-                + str(e)
-        })
-
-
-# =========================================================
+# --------------------------------------------------
 # RUN
-# =========================================================
+# --------------------------------------------------
 
 if __name__ == "__main__":
 
