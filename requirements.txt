@@ -1,4 +1,7 @@
+Flask
 pandas
 matplotlib
-Flask
+numpy
 gunicorn
+python-docx
+openpyxl
