@@ -3,16 +3,20 @@ import pandas as pd
 import os
 import json
 import re
-from werkzeug.utils import secure_filename
 
-# Word / PDF
 from docx import Document
 from pypdf import PdfReader
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data")
+
+DATA_DIR = os.path.join(
+    BASE_DIR,
+    "data"
+)
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -32,10 +36,9 @@ SEMESTERS = [
 
 
 # =========================================================
-# SUBJECT NAMES
+# MSBTE K-SCHEME SUBJECTS
+# COMPUTER ENGINEERING
 # =========================================================
-# हे temporary names आहेत.
-# तुझे actual 4 subjects नंतर इथे बदलायचे.
 
 SEMESTER_SUBJECTS = {
 
@@ -54,17 +57,17 @@ SEMESTER_SUBJECTS = {
     ],
 
     "Semester 3": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Data Structure Using C",
+        "Database Management System",
+        "Digital Techniques",
+        "Object Oriented Programming Using C++"
     ],
 
     "Semester 4": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Java Programming",
+        "Data Communication and Computer Network",
+        "Microprocessor Programming",
+        "Python Programming"
     ],
 
     "Semester 5": [
@@ -84,20 +87,46 @@ SEMESTER_SUBJECTS = {
 
 
 # =========================================================
-# JSON DATABASE
+# SUBJECT SHORT NAMES
 # =========================================================
-# CSV नाही.
-# सर्व student data JSON मध्ये save होईल.
+
+SUBJECT_CODES = {
+
+    "Java Programming":
+        "JPR",
+
+    "Data Communication and Computer Network":
+        "DCN",
+
+    "Microprocessor Programming":
+        "MIC",
+
+    "Python Programming":
+        "PWP",
+
+    "Data Structure Using C":
+        "DSU",
+
+    "Database Management System":
+        "DMS",
+
+    "Digital Techniques":
+        "DTE",
+
+    "Object Oriented Programming Using C++":
+        "OOP"
+}
+
+
+# =========================================================
+# DATABASE
+# =========================================================
 
 DATABASE_FILE = os.path.join(
     DATA_DIR,
     "students.json"
 )
 
-
-# =========================================================
-# DATABASE FUNCTIONS
-# =========================================================
 
 def load_data():
 
@@ -121,7 +150,10 @@ def load_data():
 
     except Exception as e:
 
-        print("DATABASE READ ERROR:", e)
+        print(
+            "DATABASE READ ERROR:",
+            e
+        )
 
         return []
 
@@ -187,14 +219,188 @@ def calculate_attendance_status(attendance):
 
 
 # =========================================================
+# NORMALIZE SEMESTER
+# =========================================================
+
+def normalize_semester(value):
+
+    value = str(value).strip().lower()
+
+    value = value.replace(
+        "semester",
+        ""
+    ).strip()
+
+    value = value.replace(
+        "sem",
+        ""
+    ).strip()
+
+    match = re.search(
+        r"\b([1-6])\b",
+        value
+    )
+
+    if match:
+
+        number = match.group(1)
+
+        return "Semester " + number
+
+    return ""
+
+
+# =========================================================
+# FIND COLUMN
+# =========================================================
+
+def find_column(columns, possible_names):
+
+    normalized = {}
+
+    for column in columns:
+
+        key = re.sub(
+            r"[^a-z0-9]",
+            "",
+            str(column).lower()
+        )
+
+        normalized[key] = column
+
+
+    for name in possible_names:
+
+        key = re.sub(
+            r"[^a-z0-9]",
+            "",
+            name.lower()
+        )
+
+        if key in normalized:
+
+            return normalized[key]
+
+    return None
+
+
+# =========================================================
+# FIND MARKS
+# =========================================================
+
+def get_mark(row, subject):
+
+    aliases = {
+
+        "Java Programming": [
+            "Java Programming",
+            "Java",
+            "JPR",
+            "314317"
+        ],
+
+        "Data Communication and Computer Network": [
+            "Data Communication and Computer Network",
+            "Data Communication",
+            "Computer Network",
+            "DCN",
+            "DCCN",
+            "314318"
+        ],
+
+        "Microprocessor Programming": [
+            "Microprocessor Programming",
+            "Microprocessor",
+            "Microprocessor Programming",
+            "MIC",
+            "314321"
+        ],
+
+        "Python Programming": [
+            "Python Programming",
+            "Python",
+            "PWP",
+            "314004"
+        ],
+
+        "Data Structure Using C": [
+            "Data Structure Using C",
+            "Data Structure",
+            "DSU",
+            "313301"
+        ],
+
+        "Database Management System": [
+            "Database Management System",
+            "DBMS",
+            "DMS",
+            "313302"
+        ],
+
+        "Digital Techniques": [
+            "Digital Techniques",
+            "DTE",
+            "313303"
+        ],
+
+        "Object Oriented Programming Using C++": [
+            "Object Oriented Programming Using C++",
+            "OOP",
+            "C++",
+            "313304"
+        ]
+    }
+
+
+    names = aliases.get(
+        subject,
+        [subject]
+    )
+
+
+    column = find_column(
+        row.index,
+        names
+    )
+
+
+    if column is None:
+        return 0
+
+
+    try:
+
+        value = row[column]
+
+        if pd.isna(value):
+            return 0
+
+        return float(
+            str(value)
+            .replace("%", "")
+            .strip()
+        )
+
+    except:
+
+        return 0
+
+
+# =========================================================
 # CALCULATE RESULT
 # =========================================================
 
-def calculate_result(student, semester):
+def calculate_result(
+    student,
+    semester
+):
 
-    subjects = SEMESTER_SUBJECTS[semester]
+    subjects = SEMESTER_SUBJECTS[
+        semester
+    ]
 
     total = 0
+
 
     for subject in subjects:
 
@@ -211,17 +417,25 @@ def calculate_result(student, semester):
 
             mark = 0
 
+
         total += mark
 
 
-    maximum_marks = len(subjects) * 100
+    maximum_marks = (
+        len(subjects) * 100
+    )
+
 
     percentage = 0
+
 
     if maximum_marks > 0:
 
         percentage = round(
-            (total / maximum_marks) * 100,
+            (
+                total /
+                maximum_marks
+            ) * 100,
             2
         )
 
@@ -240,11 +454,18 @@ def calculate_result(student, semester):
         attendance = 0
 
 
-    student["Total"] = total
+    student["Total"] = round(
+        total,
+        2
+    )
 
-    student["Percentage"] = percentage
+    student["Percentage"] = (
+        percentage
+    )
 
-    student["Attendance"] = attendance
+    student["Attendance"] = (
+        attendance
+    )
 
     student["Attendance Status"] = (
         calculate_attendance_status(
@@ -258,7 +479,9 @@ def calculate_result(student, semester):
         )
     )
 
-    student["Semester"] = semester
+    student["Semester"] = (
+        semester
+    )
 
     return student
 
@@ -276,7 +499,7 @@ def home():
 
 
 # =========================================================
-# GET ALL STUDENTS
+# GET STUDENTS
 # =========================================================
 
 @app.route("/api/students")
@@ -296,6 +519,7 @@ def get_students():
         data = [
 
             student
+
             for student in data
 
             if student.get(
@@ -309,7 +533,7 @@ def get_students():
 
 
 # =========================================================
-# SEARCH STUDENT
+# SEARCH
 # =========================================================
 
 @app.route("/api/search")
@@ -322,6 +546,7 @@ def search_student():
 
 
     if query == "":
+
         return jsonify([])
 
 
@@ -376,6 +601,7 @@ def add_student():
 
         data = request.get_json()
 
+
         if not data:
 
             return jsonify({
@@ -417,24 +643,20 @@ def add_student():
         ).strip()
 
 
-        semester = str(
+        semester = normalize_semester(
             data.get(
                 "Semester",
                 ""
             )
-        ).strip()
+        )
 
-
-        # -----------------------------------------
-        # Validation
-        # -----------------------------------------
 
         if student_id == "":
 
             return jsonify({
                 "success": False,
                 "message":
-                    "Student ID / Roll Number is required!"
+                    "Student ID is required!"
             }), 400
 
 
@@ -461,20 +683,13 @@ def add_student():
         ]
 
 
-        # -----------------------------------------
-        # Read database
-        # -----------------------------------------
-
         students = load_data()
 
-
-        # -----------------------------------------
-        # Same Student + Same Semester check
-        # -----------------------------------------
 
         for old_student in students:
 
             if (
+
                 str(
                     old_student.get(
                         "Student_ID",
@@ -489,18 +704,15 @@ def add_student():
                     "Semester"
                 )
                 == semester
+
             ):
 
                 return jsonify({
                     "success": False,
                     "message":
-                        f"Roll Number {student_id} already exists in {semester}!"
+                        "Student already exists!"
                 }), 400
 
-
-        # -----------------------------------------
-        # New student
-        # -----------------------------------------
 
         student = {
 
@@ -521,27 +733,23 @@ def add_student():
         }
 
 
-        # -----------------------------------------
-        # Subjects
-        # -----------------------------------------
-
         for subject in subjects:
-
-            value = data.get(
-                subject,
-                0
-            )
 
             try:
 
-                value = float(value)
+                mark = float(
+                    data.get(
+                        subject,
+                        0
+                    )
+                )
 
             except:
 
-                value = 0
+                mark = 0
 
 
-            if value < 0 or value > 100:
+            if mark < 0 or mark > 100:
 
                 return jsonify({
                     "success": False,
@@ -550,12 +758,8 @@ def add_student():
                 }), 400
 
 
-            student[subject] = value
+            student[subject] = mark
 
-
-        # -----------------------------------------
-        # Attendance
-        # -----------------------------------------
 
         try:
 
@@ -580,26 +784,21 @@ def add_student():
             }), 400
 
 
-        student["Attendance"] = attendance
+        student["Attendance"] = (
+            attendance
+        )
 
 
-        # -----------------------------------------
-        # Calculate
-        # -----------------------------------------
-
-        student = calculate_result(
+        calculate_result(
             student,
             semester
         )
 
 
-        # -----------------------------------------
-        # Save
-        # -----------------------------------------
-
         students.append(
             student
         )
+
 
         save_data(
             students
@@ -611,7 +810,7 @@ def add_student():
             "success": True,
 
             "message":
-                f"{name} added successfully!",
+                "Student added successfully!",
 
             "student":
                 student
@@ -637,562 +836,6 @@ def add_student():
 
 
 # =========================================================
-# EDIT STUDENT
-# =========================================================
-
-@app.route(
-    "/api/edit_student",
-    methods=["POST"]
-)
-def edit_student():
-
-    try:
-
-        data = request.get_json()
-
-        student_id = str(
-            data.get(
-                "Student_ID",
-                ""
-            )
-        ).strip()
-
-
-        semester = str(
-            data.get(
-                "Semester",
-                ""
-            )
-        ).strip()
-
-
-        if student_id == "":
-            return jsonify({
-                "success": False,
-                "message":
-                    "Student ID is required!"
-            }), 400
-
-
-        if semester not in SEMESTERS:
-
-            return jsonify({
-                "success": False,
-                "message":
-                    "Invalid semester!"
-            }), 400
-
-
-        students = load_data()
-
-        subjects = SEMESTER_SUBJECTS[
-            semester
-        ]
-
-
-        found = False
-
-
-        for student in students:
-
-            if (
-                str(
-                    student.get(
-                        "Student_ID",
-                        ""
-                    )
-                ).strip()
-                == student_id
-
-                and
-
-                student.get(
-                    "Semester"
-                )
-                == semester
-            ):
-
-                found = True
-
-
-                # Basic details
-
-                student["Name"] = str(
-                    data.get(
-                        "Name",
-                        student.get("Name", "")
-                    )
-                ).strip()
-
-
-                student["Gender"] = str(
-                    data.get(
-                        "Gender",
-                        student.get("Gender", "")
-                    )
-                ).strip()
-
-
-                student["Class"] = str(
-                    data.get(
-                        "Class",
-                        student.get("Class", "")
-                    )
-                ).strip()
-
-
-                # Subjects
-
-                for subject in subjects:
-
-                    try:
-
-                        mark = float(
-                            data.get(
-                                subject,
-                                student.get(
-                                    subject,
-                                    0
-                                )
-                            )
-                        )
-
-                    except:
-
-                        mark = 0
-
-
-                    if mark < 0 or mark > 100:
-
-                        return jsonify({
-                            "success": False,
-                            "message":
-                                f"{subject} marks must be between 0 and 100!"
-                        }), 400
-
-
-                    student[subject] = mark
-
-
-                # Attendance
-
-                try:
-
-                    attendance = float(
-                        data.get(
-                            "Attendance",
-                            student.get(
-                                "Attendance",
-                                0
-                            )
-                        )
-                    )
-
-                except:
-
-                    attendance = 0
-
-
-                if attendance < 0 or attendance > 100:
-
-                    return jsonify({
-                        "success": False,
-                        "message":
-                            "Attendance must be between 0 and 100!"
-                    }), 400
-
-
-                student["Attendance"] = attendance
-
-
-                # Recalculate
-
-                calculate_result(
-                    student,
-                    semester
-                )
-
-
-                break
-
-
-        if not found:
-
-            return jsonify({
-                "success": False,
-                "message":
-                    "Student not found!"
-            }), 404
-
-
-        save_data(
-            students
-        )
-
-
-        return jsonify({
-
-            "success": True,
-
-            "message":
-                "Student updated successfully!"
-
-        })
-
-
-    except Exception as e:
-
-        print(
-            "EDIT ERROR:",
-            e
-        )
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-                str(e)
-
-        }), 500
-
-
-# =========================================================
-# DELETE STUDENT
-# =========================================================
-
-@app.route(
-    "/api/delete_student",
-    methods=["POST"]
-)
-def delete_student():
-
-    try:
-
-        data = request.get_json()
-
-        student_id = str(
-            data.get(
-                "Student_ID",
-                ""
-            )
-        ).strip()
-
-
-        semester = str(
-            data.get(
-                "Semester",
-                ""
-            )
-        ).strip()
-
-
-        students = load_data()
-
-
-        new_students = [
-
-            student
-
-            for student in students
-
-            if not (
-                str(
-                    student.get(
-                        "Student_ID",
-                        ""
-                    )
-                ).strip()
-                == student_id
-
-                and
-
-                student.get(
-                    "Semester"
-                )
-                == semester
-            )
-
-        ]
-
-
-        if len(new_students) == len(students):
-
-            return jsonify({
-                "success": False,
-                "message":
-                    "Student not found!"
-            }), 404
-
-
-        save_data(
-            new_students
-        )
-
-
-        return jsonify({
-
-            "success": True,
-
-            "message":
-                "Student deleted successfully!"
-
-        })
-
-
-    except Exception as e:
-
-        print(
-            "DELETE ERROR:",
-            e
-        )
-
-        return jsonify({
-
-            "success": False,
-
-            "message":
-                str(e)
-
-        }), 500
-
-
-# =========================================================
-# EXCEL UPLOAD
-# =========================================================
-
-def process_excel(file):
-
-    try:
-
-        df = pd.read_excel(
-            file
-        )
-
-        return process_dataframe(
-            df
-        )
-
-    except Exception as e:
-
-        raise Exception(
-            "Excel reading error: "
-            + str(e)
-        )
-
-
-# =========================================================
-# WORD UPLOAD
-# =========================================================
-
-def process_word(file):
-
-    try:
-
-        document = Document(
-            file
-        )
-
-        rows = []
-
-
-        # -----------------------------------------
-        # Read tables
-        # -----------------------------------------
-
-        for table in document.tables:
-
-            for row in table.rows:
-
-                values = [
-
-                    cell.text.strip()
-
-                    for cell in row.cells
-
-                ]
-
-                rows.append(
-                    values
-                )
-
-
-        if not rows:
-
-            raise Exception(
-                "No table found in Word document."
-            )
-
-
-        headers = rows[0]
-
-        data_rows = rows[1:]
-
-
-        df = pd.DataFrame(
-            data_rows,
-            columns=headers
-        )
-
-
-        return process_dataframe(
-            df
-        )
-
-
-    except Exception as e:
-
-        raise Exception(
-            "Word reading error: "
-            + str(e)
-        )
-
-
-# =========================================================
-# PDF UPLOAD
-# =========================================================
-
-def process_pdf(file):
-
-    try:
-
-        reader = PdfReader(
-            file
-        )
-
-        text = ""
-
-
-        for page in reader.pages:
-
-            page_text = page.extract_text()
-
-            if page_text:
-
-                text += "\n" + page_text
-
-
-        if text.strip() == "":
-
-            raise Exception(
-                "No readable text found in PDF."
-            )
-
-
-        # -----------------------------------------
-        # Basic key-value extraction
-        # -----------------------------------------
-
-        data = {}
-
-        patterns = {
-
-            "Student_ID":
-                r"(?:Student\s*ID|Roll\s*No|Roll\s*Number)\s*[:\-]?\s*([A-Za-z0-9]+)",
-
-            "Name":
-                r"(?:Name|Student\s*Name)\s*[:\-]?\s*([A-Za-z .]+)",
-
-            "Gender":
-                r"Gender\s*[:\-]?\s*([A-Za-z]+)",
-
-            "Class":
-                r"Class\s*[:\-]?\s*([A-Za-z0-9 .]+)",
-
-            "Semester":
-                r"Semester\s*[:\-]?\s*([0-9]+)",
-
-            "Attendance":
-                r"Attendance\s*[:\-]?\s*([0-9.]+)"
-        }
-
-
-        for key, pattern in patterns.items():
-
-            match = re.search(
-                pattern,
-                text,
-                re.IGNORECASE
-            )
-
-            if match:
-
-                data[key] = (
-                    match.group(1)
-                    .strip()
-                )
-
-
-        # -----------------------------------------
-        # Semester conversion
-        # -----------------------------------------
-
-        if "Semester" in data:
-
-            sem_number = (
-                data["Semester"]
-                .strip()
-            )
-
-            if sem_number.isdigit():
-
-                data["Semester"] = (
-                    "Semester "
-                    + sem_number
-                )
-
-
-        # -----------------------------------------
-        # Subject marks
-        # -----------------------------------------
-
-        for semester in SEMESTERS:
-
-            subjects = SEMESTER_SUBJECTS[
-                semester
-            ]
-
-            for subject in subjects:
-
-                pattern = (
-                    re.escape(subject)
-                    + r"\s*[:\-]?\s*([0-9.]+)"
-                )
-
-                match = re.search(
-                    pattern,
-                    text,
-                    re.IGNORECASE
-                )
-
-                if match:
-
-                    data[subject] = (
-                        match.group(1)
-                    )
-
-
-        if not data:
-
-            raise Exception(
-                "Student data could not be extracted from PDF."
-            )
-
-
-        return [
-            data
-        ]
-
-
-    except Exception as e:
-
-        raise Exception(
-            "PDF reading error: "
-            + str(e)
-        )
-
-
-# =========================================================
 # PROCESS DATAFRAME
 # =========================================================
 
@@ -1210,50 +853,131 @@ def process_dataframe(df):
     results = []
 
 
+    # -----------------------------------------
+    # Find common columns
+    # -----------------------------------------
+
+    id_column = find_column(
+        df.columns,
+        [
+            "Student_ID",
+            "Student ID",
+            "StudentID",
+            "Roll No",
+            "Roll Number",
+            "ID"
+        ]
+    )
+
+
+    name_column = find_column(
+        df.columns,
+        [
+            "Name",
+            "Student Name"
+        ]
+    )
+
+
+    gender_column = find_column(
+        df.columns,
+        [
+            "Gender"
+        ]
+    )
+
+
+    class_column = find_column(
+        df.columns,
+        [
+            "Class"
+        ]
+    )
+
+
+    semester_column = find_column(
+        df.columns,
+        [
+            "Semester",
+            "Sem"
+        ]
+    )
+
+
+    attendance_column = find_column(
+        df.columns,
+        [
+            "Attendance",
+            "Attendance %",
+            "Attendance Percentage"
+        ]
+    )
+
+
     for _, row in df.iterrows():
 
         student = {}
 
 
         # -----------------------------------------
-        # Basic details
+        # BASIC DETAILS
         # -----------------------------------------
 
-        for field in [
-
-            "Student_ID",
-            "Name",
-            "Gender",
-            "Class",
-            "Semester"
-
-        ]:
-
-            student[field] = str(
-                row.get(
-                    field,
-                    ""
-                )
-            ).strip()
+        student["Student_ID"] = str(
+            row[id_column]
+            if id_column
+            else ""
+        ).strip()
 
 
-        semester = student["Semester"]
+        student["Name"] = str(
+            row[name_column]
+            if name_column
+            else ""
+        ).strip()
 
 
-        # Convert formats like 1, 2, 3
-        if semester.isdigit():
+        student["Gender"] = str(
+            row[gender_column]
+            if gender_column
+            else ""
+        ).strip()
 
-            semester = (
-                "Semester "
-                + semester
+
+        student["Class"] = str(
+            row[class_column]
+            if class_column
+            else ""
+        ).strip()
+
+
+        # -----------------------------------------
+        # SEMESTER
+        # -----------------------------------------
+
+        if semester_column:
+
+            semester = normalize_semester(
+                row[semester_column]
             )
 
-            student["Semester"] = semester
+        else:
+
+            # Since project is 4th semester,
+            # if document doesn't contain semester,
+            # use Semester 4.
+
+            semester = "Semester 4"
 
 
         if semester not in SEMESTERS:
 
             continue
+
+
+        student["Semester"] = (
+            semester
+        )
 
 
         subjects = SEMESTER_SUBJECTS[
@@ -1262,69 +986,342 @@ def process_dataframe(df):
 
 
         # -----------------------------------------
-        # Subjects
+        # SUBJECT MARKS
         # -----------------------------------------
 
         for subject in subjects:
 
-            value = row.get(
-                subject,
-                0
+            mark = get_mark(
+                row,
+                subject
             )
+
+            if mark < 0:
+                mark = 0
+
+            if mark > 100:
+                mark = 100
+
+            student[subject] = mark
+
+
+        # -----------------------------------------
+        # ATTENDANCE
+        # -----------------------------------------
+
+        if attendance_column:
 
             try:
 
-                value = float(value)
+                attendance = float(
+                    str(
+                        row[
+                            attendance_column
+                        ]
+                    )
+                    .replace(
+                        "%",
+                        ""
+                    )
+                    .strip()
+                )
 
             except:
 
-                value = 0
+                attendance = 0
 
-
-            student[subject] = value
-
-
-        # -----------------------------------------
-        # Attendance
-        # -----------------------------------------
-
-        attendance = row.get(
-            "Attendance",
-            0
-        )
-
-        try:
-
-            attendance = float(
-                str(attendance)
-                .replace("%", "")
-                .strip()
-            )
-
-        except:
+        else:
 
             attendance = 0
 
 
-        student["Attendance"] = attendance
+        student["Attendance"] = (
+            attendance
+        )
 
 
         # -----------------------------------------
-        # Calculate
+        # CALCULATE
         # -----------------------------------------
 
-        student = calculate_result(
+        calculate_result(
             student,
             semester
         )
 
 
-        results.append(
-            student
-        )
+        # -----------------------------------------
+        # VALID STUDENT
+        # -----------------------------------------
+
+        if (
+            student["Student_ID"] != ""
+            and
+            student["Name"] != ""
+        ):
+
+            results.append(
+                student
+            )
 
 
     return results
+
+
+# =========================================================
+# EXCEL
+# =========================================================
+
+def process_excel(file):
+
+    df = pd.read_excel(
+        file
+    )
+
+    return process_dataframe(
+        df
+    )
+
+
+# =========================================================
+# WORD
+# =========================================================
+
+def process_word(file):
+
+    document = Document(
+        file
+    )
+
+
+    rows = []
+
+
+    for table in document.tables:
+
+        for row in table.rows:
+
+            values = [
+
+                cell.text.strip()
+
+                for cell in row.cells
+
+            ]
+
+            rows.append(
+                values
+            )
+
+
+    if not rows:
+
+        raise Exception(
+            "No table found in Word document."
+        )
+
+
+    headers = rows[0]
+
+    data_rows = rows[1:]
+
+
+    df = pd.DataFrame(
+        data_rows,
+        columns=headers
+    )
+
+
+    return process_dataframe(
+        df
+    )
+
+
+# =========================================================
+# PDF
+# =========================================================
+
+def process_pdf(file):
+
+    reader = PdfReader(
+        file
+    )
+
+
+    text = ""
+
+
+    for page in reader.pages:
+
+        page_text = (
+            page.extract_text()
+        )
+
+        if page_text:
+
+            text += "\n" + page_text
+
+
+    if not text.strip():
+
+        raise Exception(
+            "No readable text found in PDF."
+        )
+
+
+    data = {}
+
+
+    # -----------------------------------------
+    # Student ID
+    # -----------------------------------------
+
+    patterns = {
+
+        "Student_ID": [
+            r"Student\s*ID\s*[:\-]?\s*([A-Za-z0-9]+)",
+            r"Roll\s*No\s*[:\-]?\s*([A-Za-z0-9]+)",
+            r"Roll\s*Number\s*[:\-]?\s*([A-Za-z0-9]+)"
+        ],
+
+        "Name": [
+            r"Student\s*Name\s*[:\-]?\s*([A-Za-z .]+)",
+            r"Name\s*[:\-]?\s*([A-Za-z .]+)"
+        ],
+
+        "Gender": [
+            r"Gender\s*[:\-]?\s*([A-Za-z]+)"
+        ],
+
+        "Class": [
+            r"Class\s*[:\-]?\s*([A-Za-z0-9 .]+)"
+        ],
+
+        "Semester": [
+            r"Semester\s*[:\-]?\s*([0-9]+)",
+            r"Sem\s*[:\-]?\s*([0-9]+)"
+        ],
+
+        "Attendance": [
+            r"Attendance\s*[:\-]?\s*([0-9.]+)"
+        ]
+    }
+
+
+    for key, pattern_list in patterns.items():
+
+        for pattern in pattern_list:
+
+            match = re.search(
+                pattern,
+                text,
+                re.IGNORECASE
+            )
+
+            if match:
+
+                data[key] = (
+                    match.group(1)
+                    .strip()
+                )
+
+                break
+
+
+    # -----------------------------------------
+    # Semester
+    # -----------------------------------------
+
+    semester = normalize_semester(
+        data.get(
+            "Semester",
+            "4"
+        )
+    )
+
+
+    if not semester:
+
+        semester = "Semester 4"
+
+
+    data["Semester"] = (
+        semester
+    )
+
+
+    # -----------------------------------------
+    # Subject marks
+    # -----------------------------------------
+
+    subjects = SEMESTER_SUBJECTS[
+        semester
+    ]
+
+
+    for subject in subjects:
+
+        aliases = [
+            subject
+        ]
+
+
+        if subject in SUBJECT_CODES:
+
+            aliases.append(
+                SUBJECT_CODES[
+                    subject
+                ]
+            )
+
+
+        found = False
+
+
+        for alias in aliases:
+
+            pattern = (
+                re.escape(alias)
+                +
+                r"\s*[:\-]?\s*([0-9.]+)"
+            )
+
+
+            match = re.search(
+                pattern,
+                text,
+                re.IGNORECASE
+            )
+
+
+            if match:
+
+                data[subject] = (
+                    match.group(1)
+                )
+
+                found = True
+
+                break
+
+
+        if not found:
+
+            data[subject] = 0
+
+
+    # -----------------------------------------
+    # Convert to dataframe
+    # -----------------------------------------
+
+    df = pd.DataFrame([
+        data
+    ])
+
+
+    return process_dataframe(
+        df
+    )
 
 
 # =========================================================
@@ -1342,9 +1339,12 @@ def upload_document():
         if "file" not in request.files:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
-                    "Please select a file!"
+                    "Please select a document!"
+
             }), 400
 
 
@@ -1356,9 +1356,12 @@ def upload_document():
         if file.filename == "":
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "No file selected!"
+
             }), 400
 
 
@@ -1366,39 +1369,41 @@ def upload_document():
             file.filename
         )
 
-        extension = (
-            os.path.splitext(
-                filename
-            )[1]
-            .lower()
-        )
 
+        extension = os.path.splitext(
+            filename
+        )[1].lower()
 
-        # -----------------------------------------
-        # Allowed files
-        # -----------------------------------------
 
         allowed = [
             ".xlsx",
+            ".xls",
             ".docx",
-            ".pdf"
+            ".pdf",
+            ".csv"
         ]
 
 
         if extension not in allowed:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
-                    "Only Excel, Word and PDF files are allowed!"
+                    "Only Excel, Word, PDF or CSV files are allowed!"
+
             }), 400
 
 
         # -----------------------------------------
-        # Process
+        # PROCESS FILE
         # -----------------------------------------
 
-        if extension == ".xlsx":
+        if extension in [
+            ".xlsx",
+            ".xls"
+        ]:
 
             imported_students = (
                 process_excel(file)
@@ -1412,6 +1417,17 @@ def upload_document():
             )
 
 
+        elif extension == ".csv":
+
+            df = pd.read_csv(
+                file
+            )
+
+            imported_students = (
+                process_dataframe(df)
+            )
+
+
         else:
 
             imported_students = (
@@ -1422,15 +1438,14 @@ def upload_document():
         if not imported_students:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "No valid student data found!"
+
             }), 400
 
-
-        # -----------------------------------------
-        # Existing database
-        # -----------------------------------------
 
         students = load_data()
 
@@ -1441,7 +1456,7 @@ def upload_document():
 
 
         # -----------------------------------------
-        # Add / Update
+        # ADD / UPDATE
         # -----------------------------------------
 
         for new_student in imported_students:
@@ -1484,14 +1499,16 @@ def upload_document():
                             ""
                         )
                     ).strip()
-                    == student_id
+                    ==
+                    student_id
 
                     and
 
                     old_student.get(
                         "Semester"
                     )
-                    == semester
+                    ==
+                    semester
 
                 ):
 
@@ -1514,10 +1531,6 @@ def upload_document():
 
                 added += 1
 
-
-        # -----------------------------------------
-        # Save
-        # -----------------------------------------
 
         save_data(
             students
@@ -1547,6 +1560,7 @@ def upload_document():
             e
         )
 
+
         return jsonify({
 
             "success": False,
@@ -1558,7 +1572,7 @@ def upload_document():
 
 
 # =========================================================
-# SEMESTER SUBJECTS API
+# SUBJECT API
 # =========================================================
 
 @app.route(
@@ -1566,44 +1580,23 @@ def upload_document():
 )
 def get_subjects():
 
-    return jsonify(
-        SEMESTER_SUBJECTS
-    )
+    return jsonify({
+
+        "subjects":
+            SEMESTER_SUBJECTS,
+
+        "codes":
+            SUBJECT_CODES
+
+    })
 
 
 # =========================================================
-# RUN SERVER
+# RUN
 # =========================================================
 
 if __name__ == "__main__":
 
-    print()
-    print(
-        "========================================"
-    )
-    print(
-        " STUDENT PERFORMANCE DASHBOARD"
-    )
-    print(
-        "========================================"
-    )
-
-    print(
-        "Semesters:",
-        ", ".join(SEMESTERS)
-    )
-
-    print(
-        "Database:",
-        DATABASE_FILE
-    )
-
-    print(
-        "========================================"
-    )
-
-
-    # Render PORT
     port = int(
         os.environ.get(
             "PORT",
