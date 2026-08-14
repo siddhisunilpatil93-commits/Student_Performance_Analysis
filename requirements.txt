@@ -1,6 +1,6 @@
 Flask
 pandas
-gunicorn
 openpyxl
 python-docx
 pypdf
+gunicorn
