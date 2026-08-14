@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Computer Engineering - Student Performance Analysis</title>
+<title>Computer Engineering - Student Performance Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -21,18 +22,19 @@ body{
     background:#f1f5f9;
     color:#172554;
 }
-    
+
 /* SIDEBAR */
 
 .sidebar{
     position:fixed;
     left:0;
     top:0;
-    width:265px;
+    width:260px;
     height:100vh;
-    background:linear-gradient(180deg,#312e81,#7c3aed);
+    background:linear-gradient(180deg,#312e81,#6d28d9,#9333ea);
     color:white;
     padding:25px 18px;
+    z-index:100;
 }
 
 .logo{
@@ -45,11 +47,12 @@ body{
 }
 
 .logo h2{
-    margin:8px 0 4px;
+    margin:8px 0 3px;
 }
 
 .logo p{
     margin:0;
+    font-size:13px;
     opacity:.85;
 }
 
@@ -62,7 +65,7 @@ body{
     padding:14px;
     margin:4px 0;
     border-radius:12px;
-    font-size:16px;
+    font-size:15px;
     cursor:pointer;
 }
 
@@ -74,11 +77,9 @@ body{
 /* MAIN */
 
 .main{
-    margin-left:265px;
-    padding:28px;
+    margin-left:260px;
+    padding:25px;
 }
-
-/* HEADER */
 
 .header{
     background:white;
@@ -88,7 +89,7 @@ body{
     justify-content:space-between;
     align-items:center;
     margin-bottom:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
 }
 
 .header h1{
@@ -101,11 +102,16 @@ body{
     color:#64748b;
 }
 
+.college-title{
+    color:#4f46e5;
+    font-weight:bold;
+}
+
 .semester-box{
     background:linear-gradient(135deg,#4f46e5,#9333ea);
-    padding:12px 18px;
-    border-radius:12px;
+    padding:13px 18px;
     color:white;
+    border-radius:12px;
 }
 
 .semester-box select{
@@ -125,14 +131,14 @@ body{
 
 .semester-buttons{
     display:flex;
-    flex-wrap:wrap;
     gap:10px;
+    flex-wrap:wrap;
     margin-bottom:20px;
 }
 
 .semester-buttons button{
     border:none;
-    padding:12px 20px;
+    padding:11px 18px;
     border-radius:10px;
     background:white;
     color:#3730a3;
@@ -141,6 +147,7 @@ body{
     box-shadow:0 3px 10px rgba(0,0,0,.08);
 }
 
+.semester-buttons button:hover,
 .semester-buttons button.active{
     background:#4f46e5;
     color:white;
@@ -187,7 +194,7 @@ body{
 }
 
 .card .value{
-    font-size:26px;
+    font-size:25px;
     font-weight:bold;
 }
 
@@ -200,8 +207,11 @@ body{
     background:white;
     border-radius:18px;
     padding:22px;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.search-box{
     margin-top:20px;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
 }
 
 .search-row{
@@ -211,18 +221,19 @@ body{
 
 .search-row input{
     flex:1;
-    padding:15px;
+    padding:14px;
     border:2px solid #e2e8f0;
     border-radius:11px;
-    font-size:16px;
+    font-size:15px;
 }
 
 button.primary,
 button.green,
-button.danger{
+button.danger,
+button.gray{
     border:none;
     color:white;
-    padding:13px 20px;
+    padding:12px 18px;
     border-radius:10px;
     font-weight:bold;
     cursor:pointer;
@@ -240,6 +251,20 @@ button.danger{
     background:#dc2626;
 }
 
+button.gray{
+    background:#64748b;
+}
+
+/* UPLOAD */
+
+.upload-box{
+    margin-top:20px;
+}
+
+.upload-box input{
+    padding:10px;
+}
+
 /* CHARTS */
 
 .charts{
@@ -249,30 +274,32 @@ button.danger{
     margin-top:20px;
 }
 
-.chart-card{
-    margin-top:0;
-}
-
 /* TABLE */
 
 .table-card{
+    margin-top:20px;
+    overflow:hidden;
+}
+
+.table-wrapper{
     overflow-x:auto;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
+    min-width:900px;
 }
 
 th{
     background:#4338ca;
     color:white;
-    padding:13px;
+    padding:13px 10px;
     white-space:nowrap;
 }
 
 td{
-    padding:12px;
+    padding:11px 9px;
     text-align:center;
     border-bottom:1px solid #e2e8f0;
     white-space:nowrap;
@@ -282,13 +309,30 @@ tr:hover{
     background:#f8fafc;
 }
 
+.action-btn{
+    padding:7px 10px;
+    border:none;
+    border-radius:7px;
+    color:white;
+    cursor:pointer;
+    margin:2px;
+}
+
+.edit-btn{
+    background:#2563eb;
+}
+
+.delete-btn{
+    background:#dc2626;
+}
+
 /* MODAL */
 
 .modal{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(15,23,42,.65);
+    background:rgba(15,23,42,.70);
     justify-content:center;
     align-items:center;
     z-index:1000;
@@ -327,7 +371,7 @@ tr:hover{
     width:100%;
     padding:12px;
     border:2px solid #e2e8f0;
-    border-radius:10px;
+    border-radius:9px;
 }
 
 .modal-actions{
@@ -353,17 +397,9 @@ tr:hover{
     color:#991b1b;
 }
 
-/* MOBILE */
+/* RESPONSIVE */
 
-@media(max-width:1000px){
-
-    .sidebar{
-        width:210px;
-    }
-
-    .main{
-        margin-left:210px;
-    }
+@media(max-width:1050px){
 
     .cards{
         grid-template-columns:repeat(2,1fr);
@@ -372,9 +408,10 @@ tr:hover{
     .charts{
         grid-template-columns:1fr;
     }
+
 }
 
-@media(max-width:700px){
+@media(max-width:750px){
 
     .sidebar{
         position:relative;
@@ -384,13 +421,12 @@ tr:hover{
 
     .main{
         margin-left:0;
-        padding:15px;
     }
 
     .header{
         flex-direction:column;
         gap:15px;
-        align-items:flex-start;
+        text-align:center;
     }
 
     .cards{
@@ -404,11 +440,12 @@ tr:hover{
     .form-grid{
         grid-template-columns:1fr;
     }
+
 }
 
 </style>
-</head>
 
+</head>
 
 <body>
 
@@ -421,15 +458,17 @@ tr:hover{
 
         <div class="emoji">🎓</div>
 
-        <h2>Computer Engineering</h2>
+        <h2>Student Analytics</h2>
 
-        <p>Student Performance Analysis</p>
+        <p>Computer Engineering</p>
+        <p>Performance Management</p>
 
     </div>
 
     <div class="menu">
 
-        <button class="active">
+        <button class="active"
+                onclick="goTop()">
             🏠 Dashboard
         </button>
 
@@ -437,7 +476,7 @@ tr:hover{
             🔍 Search Student
         </button>
 
-        <button onclick="openModal()">
+        <button onclick="openAddModal()">
             ➕ Add Student
         </button>
 
@@ -466,15 +505,19 @@ tr:hover{
         <div>
 
             <h1>
-                Computer Engineering
+                Student Performance Dashboard
             </h1>
 
+            <p class="college-title">
+                🖥️ Computer Engineering
+            </p>
+
             <p>
-                Student Performance Analysis System
-                • Academic Performance • Attendance • Analytics
+                Academic Performance • Attendance • Analytics
             </p>
 
         </div>
+
 
         <div class="semester-box">
 
@@ -497,7 +540,7 @@ tr:hover{
     </div>
 
 
-    <!-- SEMESTERS -->
+    <!-- SEMESTER BUTTONS -->
 
     <div class="semester-buttons">
 
@@ -613,7 +656,7 @@ tr:hover{
             </button>
 
             <button class="green"
-                    onclick="openModal()">
+                    onclick="openAddModal()">
                 ➕ Add Student
             </button>
 
@@ -626,7 +669,7 @@ tr:hover{
 
     <div class="upload-box">
 
-        <h2>📂 Upload Student Document</h2>
+        <h2>📂 Import Student Data</h2>
 
         <p>
             Upload Excel, Word or PDF student data.
@@ -681,20 +724,21 @@ tr:hover{
 
     <!-- TABLE -->
 
-    <div class="table-card">
+    <div class="table-card"
+         id="studentsSection">
 
         <h2>
-            👨‍🎓 All Students -
+            👨‍🎓 Students -
             <span id="tableSemester">
                 Semester 4
             </span>
         </h2>
 
-        <div style="overflow-x:auto;">
+        <div class="table-wrapper">
 
             <table>
 
-                <thead id="tableHead">
+                <thead id="studentHead">
                 </thead>
 
                 <tbody id="studentTable">
@@ -709,7 +753,7 @@ tr:hover{
 </div>
 
 
-<!-- ADD STUDENT MODAL -->
+<!-- ADD / EDIT MODAL -->
 
 <div class="modal"
      id="studentModal">
@@ -721,9 +765,10 @@ tr:hover{
             ✕
         </span>
 
-        <h1>
+        <h1 id="modalTitle">
             ➕ Add New Student
         </h1>
+
 
         <div class="form-grid">
 
@@ -737,7 +782,7 @@ tr:hover{
                     <option>Semester 1</option>
                     <option>Semester 2</option>
                     <option>Semester 3</option>
-                    <option selected>Semester 4</option>
+                    <option>Semester 4</option>
                     <option>Semester 5</option>
                     <option>Semester 6</option>
 
@@ -786,35 +831,26 @@ tr:hover{
 
                 <input id="studentClass"
                        type="text"
-                       placeholder="e.g. Computer Engineering">
+                       placeholder="e.g. CO">
 
             </div>
 
 
-        </div>
+            <div id="subjectInputs"
+                 style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            </div>
 
 
-        <h3>
-            📚 Subject Marks
-        </h3>
+            <div class="form-group">
 
-        <div class="form-grid"
-             id="subjectInputs">
-        </div>
+                <label>Attendance %</label>
 
+                <input id="attendance"
+                       type="number"
+                       min="0"
+                       max="100">
 
-        <div class="form-group"
-             style="margin-top:15px;">
-
-            <label>
-                Attendance %
-            </label>
-
-            <input id="attendance"
-                   type="number"
-                   min="0"
-                   max="100"
-                   placeholder="Enter attendance percentage">
+            </div>
 
         </div>
 
@@ -823,16 +859,12 @@ tr:hover{
 
             <button class="green"
                     onclick="saveStudent()">
-
                 💾 Save Student
-
             </button>
 
-            <button class="primary"
+            <button class="gray"
                     onclick="closeModal()">
-
                 Cancel
-
             </button>
 
         </div>
@@ -849,25 +881,22 @@ tr:hover{
 
 <script>
 
-
-/* =====================================================
-   VARIABLES
-===================================================== */
-
 let currentSemester = "Semester 4";
 
 let students = [];
 
-let subjects = {};
+let semesterSubjects = {};
+
+let editingStudent = null;
 
 let subjectChart = null;
 
 let gradeChart = null;
 
 
-/* =====================================================
+/* =========================================
    LOAD SUBJECTS
-===================================================== */
+========================================= */
 
 function loadSubjects(){
 
@@ -877,11 +906,11 @@ function loadSubjects(){
 
     .then(data => {
 
-        subjects = data;
+        semesterSubjects = data;
 
-        createSubjectInputs();
+        buildSubjectInputs();
 
-        createTableHeader();
+        loadStudents();
 
     })
 
@@ -889,36 +918,33 @@ function loadSubjects(){
 
         console.error(error);
 
-        alert("Unable to load subjects.");
+        alert("Unable to load semester subjects.");
 
     });
 
 }
 
 
-/* =====================================================
-   CREATE SUBJECT INPUTS
-===================================================== */
+/* =========================================
+   BUILD SUBJECT INPUTS
+========================================= */
 
-function createSubjectInputs(){
+function buildSubjectInputs(){
 
-    let container =
-        document.getElementById(
-            "subjectInputs"
-        );
+    let box =
+        document.getElementById("subjectInputs");
 
-    container.innerHTML = "";
+    box.innerHTML = "";
 
-    let list =
-        subjects[currentSemester] || [];
+    let subjects =
+        semesterSubjects[currentSemester] || [];
 
-    list.forEach((subject,index) => {
+    subjects.forEach(subject => {
 
         let div =
             document.createElement("div");
 
-        div.className =
-            "form-group";
+        div.className = "form-group";
 
         div.innerHTML = `
 
@@ -928,88 +954,28 @@ function createSubjectInputs(){
                 type="number"
                 min="0"
                 max="100"
-                id="subject_${index}"
+                class="subject-mark"
                 data-subject="${subject}"
-                placeholder="0 - 100"
             >
 
         `;
 
-        container.appendChild(div);
+        box.appendChild(div);
 
     });
 
 }
 
 
-/* =====================================================
-   TABLE HEADER
-===================================================== */
-
-function createTableHeader(){
-
-    let head =
-        document.getElementById(
-            "tableHead"
-        );
-
-    let list =
-        subjects[currentSemester] || [];
-
-    let html = `
-
-        <tr>
-
-            <th>Student ID</th>
-
-            <th>Name</th>
-
-            <th>Gender</th>
-
-            <th>Class</th>
-    `;
-
-    list.forEach(subject => {
-
-        html += `
-            <th>${subject}</th>
-        `;
-
-    });
-
-    html += `
-
-            <th>Total</th>
-
-            <th>Percentage</th>
-
-            <th>Attendance</th>
-
-            <th>Status</th>
-
-            <th>Grade</th>
-
-        </tr>
-
-    `;
-
-    head.innerHTML = html;
-
-}
-
-
-/* =====================================================
+/* =========================================
    LOAD STUDENTS
-===================================================== */
+========================================= */
 
 function loadStudents(){
 
     fetch(
         "/api/students?semester="
-        +
-        encodeURIComponent(
-            currentSemester
-        )
+        + encodeURIComponent(currentSemester)
     )
 
     .then(response => response.json())
@@ -1018,9 +984,7 @@ function loadStudents(){
 
         if(!Array.isArray(data)){
 
-            alert(
-                "Unable to load students."
-            );
+            alert("Unable to load students.");
 
             return;
 
@@ -1040,23 +1004,20 @@ function loadStudents(){
 
         console.error(error);
 
-        alert(
-            "Unable to connect to server."
-        );
+        alert("Unable to connect to server.");
 
     });
 
 }
 
 
-/* =====================================================
+/* =========================================
    SELECT SEMESTER
-===================================================== */
+========================================= */
 
 function selectSemester(semester){
 
-    currentSemester =
-        semester;
+    currentSemester = semester;
 
     document.getElementById(
         "semesterSelect"
@@ -1070,39 +1031,32 @@ function selectSemester(semester){
         "tableSemester"
     ).innerText = semester;
 
+
     document.querySelectorAll(
         ".semester-buttons button"
     ).forEach(button => {
 
-        button.classList.remove(
-            "active"
-        );
+        button.classList.remove("active");
 
-        if(
-            button.innerText.trim()
-            === semester
-        ){
+        if(button.innerText.trim() === semester){
 
-            button.classList.add(
-                "active"
-            );
+            button.classList.add("active");
 
         }
 
     });
 
-    createSubjectInputs();
 
-    createTableHeader();
+    buildSubjectInputs();
 
     loadStudents();
 
 }
 
 
-/* =====================================================
-   CHANGE SEMESTER
-===================================================== */
+/* =========================================
+   SELECT BOX
+========================================= */
 
 function changeSemester(){
 
@@ -1111,44 +1065,37 @@ function changeSemester(){
             "semesterSelect"
         ).value;
 
-    selectSemester(
-        semester
-    );
+    selectSemester(semester);
 
 }
 
 
-/* =====================================================
+/* =========================================
    DASHBOARD
-===================================================== */
+========================================= */
 
 function updateDashboard(){
 
-    let total =
-        students.length;
+    let total = students.length;
 
     document.getElementById(
         "totalStudents"
-    ).innerText =
-        total;
+    ).innerText = total;
 
 
     if(total === 0){
 
         document.getElementById(
             "avgPercentage"
-        ).innerText =
-            "0%";
+        ).innerText = "0%";
 
         document.getElementById(
             "topPerformer"
-        ).innerText =
-            "-";
+        ).innerText = "-";
 
         document.getElementById(
             "avgAttendance"
-        ).innerText =
-            "0%";
+        ).innerText = "0%";
 
         return;
 
@@ -1158,54 +1105,38 @@ function updateDashboard(){
     let avgPercentage =
         students.reduce(
             (sum,s) =>
-                sum +
-                Number(
-                    s.Percentage || 0
-                ),
+                sum + Number(s.Percentage || 0),
             0
-        )
-        /
-        total;
+        ) / total;
 
 
     let avgAttendance =
         students.reduce(
             (sum,s) =>
-                sum +
-                Number(
-                    s.Attendance || 0
-                ),
+                sum + Number(s.Attendance || 0),
             0
-        )
-        /
-        total;
+        ) / total;
 
 
     let top =
         [...students].sort(
             (a,b) =>
-                Number(
-                    b.Percentage || 0
-                )
+                Number(b.Percentage || 0)
                 -
-                Number(
-                    a.Percentage || 0
-                )
+                Number(a.Percentage || 0)
         )[0];
 
 
     document.getElementById(
         "avgPercentage"
     ).innerText =
-        avgPercentage.toFixed(2)
-        + "%";
+        avgPercentage.toFixed(2) + "%";
 
 
     document.getElementById(
         "avgAttendance"
     ).innerText =
-        avgAttendance.toFixed(2)
-        + "%";
+        avgAttendance.toFixed(2) + "%";
 
 
     document.getElementById(
@@ -1216,40 +1147,78 @@ function updateDashboard(){
 }
 
 
-/* =====================================================
-   DISPLAY STUDENTS
-===================================================== */
+/* =========================================
+   DISPLAY TABLE
+========================================= */
 
 function displayStudents(data){
 
+    let head =
+        document.getElementById("studentHead");
+
     let tbody =
-        document.getElementById(
-            "studentTable"
-        );
+        document.getElementById("studentTable");
+
+    head.innerHTML = "";
 
     tbody.innerHTML = "";
 
 
-    let list =
-        subjects[currentSemester] || [];
+    let subjects =
+        semesterSubjects[currentSemester] || [];
+
+
+    let headerRow =
+        document.createElement("tr");
+
+
+    let headers = [
+        "Student ID",
+        "Name",
+        "Gender",
+        "Class"
+    ];
+
+
+    subjects.forEach(s => headers.push(s));
+
+    headers.push(
+        "Total",
+        "Percentage",
+        "Attendance",
+        "Attendance Status",
+        "Grade",
+        "Actions"
+    );
+
+
+    headers.forEach(h => {
+
+        let th =
+            document.createElement("th");
+
+        th.innerText = h;
+
+        headerRow.appendChild(th);
+
+    });
+
+
+    head.appendChild(headerRow);
 
 
     if(data.length === 0){
 
-        tbody.innerHTML = `
+        let row =
+            document.createElement("tr");
 
-            <tr>
-
-                <td colspan="${10 + list.length}">
-
-                    No students found in
-                    ${currentSemester}.
-
-                </td>
-
-            </tr>
-
+        row.innerHTML = `
+            <td colspan="${headers.length}">
+                No students found in ${currentSemester}.
+            </td>
         `;
+
+        tbody.appendChild(row);
 
         return;
 
@@ -1259,40 +1228,26 @@ function displayStudents(data){
     data.forEach(student => {
 
         let row =
-            document.createElement(
-                "tr"
-            );
+            document.createElement("tr");
 
 
         let html = `
 
-            <td>
-                ${student.Student_ID || ""}
-            </td>
+            <td>${safe(student.Student_ID)}</td>
 
-            <td>
-                <b>${student.Name || ""}</b>
-            </td>
+            <td><b>${safe(student.Name)}</b></td>
 
-            <td>
-                ${student.Gender || ""}
-            </td>
+            <td>${safe(student.Gender)}</td>
 
-            <td>
-                ${student.Class || ""}
-            </td>
+            <td>${safe(student.Class)}</td>
 
         `;
 
 
-        list.forEach(subject => {
+        subjects.forEach(subject => {
 
             html += `
-
-                <td>
-                    ${student[subject] ?? 0}
-                </td>
-
+                <td>${safe(student[subject])}</td>
             `;
 
         });
@@ -1300,61 +1255,63 @@ function displayStudents(data){
 
         html += `
 
-            <td>
-                <b>${student.Total ?? 0}</b>
-            </td>
+            <td><b>${safe(student.Total)}</b></td>
 
             <td>
-                <b>${student.Percentage ?? 0}%</b>
+                <b>${safe(student.Percentage)}%</b>
             </td>
 
-            <td>
-                ${student.Attendance ?? 0}%
-            </td>
+            <td>${safe(student.Attendance)}%</td>
+
+            <td>${safe(student["Attendance Status"])}</td>
+
+            <td><b>${safe(student.Grade)}</b></td>
 
             <td>
-                ${student["Attendance Status"] || ""}
-            </td>
 
-            <td>
-                <b>${student.Grade || ""}</b>
+                <button
+                    class="action-btn edit-btn"
+                    onclick='editStudent(${JSON.stringify(student)})'>
+                    Edit
+                </button>
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick='deleteStudent(${JSON.stringify(student)})'>
+                    Delete
+                </button>
+
             </td>
 
         `;
 
 
-        row.innerHTML =
-            html;
+        row.innerHTML = html;
 
-        tbody.appendChild(
-            row
-        );
+        tbody.appendChild(row);
 
     });
 
 }
 
 
-/* =====================================================
+/* =========================================
    SEARCH
-===================================================== */
+========================================= */
 
 function searchStudent(){
 
     let text =
         document.getElementById(
             "searchInput"
-        )
-        .value
+        ).value
         .toLowerCase()
         .trim();
 
 
     if(text === ""){
 
-        displayStudents(
-            students
-        );
+        displayStudents(students);
 
         return;
 
@@ -1362,71 +1319,167 @@ function searchStudent(){
 
 
     let result =
-        students.filter(
-            student =>
+        students.filter(student =>
 
-                String(
-                    student.Name || ""
-                )
-                .toLowerCase()
-                .includes(text)
+            String(
+                student.Name || ""
+            )
+            .toLowerCase()
+            .includes(text)
 
-                ||
+            ||
 
-                String(
-                    student.Student_ID || ""
-                )
-                .toLowerCase()
-                .includes(text)
+            String(
+                student.Student_ID || ""
+            )
+            .toLowerCase()
+            .includes(text)
 
         );
 
 
-    displayStudents(
-        result
-    );
+    displayStudents(result);
 
 }
 
 
-/* =====================================================
-   OPEN MODAL
-===================================================== */
+/* =========================================
+   ADD MODAL
+========================================= */
 
-function openModal(){
+function openAddModal(){
+
+    editingStudent = null;
+
+    document.getElementById(
+        "modalTitle"
+    ).innerText =
+        "➕ Add New Student";
+
 
     document.getElementById(
         "studentModal"
-    ).style.display =
-        "flex";
+    ).style.display = "flex";
+
+
+    document.getElementById(
+        "studentSemester"
+    ).value = currentSemester;
+
+
+    document.getElementById(
+        "studentID"
+    ).disabled = false;
+
+
+    clearForm();
+
+    buildSubjectInputs();
+
+}
+
+
+/* =========================================
+   EDIT
+========================================= */
+
+function editStudent(student){
+
+    editingStudent = student;
+
+
+    document.getElementById(
+        "modalTitle"
+    ).innerText =
+        "✏️ Edit Student";
+
+
+    document.getElementById(
+        "studentModal"
+    ).style.display = "flex";
+
 
     document.getElementById(
         "studentSemester"
     ).value =
-        currentSemester;
+        student.Semester;
 
-    createSubjectInputs();
+
+    document.getElementById(
+        "studentID"
+    ).value =
+        student.Student_ID;
+
+
+    document.getElementById(
+        "studentID"
+    ).disabled = true;
+
+
+    document.getElementById(
+        "studentName"
+    ).value =
+        student.Name || "";
+
+
+    document.getElementById(
+        "studentGender"
+    ).value =
+        student.Gender || "Male";
+
+
+    document.getElementById(
+        "studentClass"
+    ).value =
+        student.Class || "";
+
+
+    document.getElementById(
+        "attendance"
+    ).value =
+        student.Attendance || "";
+
+
+    buildSubjectInputs();
+
+
+    document.querySelectorAll(
+        ".subject-mark"
+    ).forEach(input => {
+
+        let subject =
+            input.dataset.subject;
+
+        input.value =
+            student[subject] ?? "";
+
+    });
 
 }
 
 
-/* =====================================================
+/* =========================================
    CLOSE MODAL
-===================================================== */
+========================================= */
 
 function closeModal(){
 
     document.getElementById(
         "studentModal"
-    ).style.display =
-        "none";
+    ).style.display = "none";
+
+    document.getElementById(
+        "studentID"
+    ).disabled = false;
+
+    editingStudent = null;
 
 }
 
 
-/* =====================================================
+/* =========================================
    SAVE STUDENT
-===================================================== */
+========================================= */
 
 function saveStudent(){
 
@@ -1469,29 +1522,109 @@ function saveStudent(){
     };
 
 
-    let list =
-        subjects[semester] || [];
+    document.querySelectorAll(
+        ".subject-mark"
+    ).forEach(input => {
+
+        data[
+            input.dataset.subject
+        ] = input.value;
+
+    });
 
 
-    list.forEach(
-        (subject,index) => {
+    if(!data.Student_ID || !data.Name){
 
-            let input =
-                document.getElementById(
-                    "subject_" + index
-                );
+        showFormMessage(
+            "Student ID and Name are required!",
+            false
+        );
 
-            data[subject] =
-                input
-                ? input.value
-                : 0;
+        return;
+
+    }
+
+
+    let url =
+        editingStudent
+        ? "/api/edit_student"
+        : "/api/add_student";
+
+
+    fetch(url,{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":
+                "application/json"
+        },
+
+        body:JSON.stringify(data)
+
+    })
+
+    .then(response =>
+        response.json()
+    )
+
+    .then(result => {
+
+        showFormMessage(
+            result.message,
+            result.success
+        );
+
+
+        if(result.success){
+
+            setTimeout(() => {
+
+                closeModal();
+
+                selectSemester(semester);
+
+            },700);
 
         }
-    );
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        showFormMessage(
+            "Something went wrong!",
+            false
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   DELETE
+========================================= */
+
+function deleteStudent(student){
+
+    if(!confirm(
+        "Delete " +
+        student.Name +
+        " from " +
+        student.Semester +
+        "?"
+    )){
+
+        return;
+
+    }
 
 
     fetch(
-        "/api/add_student",
+        "/api/delete_student",
         {
 
             method:"POST",
@@ -1501,10 +1634,15 @@ function saveStudent(){
                     "application/json"
             },
 
-            body:
-                JSON.stringify(
-                    data
-                )
+            body:JSON.stringify({
+
+                Student_ID:
+                    student.Student_ID,
+
+                Semester:
+                    student.Semester
+
+            })
 
         }
     )
@@ -1515,45 +1653,11 @@ function saveStudent(){
 
     .then(result => {
 
-        let msg =
-            document.getElementById(
-                "formMessage"
-            );
-
-
-        msg.style.display =
-            "block";
-
+        alert(result.message);
 
         if(result.success){
 
-            msg.className =
-                "message success";
-
-            msg.innerText =
-                result.message;
-
-
-            setTimeout(() => {
-
-                closeModal();
-
-                clearForm();
-
-                selectSemester(
-                    semester
-                );
-
-            },1000);
-
-
-        }else{
-
-            msg.className =
-                "message error";
-
-            msg.innerText =
-                result.message;
+            loadStudents();
 
         }
 
@@ -1563,28 +1667,16 @@ function saveStudent(){
 
         console.error(error);
 
-        let msg =
-            document.getElementById(
-                "formMessage"
-            );
-
-        msg.style.display =
-            "block";
-
-        msg.className =
-            "message error";
-
-        msg.innerText =
-            "Something went wrong!";
+        alert("Delete failed.");
 
     });
 
 }
 
 
-/* =====================================================
+/* =========================================
    CLEAR FORM
-===================================================== */
+========================================= */
 
 function clearForm(){
 
@@ -1605,31 +1697,48 @@ function clearForm(){
     ).value = "";
 
 
-    let list =
-        subjects[currentSemester] || [];
+    document.getElementById(
+        "formMessage"
+    ).style.display = "none";
 
 
-    list.forEach(
-        (subject,index) => {
+    document.querySelectorAll(
+        ".subject-mark"
+    ).forEach(input => {
 
-            let input =
-                document.getElementById(
-                    "subject_" + index
-                );
+        input.value = "";
 
-            if(input){
-                input.value = "";
-            }
-
-        }
-    );
+    });
 
 }
 
 
-/* =====================================================
-   UPLOAD DOCUMENT
-===================================================== */
+/* =========================================
+   FORM MESSAGE
+========================================= */
+
+function showFormMessage(message,success){
+
+    let msg =
+        document.getElementById(
+            "formMessage"
+        );
+
+    msg.style.display = "block";
+
+    msg.className =
+        success
+        ? "message success"
+        : "message error";
+
+    msg.innerText = message;
+
+}
+
+
+/* =========================================
+   UPLOAD EXCEL WORD PDF
+========================================= */
 
 function uploadDocument(){
 
@@ -1652,7 +1761,6 @@ function uploadDocument(){
 
     let formData =
         new FormData();
-
 
     formData.append(
         "file",
@@ -1682,31 +1790,24 @@ function uploadDocument(){
                 "uploadMessage"
             );
 
-        msg.style.display =
-            "block";
+        msg.style.display = "block";
+
+        msg.className =
+            result.success
+            ? "message success"
+            : "message error";
+
+        msg.innerText =
+            result.message;
 
 
         if(result.success){
-
-            msg.className =
-                "message success";
-
-            msg.innerText =
-                result.message;
 
             document.getElementById(
                 "documentFile"
             ).value = "";
 
             loadStudents();
-
-        }else{
-
-            msg.className =
-                "message error";
-
-            msg.innerText =
-                result.message;
 
         }
 
@@ -1716,30 +1817,21 @@ function uploadDocument(){
 
         console.error(error);
 
-        alert(
-            "Upload failed!"
-        );
+        alert("Upload failed!");
 
     });
 
 }
 
 
-/* =====================================================
+/* =========================================
    CHARTS
-===================================================== */
+========================================= */
 
 function createCharts(){
 
-    let list =
-        subjects[currentSemester] || [];
-
-
-    if(subjectChart){
-
-        subjectChart.destroy();
-
-    }
+    let subjects =
+        semesterSubjects[currentSemester] || [];
 
 
     let labels = [];
@@ -1747,7 +1839,7 @@ function createCharts(){
     let values = [];
 
 
-    list.forEach(subject => {
+    subjects.forEach(subject => {
 
         labels.push(subject);
 
@@ -1760,13 +1852,18 @@ function createCharts(){
     });
 
 
+    if(subjectChart){
+
+        subjectChart.destroy();
+
+    }
+
+
     subjectChart =
         new Chart(
-
             document.getElementById(
                 "subjectChart"
             ),
-
             {
 
                 type:"bar",
@@ -1805,7 +1902,6 @@ function createCharts(){
                 }
 
             }
-
         );
 
 
@@ -1826,15 +1922,14 @@ function createCharts(){
 
     students.forEach(student => {
 
-        let grade =
-            student.Grade;
-
-
         if(
-            grades[grade] !== undefined
+            grades[student.Grade]
+            !== undefined
         ){
 
-            grades[grade]++;
+            grades[
+                student.Grade
+            ]++;
 
         }
 
@@ -1850,11 +1945,9 @@ function createCharts(){
 
     gradeChart =
         new Chart(
-
             document.getElementById(
                 "gradeChart"
             ),
-
             {
 
                 type:"doughnut",
@@ -1894,21 +1987,18 @@ function createCharts(){
                 }
 
             }
-
         );
 
 }
 
 
-/* =====================================================
+/* =========================================
    AVERAGE
-===================================================== */
+========================================= */
 
 function average(subject){
 
-    if(
-        students.length === 0
-    ){
+    if(students.length === 0){
 
         return 0;
 
@@ -1917,16 +2007,12 @@ function average(subject){
 
     let total =
         students.reduce(
-
             (sum,student) =>
-
                 sum +
                 Number(
                     student[subject] || 0
                 ),
-
             0
-
         );
 
 
@@ -1938,9 +2024,9 @@ function average(subject){
 }
 
 
-/* =====================================================
+/* =========================================
    NAVIGATION
-===================================================== */
+========================================= */
 
 function focusSearch(){
 
@@ -1959,8 +2045,8 @@ function focusSearch(){
 
 function showStudents(){
 
-    document.querySelector(
-        ".table-card"
+    document.getElementById(
+        "studentsSection"
     ).scrollIntoView({
         behavior:"smooth"
     });
@@ -1979,13 +2065,44 @@ function scrollToCharts(){
 }
 
 
-/* =====================================================
+function goTop(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================
+   SAFE DISPLAY
+========================================= */
+
+function safe(value){
+
+    if(value === null ||
+       value === undefined){
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
    START
-===================================================== */
+========================================= */
 
 loadSubjects();
-
-loadStudents();
 
 </script>
 
