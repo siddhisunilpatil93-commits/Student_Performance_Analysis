@@ -25,6 +25,8 @@ body {
     color: #172554;
 }
 
+/* ================= SIDEBAR ================= */
+
 .sidebar {
     position: fixed;
     left: 0;
@@ -76,6 +78,8 @@ body {
     background: rgba(255,255,255,0.20);
 }
 
+/* ================= MAIN ================= */
+
 .main {
     margin-left: 265px;
     padding: 28px;
@@ -101,18 +105,21 @@ body {
     color: #64748b;
 }
 
-.year-box {
+/* ================= SEMESTER BOX ================= */
+
+.semester-box {
     background: linear-gradient(
         135deg,
         #4f46e5,
         #9333ea
     );
+
     padding: 14px 20px;
     color: white;
     border-radius: 12px;
 }
 
-.year-box select {
+.semester-box select {
     border: none;
     background: transparent;
     color: white;
@@ -121,15 +128,44 @@ body {
     outline: none;
 }
 
-.year-box option {
+.semester-box option {
     color: black;
 }
+
+/* ================= SEMESTER BUTTONS ================= */
+
+.semester-buttons {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.semester-buttons button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background: white;
+    color: #3730a3;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow:
+        0 3px 10px rgba(0,0,0,0.08);
+}
+
+.semester-buttons button.active {
+    background: #4f46e5;
+    color: white;
+}
+
+/* ================= CARDS ================= */
 
 .cards {
     display: grid;
     grid-template-columns:
         repeat(4, 1fr);
     gap: 18px;
+    margin-top: 22px;
 }
 
 .card {
@@ -186,6 +222,8 @@ body {
     font-weight: bold;
 }
 
+/* ================= SEARCH ================= */
+
 .search-box {
     margin-top: 22px;
     background: white;
@@ -207,7 +245,8 @@ body {
 }
 
 button.primary,
-button.green {
+button.green,
+button.danger {
     border: none;
     color: white;
     padding: 14px 22px;
@@ -224,28 +263,34 @@ button.green {
     background: #059669;
 }
 
-.year-buttons {
+button.danger {
+    background: #dc2626;
+}
+
+/* ================= SUBJECT INFO ================= */
+
+.subject-box {
+    background: white;
     margin-top: 22px;
+    padding: 22px;
+    border-radius: 18px;
+}
+
+.subject-list {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
-.year-buttons button {
-    border: none;
-    padding: 12px 25px;
-    border-radius: 10px;
-    background: white;
+.subject-tag {
+    background: #eef2ff;
     color: #3730a3;
+    padding: 10px 16px;
+    border-radius: 20px;
     font-weight: bold;
-    cursor: pointer;
-    box-shadow:
-        0 3px 10px rgba(0,0,0,0.08);
 }
 
-.year-buttons button.active {
-    background: #4f46e5;
-    color: white;
-}
+/* ================= CHARTS ================= */
 
 .charts {
     display: grid;
@@ -272,6 +317,8 @@ button.green {
     overflow-x: auto;
 }
 
+/* ================= TABLE ================= */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -293,6 +340,8 @@ tr:hover {
     background: #f8fafc;
 }
 
+/* ================= UPLOAD ================= */
+
 .upload-box {
     background: white;
     margin-top: 22px;
@@ -303,6 +352,8 @@ tr:hover {
 .upload-box input {
     padding: 12px;
 }
+
+/* ================= MODAL ================= */
 
 .modal {
     display: none;
@@ -357,6 +408,8 @@ tr:hover {
     cursor: pointer;
 }
 
+/* ================= MESSAGE ================= */
+
 .message {
     margin-top: 15px;
     padding: 12px;
@@ -373,6 +426,8 @@ tr:hover {
     background: #fee2e2;
     color: #991b1b;
 }
+
+/* ================= MOBILE ================= */
 
 @media(max-width: 1000px) {
 
@@ -400,6 +455,7 @@ tr:hover {
 
 <body>
 
+
 <!-- ================================================= -->
 <!-- SIDEBAR -->
 <!-- ================================================= -->
@@ -415,6 +471,7 @@ tr:hover {
         <p>Performance Management</p>
 
     </div>
+
 
     <div class="menu">
 
@@ -443,11 +500,15 @@ tr:hover {
 </div>
 
 
+
 <!-- ================================================= -->
 <!-- MAIN -->
 <!-- ================================================= -->
 
 <div class="main">
+
+
+    <!-- HEADER -->
 
     <div class="header">
 
@@ -458,21 +519,45 @@ tr:hover {
             </h1>
 
             <p>
-                Academic Performance • Attendance • Analytics
+                MSBTE K-Scheme • Academic Performance • Attendance • Analytics
             </p>
 
         </div>
 
-        <div class="year-box">
+
+        <!-- SEMESTER -->
+
+        <div class="semester-box">
 
             🎓
 
-            <select id="yearSelect"
-                    onchange="changeYear()">
+            <select
+                id="semesterSelect"
+                onchange="changeSemester()">
 
-                <option>1st Year</option>
-                <option>2nd Year</option>
-                <option selected>3rd Year</option>
+                <option value="Semester 1">
+                    Semester 1
+                </option>
+
+                <option value="Semester 2">
+                    Semester 2
+                </option>
+
+                <option value="Semester 3">
+                    Semester 3
+                </option>
+
+                <option value="Semester 4">
+                    Semester 4
+                </option>
+
+                <option value="Semester 5">
+                    Semester 5
+                </option>
+
+                <option value="Semester 6">
+                    Semester 6
+                </option>
 
             </select>
 
@@ -481,26 +566,46 @@ tr:hover {
     </div>
 
 
-    <!-- YEAR BUTTONS -->
 
-    <div class="year-buttons">
+    <!-- ================================================= -->
+    <!-- SEMESTER BUTTONS -->
+    <!-- ================================================= -->
 
-        <button onclick="selectYear('1st Year')">
-            1st Year
+    <div class="semester-buttons">
+
+        <button
+            onclick="selectSemester('Semester 1')">
+            Sem 1
         </button>
 
-        <button onclick="selectYear('2nd Year')">
-            2nd Year
+        <button
+            onclick="selectSemester('Semester 2')">
+            Sem 2
         </button>
 
-        <button class="active"
-                onclick="selectYear('3rd Year')">
+        <button
+            onclick="selectSemester('Semester 3')">
+            Sem 3
+        </button>
 
-            3rd Year
+        <button
+            class="active"
+            onclick="selectSemester('Semester 4')">
+            Sem 4
+        </button>
 
+        <button
+            onclick="selectSemester('Semester 5')">
+            Sem 5
+        </button>
+
+        <button
+            onclick="selectSemester('Semester 6')">
+            Sem 6
         </button>
 
     </div>
+
 
 
     <!-- ================================================= -->
@@ -515,11 +620,10 @@ tr:hover {
 
             <h3>Total Students</h3>
 
-            <div class="value"
-                 id="totalStudents">
-
+            <div
+                class="value"
+                id="totalStudents">
                 0
-
             </div>
 
         </div>
@@ -531,11 +635,10 @@ tr:hover {
 
             <h3>Average Percentage</h3>
 
-            <div class="value"
-                 id="avgPercentage">
-
+            <div
+                class="value"
+                id="avgPercentage">
                 0%
-
             </div>
 
         </div>
@@ -547,11 +650,10 @@ tr:hover {
 
             <h3>Top Performer</h3>
 
-            <div class="value"
-                 id="topPerformer">
-
+            <div
+                class="value"
+                id="topPerformer">
                 -
-
             </div>
 
         </div>
@@ -563,11 +665,10 @@ tr:hover {
 
             <h3>Average Attendance</h3>
 
-            <div class="value"
-                 id="avgAttendance">
-
+            <div
+                class="value"
+                id="avgAttendance">
                 0%
-
             </div>
 
         </div>
@@ -575,12 +676,36 @@ tr:hover {
     </div>
 
 
+
+    <!-- ================================================= -->
+    <!-- SUBJECTS -->
+    <!-- ================================================= -->
+
+    <div class="subject-box">
+
+        <h2>
+            📚 Subjects -
+            <span id="currentSemester">
+                Semester 4
+            </span>
+        </h2>
+
+        <div
+            class="subject-list"
+            id="subjectList">
+        </div>
+
+    </div>
+
+
+
     <!-- ================================================= -->
     <!-- SEARCH -->
     <!-- ================================================= -->
 
-    <div class="search-box"
-         id="searchSection">
+    <div
+        class="search-box"
+        id="searchSection">
 
         <h2>
             🔍 Search Student
@@ -595,15 +720,18 @@ tr:hover {
                 onkeyup="searchStudent()"
             >
 
-            <button class="primary"
-                    onclick="searchStudent()">
+            <button
+                class="primary"
+                onclick="searchStudent()">
 
                 Search
 
             </button>
 
-            <button class="green"
-                    onclick="openModal()">
+
+            <button
+                class="green"
+                onclick="openModal()">
 
                 ➕ Add Student
 
@@ -614,47 +742,51 @@ tr:hover {
     </div>
 
 
+
     <!-- ================================================= -->
-    <!-- UPLOAD CSV -->
+    <!-- DOCUMENT UPLOAD -->
     <!-- ================================================= -->
 
     <div class="upload-box">
 
-        <h2>📂 Upload Student CSV</h2>
+        <h2>
+            📂 Upload Student Data
+        </h2>
 
         <p>
-            Select a CSV file from your PC.
-            Data will be added to the selected year.
+            Excel (.xlsx), Word (.docx) किंवा PDF (.pdf) file upload करा.
         </p>
 
         <input
             type="file"
-            id="csvFile"
-            accept=".csv"
+            id="studentFile"
+            accept=".xlsx,.docx,.pdf"
         >
 
         <button
             class="green"
-            onclick="uploadCSV()">
+            onclick="uploadDocument()">
 
-            ⬆ Upload CSV
+            ⬆ Upload File
 
         </button>
 
-        <div id="uploadMessage"
-             class="message">
-
+        <div
+            id="uploadMessage"
+            class="message">
         </div>
 
     </div>
+
 
 
     <!-- ================================================= -->
     <!-- CHARTS -->
     <!-- ================================================= -->
 
-    <div class="charts"
-         id="chartsSection">
+    <div
+        class="charts"
+        id="chartsSection">
 
         <div class="chart-card">
 
@@ -680,6 +812,7 @@ tr:hover {
     </div>
 
 
+
     <!-- ================================================= -->
     <!-- TABLE -->
     <!-- ================================================= -->
@@ -687,49 +820,22 @@ tr:hover {
     <div class="table-card">
 
         <h2>
-            👨‍🎓 All Students
+            👨‍🎓 All Students -
+            <span id="tableSemester">
+                Semester 4
+            </span>
         </h2>
 
         <div style="overflow-x:auto;">
 
             <table>
 
-                <thead>
-
-                    <tr>
-
-                        <th>Student ID</th>
-
-                        <th>Name</th>
-
-                        <th>Gender</th>
-
-                        <th>Class</th>
-
-                        <th>OSY</th>
-
-                        <th>STE</th>
-
-                        <th>ACN</th>
-
-                        <th>DAN</th>
-
-                        <th>Total</th>
-
-                        <th>Percentage</th>
-
-                        <th>Attendance</th>
-
-                        <th>Status</th>
-
-                        <th>Grade</th>
-
-                    </tr>
+                <thead id="studentTableHead">
 
                 </thead>
 
-                <tbody id="studentTable">
-
+                <tbody
+                    id="studentTable">
                 </tbody>
 
             </table>
@@ -741,21 +847,25 @@ tr:hover {
 </div>
 
 
+
 <!-- ================================================= -->
 <!-- ADD STUDENT MODAL -->
 <!-- ================================================= -->
 
-<div class="modal"
-     id="studentModal">
+<div
+    class="modal"
+    id="studentModal">
 
     <div class="modal-content">
 
-        <span class="close"
-              onclick="closeModal()">
+        <span
+            class="close"
+            onclick="closeModal()">
 
             ✕
 
         </span>
+
 
         <h1>
             ➕ Add New Student
@@ -765,141 +875,142 @@ tr:hover {
         <div class="form-grid">
 
 
+            <!-- SEMESTER -->
+
             <div class="form-group">
 
-                <label>Year</label>
+                <label>
+                    Semester
+                </label>
 
-                <select id="studentYear">
+                <select
+                    id="studentSemester"
+                    onchange="createSubjectInputs()">
 
-                    <option>1st Year</option>
+                    <option>
+                        Semester 1
+                    </option>
 
-                    <option>2nd Year</option>
+                    <option>
+                        Semester 2
+                    </option>
 
-                    <option>3rd Year</option>
+                    <option>
+                        Semester 3
+                    </option>
+
+                    <option selected>
+                        Semester 4
+                    </option>
+
+                    <option>
+                        Semester 5
+                    </option>
+
+                    <option>
+                        Semester 6
+                    </option>
 
                 </select>
 
             </div>
 
 
+            <!-- STUDENT ID -->
+
             <div class="form-group">
 
-                <label>Student ID / Roll Number</label>
+                <label>
+                    Student ID / Roll Number
+                </label>
 
                 <input
                     id="studentID"
-                    type="text"
-                >
+                    type="text">
 
             </div>
 
 
+            <!-- NAME -->
+
             <div class="form-group">
 
-                <label>Name</label>
+                <label>
+                    Name
+                </label>
 
                 <input
                     id="studentName"
-                    type="text"
-                >
+                    type="text">
 
             </div>
 
 
+            <!-- GENDER -->
+
             <div class="form-group">
 
-                <label>Gender</label>
+                <label>
+                    Gender
+                </label>
 
                 <select id="studentGender">
 
-                    <option>Male</option>
+                    <option>
+                        Male
+                    </option>
 
-                    <option>Female</option>
+                    <option>
+                        Female
+                    </option>
 
                 </select>
 
             </div>
 
 
+            <!-- CLASS -->
+
             <div class="form-group">
 
-                <label>Class</label>
+                <label>
+                    Class
+                </label>
 
                 <input
                     id="studentClass"
                     type="text"
-                    placeholder="e.g. FY / SY / TY"
-                >
+                    placeholder="e.g. CO-2-A">
 
             </div>
 
 
-            <div class="form-group">
+            <!-- SUBJECTS WILL COME HERE -->
 
-                <label>OSY Marks</label>
-
-                <input
-                    id="osy"
-                    type="number"
-                    min="0"
-                    max="100"
-                >
-
+            <div
+                id="subjectInputs"
+                style="
+                    grid-column:1/-1;
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:16px;
+                ">
             </div>
 
 
-            <div class="form-group">
-
-                <label>STE Marks</label>
-
-                <input
-                    id="ste"
-                    type="number"
-                    min="0"
-                    max="100"
-                >
-
-            </div>
-
+            <!-- ATTENDANCE -->
 
             <div class="form-group">
 
-                <label>ACN Marks</label>
-
-                <input
-                    id="acn"
-                    type="number"
-                    min="0"
-                    max="100"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>DAN Marks</label>
-
-                <input
-                    id="dan"
-                    type="number"
-                    min="0"
-                    max="100"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>Attendance %</label>
+                <label>
+                    Attendance %
+                </label>
 
                 <input
                     id="attendance"
                     type="number"
                     min="0"
-                    max="100"
-                >
+                    max="100">
 
             </div>
 
@@ -908,12 +1019,14 @@ tr:hover {
 
         <div class="modal-actions">
 
-            <button class="green"
-                    onclick="saveStudent()">
+            <button
+                class="green"
+                onclick="saveStudent()">
 
                 💾 Save Student
 
             </button>
+
 
             <button
                 class="primary"
@@ -926,9 +1039,9 @@ tr:hover {
         </div>
 
 
-        <div id="formMessage"
-             class="message">
-
+        <div
+            id="formMessage"
+            class="message">
         </div>
 
     </div>
@@ -936,29 +1049,296 @@ tr:hover {
 </div>
 
 
+
 <script>
 
-let currentYear = "3rd Year";
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let currentSemester = "Semester 4";
 
 let students = [];
+
+let semesterSubjects = {};
 
 let subjectChart = null;
 
 let gradeChart = null;
 
 
-// =====================================================
-// LOAD STUDENTS
-// =====================================================
+
+/* =====================================================
+   LOAD SUBJECTS FROM FLASK
+===================================================== */
+
+function loadSubjects() {
+
+    fetch("/api/subjects")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        semesterSubjects = data;
+
+        displaySubjects();
+
+        createSubjectInputs();
+
+        createTableHeader();
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            "Subject loading error:",
+            error
+        );
+
+    });
+
+}
+
+
+
+/* =====================================================
+   DISPLAY SUBJECTS
+===================================================== */
+
+function displaySubjects() {
+
+    let list =
+        document.getElementById(
+            "subjectList"
+        );
+
+    list.innerHTML = "";
+
+    let subjects =
+        semesterSubjects[
+            currentSemester
+        ] || [];
+
+    subjects.forEach(subject => {
+
+        let tag =
+            document.createElement(
+                "div"
+            );
+
+        tag.className =
+            "subject-tag";
+
+        tag.innerText =
+            subject;
+
+        list.appendChild(tag);
+
+    });
+
+
+    document.getElementById(
+        "currentSemester"
+    ).innerText =
+        currentSemester;
+
+    document.getElementById(
+        "tableSemester"
+    ).innerText =
+        currentSemester;
+
+}
+
+
+
+/* =====================================================
+   CREATE SUBJECT INPUTS
+===================================================== */
+
+function createSubjectInputs() {
+
+    let semester =
+        document.getElementById(
+            "studentSemester"
+        ).value;
+
+    let container =
+        document.getElementById(
+            "subjectInputs"
+        );
+
+    container.innerHTML = "";
+
+    let subjects =
+        semesterSubjects[
+            semester
+        ] || [];
+
+
+    subjects.forEach(subject => {
+
+        let div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "form-group";
+
+
+        let label =
+            document.createElement(
+                "label"
+            );
+
+        label.innerText =
+            subject + " Marks";
+
+
+        let input =
+            document.createElement(
+                "input"
+            );
+
+        input.type = "number";
+
+        input.min = "0";
+
+        input.max = "100";
+
+        input.id =
+            "subject_" +
+            subject;
+
+
+        div.appendChild(label);
+
+        div.appendChild(input);
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+
+/* =====================================================
+   CREATE TABLE HEADER
+===================================================== */
+
+function createTableHeader() {
+
+    let head =
+        document.getElementById(
+            "studentTableHead"
+        );
+
+    head.innerHTML = "";
+
+
+    let row =
+        document.createElement(
+            "tr"
+        );
+
+
+    let basicColumns = [
+        "Student ID",
+        "Name",
+        "Gender",
+        "Class"
+    ];
+
+
+    basicColumns.forEach(column => {
+
+        let th =
+            document.createElement(
+                "th"
+            );
+
+        th.innerText =
+            column;
+
+        row.appendChild(th);
+
+    });
+
+
+    let subjects =
+        semesterSubjects[
+            currentSemester
+        ] || [];
+
+
+    subjects.forEach(subject => {
+
+        let th =
+            document.createElement(
+                "th"
+            );
+
+        th.innerText =
+            subject;
+
+        row.appendChild(th);
+
+    });
+
+
+    let finalColumns = [
+
+        "Total",
+        "Percentage",
+        "Attendance",
+        "Status",
+        "Grade"
+
+    ];
+
+
+    finalColumns.forEach(column => {
+
+        let th =
+            document.createElement(
+                "th"
+            );
+
+        th.innerText =
+            column;
+
+        row.appendChild(th);
+
+    });
+
+
+    head.appendChild(row);
+
+}
+
+
+
+/* =====================================================
+   LOAD STUDENTS
+===================================================== */
 
 function loadStudents() {
 
     fetch(
-        "/api/students?year="
-        + encodeURIComponent(currentYear)
+        "/api/students?semester="
+        +
+        encodeURIComponent(
+            currentSemester
+        )
     )
 
-    .then(response => response.json())
+    .then(response =>
+        response.json()
+    )
 
     .then(data => {
 
@@ -972,11 +1352,14 @@ function loadStudents() {
             return;
         }
 
+
         students = data;
 
         updateDashboard();
 
-        displayStudents(students);
+        displayStudents(
+            students
+        );
 
         createCharts();
 
@@ -991,36 +1374,51 @@ function loadStudents() {
         );
 
     });
+
 }
 
 
-// =====================================================
-// YEAR CHANGE
-// =====================================================
 
-function selectYear(year) {
+/* =====================================================
+   SELECT SEMESTER
+===================================================== */
 
-    currentYear = year;
+function selectSemester(semester) {
+
+    currentSemester =
+        semester;
+
 
     document.getElementById(
-        "yearSelect"
-    ).value = year;
+        "semesterSelect"
+    ).value =
+        semester;
+
 
     document.getElementById(
-        "studentYear"
-    ).value = year;
+        "studentSemester"
+    ).value =
+        semester;
+
 
     document.querySelectorAll(
-        ".year-buttons button"
+        ".semester-buttons button"
     ).forEach(button => {
 
         button.classList.remove(
             "active"
         );
 
+
         if (
-            button.innerText.trim()
-            === year
+            button.innerText
+                .trim()
+                ===
+            "Sem " +
+            semester.replace(
+                "Semester ",
+                ""
+            )
         ) {
 
             button.classList.add(
@@ -1031,83 +1429,127 @@ function selectYear(year) {
 
     });
 
+
+    displaySubjects();
+
+    createSubjectInputs();
+
+    createTableHeader();
+
     loadStudents();
 
 }
 
 
-// =====================================================
-// SELECT BOX YEAR
-// =====================================================
 
-function changeYear() {
+/* =====================================================
+   SELECT BOX
+===================================================== */
 
-    let year =
+function changeSemester() {
+
+    let semester =
         document.getElementById(
-            "yearSelect"
+            "semesterSelect"
         ).value;
 
-    selectYear(year);
+
+    selectSemester(
+        semester
+    );
 
 }
 
 
-// =====================================================
-// DASHBOARD
-// =====================================================
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 function updateDashboard() {
 
     let total =
         students.length;
 
+
     document.getElementById(
         "totalStudents"
-    ).innerText = total;
+    ).innerText =
+        total;
 
 
     if (total === 0) {
 
         document.getElementById(
             "avgPercentage"
-        ).innerText = "0%";
+        ).innerText =
+            "0%";
+
 
         document.getElementById(
             "topPerformer"
-        ).innerText = "-";
+        ).innerText =
+            "-";
+
 
         document.getElementById(
             "avgAttendance"
-        ).innerText = "0%";
+        ).innerText =
+            "0%";
+
 
         return;
+
     }
 
 
     let avgPercentage =
         students.reduce(
-            (sum, s) =>
+
+            (sum, student) =>
+
                 sum +
-                Number(s.Percentage || 0),
+                Number(
+                    student.Percentage ||
+                    0
+                ),
+
             0
+
         ) / total;
 
 
     let avgAttendance =
         students.reduce(
-            (sum, s) =>
+
+            (sum, student) =>
+
                 sum +
-                Number(s.Attendance || 0),
+                Number(
+                    student.Attendance ||
+                    0
+                ),
+
             0
+
         ) / total;
 
 
     let top =
         [...students].sort(
-            (a, b) =>
-                Number(b.Percentage || 0)
+
+            (a,b) =>
+
+                Number(
+                    b.Percentage || 0
+                )
+
                 -
-                Number(a.Percentage || 0)
+
+                Number(
+                    a.Percentage || 0
+                )
+
         )[0];
 
 
@@ -1133,9 +1575,10 @@ function updateDashboard() {
 }
 
 
-// =====================================================
-// DISPLAY TABLE
-// =====================================================
+
+/* =====================================================
+   DISPLAY STUDENTS
+===================================================== */
 
 function displayStudents(data) {
 
@@ -1144,22 +1587,47 @@ function displayStudents(data) {
             "studentTable"
         );
 
+
     tbody.innerHTML = "";
 
 
     if (data.length === 0) {
 
+        let colspan =
+            4 +
+            (
+                semesterSubjects[
+                    currentSemester
+                ] || []
+            ).length
+            +
+            5;
+
+
         tbody.innerHTML = `
+
             <tr>
-                <td colspan="13">
+
+                <td colspan="${colspan}">
+
                     No students found
-                    in ${currentYear}.
+                    in ${currentSemester}.
+
                 </td>
+
             </tr>
+
         `;
 
         return;
+
     }
+
+
+    let subjects =
+        semesterSubjects[
+            currentSemester
+        ] || [];
 
 
     data.forEach(student => {
@@ -1172,47 +1640,72 @@ function displayStudents(data) {
 
         row.innerHTML = `
 
-            <td>${student.Student_ID}</td>
-
             <td>
-                <b>${student.Name}</b>
-            </td>
-
-            <td>${student.Gender}</td>
-
-            <td>${student.Class}</td>
-
-            <td>${student.OSY}</td>
-
-            <td>${student.STE}</td>
-
-            <td>${student.ACN}</td>
-
-            <td>${student.DAN}</td>
-
-            <td>
-                <b>${student.Total}</b>
+                ${student.Student_ID || ""}
             </td>
 
             <td>
                 <b>
-                    ${student.Percentage}%
+                    ${student.Name || ""}
                 </b>
             </td>
 
             <td>
-                ${student.Attendance}%
+                ${student.Gender || ""}
             </td>
 
             <td>
-                ${student.Status}
-            </td>
-
-            <td>
-                <b>${student.Grade}</b>
+                ${student.Class || ""}
             </td>
 
         `;
+
+
+        subjects.forEach(subject => {
+
+            let td =
+                document.createElement(
+                    "td"
+                );
+
+            td.innerText =
+                student[subject] ?? 0;
+
+            row.appendChild(td);
+
+        });
+
+
+        row.innerHTML += `
+
+            <td>
+                <b>
+                    ${student.Total || 0}
+                </b>
+            </td>
+
+            <td>
+                <b>
+                    ${student.Percentage || 0}%
+                </b>
+            </td>
+
+            <td>
+                ${student.Attendance || 0}%
+            </td>
+
+            <td>
+                ${student["Attendance Status"] || ""}
+            </td>
+
+            <td>
+                <b>
+                    ${student.Grade || ""}
+                </b>
+            </td>
+
+        `;
+
 
         tbody.appendChild(row);
 
@@ -1221,9 +1714,10 @@ function displayStudents(data) {
 }
 
 
-// =====================================================
-// SEARCH
-// =====================================================
+
+/* =====================================================
+   SEARCH
+===================================================== */
 
 function searchStudent() {
 
@@ -1238,80 +1732,98 @@ function searchStudent() {
 
     if (text === "") {
 
-        displayStudents(students);
+        displayStudents(
+            students
+        );
 
         return;
+
     }
 
 
     let result =
-        students.filter(student =>
+        students.filter(
+            student =>
 
-            String(
-                student.Name
-            )
-            .toLowerCase()
-            .includes(text)
+                String(
+                    student.Name || ""
+                )
+                .toLowerCase()
+                .includes(text)
 
-            ||
+                ||
 
-            String(
-                student.Student_ID
-            )
-            .toLowerCase()
-            .includes(text)
-
+                String(
+                    student.Student_ID || ""
+                )
+                .toLowerCase()
+                .includes(text)
         );
 
 
-    displayStudents(result);
+    displayStudents(
+        result
+    );
 
 }
 
 
-// =====================================================
-// OPEN MODAL
-// =====================================================
+
+/* =====================================================
+   OPEN MODAL
+===================================================== */
 
 function openModal() {
 
     document.getElementById(
         "studentModal"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 
     document.getElementById(
-        "studentYear"
-    ).value = currentYear;
+        "studentSemester"
+    ).value =
+        currentSemester;
+
+
+    createSubjectInputs();
 
 }
 
 
-// =====================================================
-// CLOSE MODAL
-// =====================================================
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
 
 function closeModal() {
 
     document.getElementById(
         "studentModal"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 }
 
 
-// =====================================================
-// SAVE STUDENT
-// =====================================================
+
+/* =====================================================
+   SAVE STUDENT
+===================================================== */
 
 function saveStudent() {
 
+    let semester =
+        document.getElementById(
+            "studentSemester"
+        ).value;
+
+
     let data = {
 
-        Year:
-            document.getElementById(
-                "studentYear"
-            ).value,
+        Semester:
+            semester,
 
         Student_ID:
             document.getElementById(
@@ -1333,32 +1845,38 @@ function saveStudent() {
                 "studentClass"
             ).value,
 
-        OSY:
-            document.getElementById(
-                "osy"
-            ).value,
-
-        STE:
-            document.getElementById(
-                "ste"
-            ).value,
-
-        ACN:
-            document.getElementById(
-                "acn"
-            ).value,
-
-        DAN:
-            document.getElementById(
-                "dan"
-            ).value,
-
         Attendance:
             document.getElementById(
                 "attendance"
             ).value
 
     };
+
+
+    /* SUBJECT MARKS */
+
+    let subjects =
+        semesterSubjects[
+            semester
+        ] || [];
+
+
+    subjects.forEach(subject => {
+
+        let input =
+            document.getElementById(
+                "subject_" +
+                subject
+            );
+
+
+        data[subject] =
+            input
+                ? input.value
+                : 0;
+
+    });
+
 
 
     fetch(
@@ -1368,8 +1886,10 @@ function saveStudent() {
             method: "POST",
 
             headers: {
+
                 "Content-Type":
                     "application/json"
+
             },
 
             body:
@@ -1389,15 +1909,20 @@ function saveStudent() {
                 "formMessage"
             );
 
-        msg.style.display = "block";
+
+        msg.style.display =
+            "block";
+
 
         if (result.success) {
 
             msg.className =
                 "message success";
 
+
             msg.innerText =
                 result.message;
+
 
             setTimeout(
                 () => {
@@ -1406,13 +1931,14 @@ function saveStudent() {
 
                     clearForm();
 
-                    selectYear(
-                        data.Year
+                    selectSemester(
+                        semester
                     );
 
                 },
                 1000
             );
+
 
         } else {
 
@@ -1430,15 +1956,20 @@ function saveStudent() {
 
         console.error(error);
 
+
         let msg =
             document.getElementById(
                 "formMessage"
             );
 
-        msg.style.display = "block";
+
+        msg.style.display =
+            "block";
+
 
         msg.className =
             "message error";
+
 
         msg.innerText =
             "Something went wrong!";
@@ -1448,9 +1979,10 @@ function saveStudent() {
 }
 
 
-// =====================================================
-// CLEAR FORM
-// =====================================================
+
+/* =====================================================
+   CLEAR FORM
+===================================================== */
 
 function clearForm() {
 
@@ -1458,56 +1990,69 @@ function clearForm() {
         "studentID"
     ).value = "";
 
+
     document.getElementById(
         "studentName"
     ).value = "";
+
 
     document.getElementById(
         "studentClass"
     ).value = "";
 
-    document.getElementById(
-        "osy"
-    ).value = "";
-
-    document.getElementById(
-        "ste"
-    ).value = "";
-
-    document.getElementById(
-        "acn"
-    ).value = "";
-
-    document.getElementById(
-        "dan"
-    ).value = "";
 
     document.getElementById(
         "attendance"
     ).value = "";
 
+
+    let subjects =
+        semesterSubjects[
+            currentSemester
+        ] || [];
+
+
+    subjects.forEach(subject => {
+
+        let input =
+            document.getElementById(
+                "subject_" +
+                subject
+            );
+
+
+        if (input) {
+
+            input.value = "";
+
+        }
+
+    });
+
 }
 
 
-// =====================================================
-// UPLOAD CSV
-// =====================================================
 
-function uploadCSV() {
+/* =====================================================
+   UPLOAD DOCUMENT
+===================================================== */
+
+function uploadDocument() {
 
     let file =
         document.getElementById(
-            "csvFile"
+            "studentFile"
         ).files[0];
 
 
     if (!file) {
 
         alert(
-            "Please select a CSV file!"
+            "Please select a file!"
         );
 
         return;
+
     }
 
 
@@ -1521,19 +2066,14 @@ function uploadCSV() {
     );
 
 
-    formData.append(
-        "year",
-        currentYear
-    );
-
-
     fetch(
-        "/api/upload_csv",
+        "/api/upload_document",
         {
 
             method: "POST",
 
-            body: formData
+            body:
+                formData
 
         }
     )
@@ -1549,7 +2089,9 @@ function uploadCSV() {
                 "uploadMessage"
             );
 
-        msg.style.display = "block";
+
+        msg.style.display =
+            "block";
 
 
         if (result.success) {
@@ -1557,12 +2099,15 @@ function uploadCSV() {
             msg.className =
                 "message success";
 
+
             msg.innerText =
                 result.message;
 
+
             document.getElementById(
-                "csvFile"
+                "studentFile"
             ).value = "";
+
 
             loadStudents();
 
@@ -1570,6 +2115,7 @@ function uploadCSV() {
 
             msg.className =
                 "message error";
+
 
             msg.innerText =
                 result.message;
@@ -1591,19 +2137,33 @@ function uploadCSV() {
 }
 
 
-// =====================================================
-// CHARTS
-// =====================================================
+
+/* =====================================================
+   CHARTS
+===================================================== */
 
 function createCharts() {
 
-    let osy = average("OSY");
+    let subjects =
+        semesterSubjects[
+            currentSemester
+        ] || [];
 
-    let ste = average("STE");
 
-    let acn = average("ACN");
+    let labels = [];
 
-    let dan = average("DAN");
+    let values = [];
+
+
+    subjects.forEach(subject => {
+
+        labels.push(subject);
+
+        values.push(
+            average(subject)
+        );
+
+    });
 
 
     if (subjectChart) {
@@ -1626,24 +2186,15 @@ function createCharts() {
 
                 data: {
 
-                    labels: [
-                        "OSY",
-                        "STE",
-                        "ACN",
-                        "DAN"
-                    ],
+                    labels: labels,
 
                     datasets: [{
 
                         label:
                             "Average Marks",
 
-                        data: [
-                            osy,
-                            ste,
-                            acn,
-                            dan
-                        ]
+                        data:
+                            values
 
                     }]
 
@@ -1673,11 +2224,11 @@ function createCharts() {
         );
 
 
-    // =================================================
-    // GRADE PIE
-    // =================================================
+
+    /* GRADE CHART */
 
     let grades = {
+
         "A+": 0,
         "A": 0,
         "B+": 0,
@@ -1685,6 +2236,7 @@ function createCharts() {
         "C": 0,
         "D": 0,
         "F": 0
+
     };
 
 
@@ -1693,10 +2245,11 @@ function createCharts() {
         let grade =
             student.Grade;
 
+
         if (
-            grades[
-                grade
-            ] !== undefined
+            grades[grade]
+            !==
+            undefined
         ) {
 
             grades[grade]++;
@@ -1722,7 +2275,8 @@ function createCharts() {
 
             {
 
-                type: "doughnut",
+                type:
+                    "doughnut",
 
                 data: {
 
@@ -1766,9 +2320,10 @@ function createCharts() {
 }
 
 
-// =====================================================
-// AVERAGE
-// =====================================================
+
+/* =====================================================
+   AVERAGE
+===================================================== */
 
 function average(subject) {
 
@@ -1788,7 +2343,9 @@ function average(subject) {
 
                 sum +
                 Number(
-                    student[subject] || 0
+                    student[
+                        subject
+                    ] || 0
                 ),
 
             0
@@ -1804,17 +2361,22 @@ function average(subject) {
 }
 
 
-// =====================================================
-// FOCUS SEARCH
-// =====================================================
+
+/* =====================================================
+   FOCUS SEARCH
+===================================================== */
 
 function focusSearch() {
 
     document.getElementById(
         "searchSection"
     ).scrollIntoView({
-        behavior: "smooth"
+
+        behavior:
+            "smooth"
+
     });
+
 
     document.getElementById(
         "searchInput"
@@ -1823,39 +2385,50 @@ function focusSearch() {
 }
 
 
-// =====================================================
-// SHOW STUDENTS
-// =====================================================
+
+/* =====================================================
+   SHOW STUDENTS
+===================================================== */
 
 function showStudents() {
 
     document.querySelector(
         ".table-card"
     ).scrollIntoView({
-        behavior: "smooth"
+
+        behavior:
+            "smooth"
+
     });
 
 }
 
 
-// =====================================================
-// CHART SCROLL
-// =====================================================
+
+/* =====================================================
+   CHART SCROLL
+===================================================== */
 
 function scrollToCharts() {
 
     document.getElementById(
         "chartsSection"
     ).scrollIntoView({
-        behavior: "smooth"
+
+        behavior:
+            "smooth"
+
     });
 
 }
 
 
-// =====================================================
-// START
-// =====================================================
+
+/* =====================================================
+   START
+===================================================== */
+
+loadSubjects();
 
 loadStudents();
 
