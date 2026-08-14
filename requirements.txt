@@ -1,9 +1,6 @@
 Flask
 pandas
-numpy
-matplotlib
-gunicorn
 openpyxl
 python-docx
-pypdf
-werkzeug
+pdfplumber
+gunicorn
