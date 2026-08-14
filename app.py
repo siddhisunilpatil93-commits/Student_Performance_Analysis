@@ -3,22 +3,17 @@ import pandas as pd
 import os
 import json
 import re
-
+from werkzeug.utils import secure_filename
 from docx import Document
 from pypdf import PdfReader
-from werkzeug.utils import secure_filename
-
 
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-DATA_DIR = os.path.join(
-    BASE_DIR,
-    "data"
-)
-
+DATA_DIR = os.path.join(BASE_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
+
+DATABASE_FILE = os.path.join(DATA_DIR, "students.json")
 
 
 # =========================================================
@@ -36,24 +31,23 @@ SEMESTERS = [
 
 
 # =========================================================
-# MSBTE K-SCHEME SUBJECTS
-# COMPUTER ENGINEERING
+# MSBTE K-SCHEME COMPUTER ENGINEERING SUBJECTS
 # =========================================================
 
 SEMESTER_SUBJECTS = {
 
     "Semester 1": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Basic Mathematics",
+        "Communication Skills",
+        "Basic Science",
+        "Fundamentals of ICT"
     ],
 
     "Semester 2": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Applied Mathematics",
+        "Basic Electrical and Electronics Engineering",
+        "Programming in C",
+        "Linux Basics"
     ],
 
     "Semester 3": [
@@ -71,50 +65,18 @@ SEMESTER_SUBJECTS = {
     ],
 
     "Semester 5": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Operating System",
+        "Software Engineering",
+        "Entrepreneurship Development",
+        "Seminar and Project Initiation"
     ],
 
     "Semester 6": [
-        "Subject 1",
-        "Subject 2",
-        "Subject 3",
-        "Subject 4"
+        "Software Testing",
+        "Client Side Scripting",
+        "Mobile Application Development",
+        "Capstone Project"
     ]
-}
-
-
-# =========================================================
-# SUBJECT SHORT NAMES
-# =========================================================
-
-SUBJECT_CODES = {
-
-    "Java Programming":
-        "JPR",
-
-    "Data Communication and Computer Network":
-        "DCN",
-
-    "Microprocessor Programming":
-        "MIC",
-
-    "Python Programming":
-        "PWP",
-
-    "Data Structure Using C":
-        "DSU",
-
-    "Database Management System":
-        "DMS",
-
-    "Digital Techniques":
-        "DTE",
-
-    "Object Oriented Programming Using C++":
-        "OOP"
 }
 
 
@@ -122,19 +84,12 @@ SUBJECT_CODES = {
 # DATABASE
 # =========================================================
 
-DATABASE_FILE = os.path.join(
-    DATA_DIR,
-    "students.json"
-)
-
-
 def load_data():
 
     if not os.path.exists(DATABASE_FILE):
         return []
 
     try:
-
         with open(
             DATABASE_FILE,
             "r",
@@ -150,11 +105,7 @@ def load_data():
 
     except Exception as e:
 
-        print(
-            "DATABASE READ ERROR:",
-            e
-        )
-
+        print("DATABASE READ ERROR:", e)
         return []
 
 
@@ -198,8 +149,7 @@ def calculate_grade(percentage):
     elif percentage >= 40:
         return "D"
 
-    else:
-        return "F"
+    return "F"
 
 
 # =========================================================
@@ -214,198 +164,25 @@ def calculate_attendance_status(attendance):
     elif attendance >= 75:
         return "Average"
 
-    else:
-        return "Low"
-
-
-# =========================================================
-# NORMALIZE SEMESTER
-# =========================================================
-
-def normalize_semester(value):
-
-    value = str(value).strip().lower()
-
-    value = value.replace(
-        "semester",
-        ""
-    ).strip()
-
-    value = value.replace(
-        "sem",
-        ""
-    ).strip()
-
-    match = re.search(
-        r"\b([1-6])\b",
-        value
-    )
-
-    if match:
-
-        number = match.group(1)
-
-        return "Semester " + number
-
-    return ""
-
-
-# =========================================================
-# FIND COLUMN
-# =========================================================
-
-def find_column(columns, possible_names):
-
-    normalized = {}
-
-    for column in columns:
-
-        key = re.sub(
-            r"[^a-z0-9]",
-            "",
-            str(column).lower()
-        )
-
-        normalized[key] = column
-
-
-    for name in possible_names:
-
-        key = re.sub(
-            r"[^a-z0-9]",
-            "",
-            name.lower()
-        )
-
-        if key in normalized:
-
-            return normalized[key]
-
-    return None
-
-
-# =========================================================
-# FIND MARKS
-# =========================================================
-
-def get_mark(row, subject):
-
-    aliases = {
-
-        "Java Programming": [
-            "Java Programming",
-            "Java",
-            "JPR",
-            "314317"
-        ],
-
-        "Data Communication and Computer Network": [
-            "Data Communication and Computer Network",
-            "Data Communication",
-            "Computer Network",
-            "DCN",
-            "DCCN",
-            "314318"
-        ],
-
-        "Microprocessor Programming": [
-            "Microprocessor Programming",
-            "Microprocessor",
-            "Microprocessor Programming",
-            "MIC",
-            "314321"
-        ],
-
-        "Python Programming": [
-            "Python Programming",
-            "Python",
-            "PWP",
-            "314004"
-        ],
-
-        "Data Structure Using C": [
-            "Data Structure Using C",
-            "Data Structure",
-            "DSU",
-            "313301"
-        ],
-
-        "Database Management System": [
-            "Database Management System",
-            "DBMS",
-            "DMS",
-            "313302"
-        ],
-
-        "Digital Techniques": [
-            "Digital Techniques",
-            "DTE",
-            "313303"
-        ],
-
-        "Object Oriented Programming Using C++": [
-            "Object Oriented Programming Using C++",
-            "OOP",
-            "C++",
-            "313304"
-        ]
-    }
-
-
-    names = aliases.get(
-        subject,
-        [subject]
-    )
-
-
-    column = find_column(
-        row.index,
-        names
-    )
-
-
-    if column is None:
-        return 0
-
-
-    try:
-
-        value = row[column]
-
-        if pd.isna(value):
-            return 0
-
-        return float(
-            str(value)
-            .replace("%", "")
-            .strip()
-        )
-
-    except:
-
-        return 0
+    return "Low"
 
 
 # =========================================================
 # CALCULATE RESULT
 # =========================================================
 
-def calculate_result(
-    student,
-    semester
-):
+def calculate_result(student, semester):
 
-    subjects = SEMESTER_SUBJECTS[
-        semester
-    ]
+    subjects = SEMESTER_SUBJECTS.get(
+        semester,
+        []
+    )
 
     total = 0
-
 
     for subject in subjects:
 
         try:
-
             mark = float(
                 student.get(
                     subject,
@@ -414,30 +191,23 @@ def calculate_result(
             )
 
         except:
-
             mark = 0
-
 
         total += mark
 
 
-    maximum_marks = (
-        len(subjects) * 100
-    )
-
-
-    percentage = 0
-
+    maximum_marks = len(subjects) * 100
 
     if maximum_marks > 0:
 
         percentage = round(
-            (
-                total /
-                maximum_marks
-            ) * 100,
+            (total / maximum_marks) * 100,
             2
         )
+
+    else:
+
+        percentage = 0
 
 
     try:
@@ -454,18 +224,9 @@ def calculate_result(
         attendance = 0
 
 
-    student["Total"] = round(
-        total,
-        2
-    )
-
-    student["Percentage"] = (
-        percentage
-    )
-
-    student["Attendance"] = (
-        attendance
-    )
+    student["Total"] = total
+    student["Percentage"] = percentage
+    student["Attendance"] = attendance
 
     student["Attendance Status"] = (
         calculate_attendance_status(
@@ -479,9 +240,7 @@ def calculate_result(
         )
     )
 
-    student["Semester"] = (
-        semester
-    )
+    student["Semester"] = semester
 
     return student
 
@@ -510,24 +269,15 @@ def get_students():
         ""
     ).strip()
 
-
     data = load_data()
-
 
     if semester:
 
         data = [
-
             student
-
             for student in data
-
-            if student.get(
-                "Semester"
-            ) == semester
-
+            if student.get("Semester") == semester
         ]
-
 
     return jsonify(data)
 
@@ -544,16 +294,12 @@ def search_student():
         ""
     ).strip().lower()
 
-
     if query == "":
-
         return jsonify([])
-
 
     data = load_data()
 
     results = []
-
 
     for student in data:
 
@@ -564,7 +310,6 @@ def search_student():
             )
         ).lower()
 
-
         name = str(
             student.get(
                 "Name",
@@ -572,17 +317,13 @@ def search_student():
             )
         ).lower()
 
-
         if (
             query in student_id
             or
             query in name
         ):
 
-            results.append(
-                student
-            )
-
+            results.append(student)
 
     return jsonify(results)
 
@@ -600,7 +341,6 @@ def add_student():
     try:
 
         data = request.get_json()
-
 
         if not data:
 
@@ -643,12 +383,12 @@ def add_student():
         ).strip()
 
 
-        semester = normalize_semester(
+        semester = str(
             data.get(
                 "Semester",
                 ""
             )
-        )
+        ).strip()
 
 
         if student_id == "":
@@ -678,13 +418,10 @@ def add_student():
             }), 400
 
 
-        subjects = SEMESTER_SUBJECTS[
-            semester
-        ]
-
-
         students = load_data()
 
+
+        # Duplicate check
 
         for old_student in students:
 
@@ -708,9 +445,12 @@ def add_student():
             ):
 
                 return jsonify({
+
                     "success": False,
+
                     "message":
-                        "Student already exists!"
+                        f"Roll Number {student_id} already exists in {semester}!"
+
                 }), 400
 
 
@@ -733,11 +473,17 @@ def add_student():
         }
 
 
+        # Subjects
+
+        subjects = SEMESTER_SUBJECTS[
+            semester
+        ]
+
         for subject in subjects:
 
             try:
 
-                mark = float(
+                value = float(
                     data.get(
                         subject,
                         0
@@ -746,20 +492,25 @@ def add_student():
 
             except:
 
-                mark = 0
+                value = 0
 
 
-            if mark < 0 or mark > 100:
+            if value < 0 or value > 100:
 
                 return jsonify({
+
                     "success": False,
+
                     "message":
                         f"{subject} marks must be between 0 and 100!"
+
                 }), 400
 
 
-            student[subject] = mark
+            student[subject] = value
 
+
+        # Attendance
 
         try:
 
@@ -778,16 +529,19 @@ def add_student():
         if attendance < 0 or attendance > 100:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "Attendance must be between 0 and 100!"
+
             }), 400
 
 
-        student["Attendance"] = (
-            attendance
-        )
+        student["Attendance"] = attendance
 
+
+        # Calculate
 
         calculate_result(
             student,
@@ -795,14 +549,9 @@ def add_student():
         )
 
 
-        students.append(
-            student
-        )
+        students.append(student)
 
-
-        save_data(
-            students
-        )
+        save_data(students)
 
 
         return jsonify({
@@ -810,7 +559,7 @@ def add_student():
             "success": True,
 
             "message":
-                "Student added successfully!",
+                f"{name} added successfully!",
 
             "student":
                 student
@@ -836,236 +585,100 @@ def add_student():
 
 
 # =========================================================
-# PROCESS DATAFRAME
+# DELETE STUDENT
 # =========================================================
 
-def process_dataframe(df):
+@app.route(
+    "/api/delete_student",
+    methods=["POST"]
+)
+def delete_student():
 
-    df.columns = [
+    try:
 
-        str(column).strip()
+        data = request.get_json()
 
-        for column in df.columns
-
-    ]
-
-
-    results = []
-
-
-    # -----------------------------------------
-    # Find common columns
-    # -----------------------------------------
-
-    id_column = find_column(
-        df.columns,
-        [
-            "Student_ID",
-            "Student ID",
-            "StudentID",
-            "Roll No",
-            "Roll Number",
-            "ID"
-        ]
-    )
-
-
-    name_column = find_column(
-        df.columns,
-        [
-            "Name",
-            "Student Name"
-        ]
-    )
-
-
-    gender_column = find_column(
-        df.columns,
-        [
-            "Gender"
-        ]
-    )
-
-
-    class_column = find_column(
-        df.columns,
-        [
-            "Class"
-        ]
-    )
-
-
-    semester_column = find_column(
-        df.columns,
-        [
-            "Semester",
-            "Sem"
-        ]
-    )
-
-
-    attendance_column = find_column(
-        df.columns,
-        [
-            "Attendance",
-            "Attendance %",
-            "Attendance Percentage"
-        ]
-    )
-
-
-    for _, row in df.iterrows():
-
-        student = {}
-
-
-        # -----------------------------------------
-        # BASIC DETAILS
-        # -----------------------------------------
-
-        student["Student_ID"] = str(
-            row[id_column]
-            if id_column
-            else ""
-        ).strip()
-
-
-        student["Name"] = str(
-            row[name_column]
-            if name_column
-            else ""
-        ).strip()
-
-
-        student["Gender"] = str(
-            row[gender_column]
-            if gender_column
-            else ""
-        ).strip()
-
-
-        student["Class"] = str(
-            row[class_column]
-            if class_column
-            else ""
-        ).strip()
-
-
-        # -----------------------------------------
-        # SEMESTER
-        # -----------------------------------------
-
-        if semester_column:
-
-            semester = normalize_semester(
-                row[semester_column]
+        student_id = str(
+            data.get(
+                "Student_ID",
+                ""
             )
+        ).strip()
 
-        else:
-
-            # Since project is 4th semester,
-            # if document doesn't contain semester,
-            # use Semester 4.
-
-            semester = "Semester 4"
-
-
-        if semester not in SEMESTERS:
-
-            continue
-
-
-        student["Semester"] = (
-            semester
-        )
-
-
-        subjects = SEMESTER_SUBJECTS[
-            semester
-        ]
-
-
-        # -----------------------------------------
-        # SUBJECT MARKS
-        # -----------------------------------------
-
-        for subject in subjects:
-
-            mark = get_mark(
-                row,
-                subject
+        semester = str(
+            data.get(
+                "Semester",
+                ""
             )
-
-            if mark < 0:
-                mark = 0
-
-            if mark > 100:
-                mark = 100
-
-            student[subject] = mark
+        ).strip()
 
 
-        # -----------------------------------------
-        # ATTENDANCE
-        # -----------------------------------------
+        students = load_data()
 
-        if attendance_column:
 
-            try:
+        new_students = [
 
-                attendance = float(
-                    str(
-                        row[
-                            attendance_column
-                        ]
-                    )
-                    .replace(
-                        "%",
+            student
+
+            for student in students
+
+            if not (
+
+                str(
+                    student.get(
+                        "Student_ID",
                         ""
                     )
-                    .strip()
+                ).strip()
+                == student_id
+
+                and
+
+                student.get(
+                    "Semester"
                 )
+                == semester
 
-            except:
-
-                attendance = 0
-
-        else:
-
-            attendance = 0
-
-
-        student["Attendance"] = (
-            attendance
-        )
-
-
-        # -----------------------------------------
-        # CALCULATE
-        # -----------------------------------------
-
-        calculate_result(
-            student,
-            semester
-        )
-
-
-        # -----------------------------------------
-        # VALID STUDENT
-        # -----------------------------------------
-
-        if (
-            student["Student_ID"] != ""
-            and
-            student["Name"] != ""
-        ):
-
-            results.append(
-                student
             )
 
+        ]
 
-    return results
+
+        if len(new_students) == len(students):
+
+            return jsonify({
+
+                "success": False,
+
+                "message":
+                    "Student not found!"
+
+            }), 404
+
+
+        save_data(new_students)
+
+
+        return jsonify({
+
+            "success": True,
+
+            "message":
+                "Student deleted successfully!"
+
+        })
+
+
+    except Exception as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                str(e)
+
+        }), 500
 
 
 # =========================================================
@@ -1074,13 +687,9 @@ def process_dataframe(df):
 
 def process_excel(file):
 
-    df = pd.read_excel(
-        file
-    )
+    df = pd.read_excel(file)
 
-    return process_dataframe(
-        df
-    )
+    return process_dataframe(df)
 
 
 # =========================================================
@@ -1089,29 +698,18 @@ def process_excel(file):
 
 def process_word(file):
 
-    document = Document(
-        file
-    )
-
+    document = Document(file)
 
     rows = []
-
 
     for table in document.tables:
 
         for row in table.rows:
 
-            values = [
-
+            rows.append([
                 cell.text.strip()
-
                 for cell in row.cells
-
-            ]
-
-            rows.append(
-                values
-            )
+            ])
 
 
     if not rows:
@@ -1125,16 +723,12 @@ def process_word(file):
 
     data_rows = rows[1:]
 
-
     df = pd.DataFrame(
         data_rows,
         columns=headers
     )
 
-
-    return process_dataframe(
-        df
-    )
+    return process_dataframe(df)
 
 
 # =========================================================
@@ -1143,26 +737,19 @@ def process_word(file):
 
 def process_pdf(file):
 
-    reader = PdfReader(
-        file
-    )
-
+    reader = PdfReader(file)
 
     text = ""
 
-
     for page in reader.pages:
 
-        page_text = (
-            page.extract_text()
-        )
+        page_text = page.extract_text()
 
         if page_text:
-
             text += "\n" + page_text
 
 
-    if not text.strip():
+    if text.strip() == "":
 
         raise Exception(
             "No readable text found in PDF."
@@ -1172,127 +759,66 @@ def process_pdf(file):
     data = {}
 
 
-    # -----------------------------------------
-    # Student ID
-    # -----------------------------------------
-
     patterns = {
 
-        "Student_ID": [
-            r"Student\s*ID\s*[:\-]?\s*([A-Za-z0-9]+)",
-            r"Roll\s*No\s*[:\-]?\s*([A-Za-z0-9]+)",
-            r"Roll\s*Number\s*[:\-]?\s*([A-Za-z0-9]+)"
-        ],
+        "Student_ID":
+            r"(?:Student\s*ID|Roll\s*No|Roll\s*Number)\s*[:\-]?\s*([A-Za-z0-9]+)",
 
-        "Name": [
-            r"Student\s*Name\s*[:\-]?\s*([A-Za-z .]+)",
-            r"Name\s*[:\-]?\s*([A-Za-z .]+)"
-        ],
+        "Name":
+            r"(?:Name|Student\s*Name)\s*[:\-]?\s*([A-Za-z .]+)",
 
-        "Gender": [
-            r"Gender\s*[:\-]?\s*([A-Za-z]+)"
-        ],
+        "Gender":
+            r"Gender\s*[:\-]?\s*([A-Za-z]+)",
 
-        "Class": [
-            r"Class\s*[:\-]?\s*([A-Za-z0-9 .]+)"
-        ],
+        "Class":
+            r"Class\s*[:\-]?\s*([A-Za-z0-9 .]+)",
 
-        "Semester": [
+        "Semester":
             r"Semester\s*[:\-]?\s*([0-9]+)",
-            r"Sem\s*[:\-]?\s*([0-9]+)"
-        ],
 
-        "Attendance": [
+        "Attendance":
             r"Attendance\s*[:\-]?\s*([0-9.]+)"
-        ]
     }
 
 
-    for key, pattern_list in patterns.items():
+    for key, pattern in patterns.items():
 
-        for pattern in pattern_list:
-
-            match = re.search(
-                pattern,
-                text,
-                re.IGNORECASE
-            )
-
-            if match:
-
-                data[key] = (
-                    match.group(1)
-                    .strip()
-                )
-
-                break
-
-
-    # -----------------------------------------
-    # Semester
-    # -----------------------------------------
-
-    semester = normalize_semester(
-        data.get(
-            "Semester",
-            "4"
+        match = re.search(
+            pattern,
+            text,
+            re.IGNORECASE
         )
-    )
+
+        if match:
+
+            data[key] = match.group(1).strip()
 
 
-    if not semester:
+    if "Semester" in data:
 
-        semester = "Semester 4"
+        number = data["Semester"]
 
+        if number.isdigit():
 
-    data["Semester"] = (
-        semester
-    )
-
-
-    # -----------------------------------------
-    # Subject marks
-    # -----------------------------------------
-
-    subjects = SEMESTER_SUBJECTS[
-        semester
-    ]
-
-
-    for subject in subjects:
-
-        aliases = [
-            subject
-        ]
-
-
-        if subject in SUBJECT_CODES:
-
-            aliases.append(
-                SUBJECT_CODES[
-                    subject
-                ]
+            data["Semester"] = (
+                "Semester " + number
             )
 
 
-        found = False
+    for semester in SEMESTERS:
 
-
-        for alias in aliases:
+        for subject in SEMESTER_SUBJECTS[semester]:
 
             pattern = (
-                re.escape(alias)
-                +
-                r"\s*[:\-]?\s*([0-9.]+)"
+                re.escape(subject)
+                + r"\s*[:\-]?\s*([0-9.]+)"
             )
-
 
             match = re.search(
                 pattern,
                 text,
                 re.IGNORECASE
             )
-
 
             if match:
 
@@ -1300,32 +826,130 @@ def process_pdf(file):
                     match.group(1)
                 )
 
-                found = True
 
-                break
+    if not data:
 
-
-        if not found:
-
-            data[subject] = 0
+        raise Exception(
+            "Student data could not be extracted from PDF."
+        )
 
 
-    # -----------------------------------------
-    # Convert to dataframe
-    # -----------------------------------------
-
-    df = pd.DataFrame([
-        data
-    ])
-
-
-    return process_dataframe(
-        df
-    )
+    return [data]
 
 
 # =========================================================
-# UPLOAD DOCUMENT
+# DATAFRAME
+# =========================================================
+
+def process_dataframe(df):
+
+    df.columns = [
+        str(column).strip()
+        for column in df.columns
+    ]
+
+
+    results = []
+
+
+    for _, row in df.iterrows():
+
+        student = {}
+
+
+        for field in [
+
+            "Student_ID",
+            "Name",
+            "Gender",
+            "Class",
+            "Semester"
+
+        ]:
+
+            student[field] = str(
+                row.get(
+                    field,
+                    ""
+                )
+            ).strip()
+
+
+        semester = student["Semester"]
+
+
+        if semester.isdigit():
+
+            semester = (
+                "Semester " + semester
+            )
+
+            student["Semester"] = semester
+
+
+        if semester not in SEMESTERS:
+            continue
+
+
+        subjects = SEMESTER_SUBJECTS[
+            semester
+        ]
+
+
+        for subject in subjects:
+
+            try:
+
+                value = float(
+                    row.get(
+                        subject,
+                        0
+                    )
+                )
+
+            except:
+
+                value = 0
+
+
+            student[subject] = value
+
+
+        try:
+
+            attendance = float(
+                str(
+                    row.get(
+                        "Attendance",
+                        0
+                    )
+                )
+                .replace("%", "")
+                .strip()
+            )
+
+        except:
+
+            attendance = 0
+
+
+        student["Attendance"] = attendance
+
+
+        calculate_result(
+            student,
+            semester
+        )
+
+
+        results.append(student)
+
+
+    return results
+
+
+# =========================================================
+# DOCUMENT UPLOAD
 # =========================================================
 
 @app.route(
@@ -1343,14 +967,12 @@ def upload_document():
                 "success": False,
 
                 "message":
-                    "Please select a document!"
+                    "Please select a file!"
 
             }), 400
 
 
-        file = request.files[
-            "file"
-        ]
+        file = request.files["file"]
 
 
         if file.filename == "":
@@ -1377,10 +999,8 @@ def upload_document():
 
         allowed = [
             ".xlsx",
-            ".xls",
             ".docx",
-            ".pdf",
-            ".csv"
+            ".pdf"
         ]
 
 
@@ -1391,48 +1011,22 @@ def upload_document():
                 "success": False,
 
                 "message":
-                    "Only Excel, Word, PDF or CSV files are allowed!"
+                    "Only Excel, Word and PDF files are allowed!"
 
             }), 400
 
 
-        # -----------------------------------------
-        # PROCESS FILE
-        # -----------------------------------------
+        if extension == ".xlsx":
 
-        if extension in [
-            ".xlsx",
-            ".xls"
-        ]:
-
-            imported_students = (
-                process_excel(file)
-            )
-
+            imported_students = process_excel(file)
 
         elif extension == ".docx":
 
-            imported_students = (
-                process_word(file)
-            )
-
-
-        elif extension == ".csv":
-
-            df = pd.read_csv(
-                file
-            )
-
-            imported_students = (
-                process_dataframe(df)
-            )
-
+            imported_students = process_word(file)
 
         else:
 
-            imported_students = (
-                process_pdf(file)
-            )
+            imported_students = process_pdf(file)
 
 
         if not imported_students:
@@ -1449,15 +1043,9 @@ def upload_document():
 
         students = load_data()
 
-
         added = 0
-
         updated = 0
 
-
-        # -----------------------------------------
-        # ADD / UPDATE
-        # -----------------------------------------
 
         for new_student in imported_students:
 
@@ -1476,9 +1064,11 @@ def upload_document():
 
 
             if (
+
                 student_id == ""
                 or
                 semester not in SEMESTERS
+
             ):
 
                 continue
@@ -1499,22 +1089,18 @@ def upload_document():
                             ""
                         )
                     ).strip()
-                    ==
-                    student_id
+                    == student_id
 
                     and
 
                     old_student.get(
                         "Semester"
                     )
-                    ==
-                    semester
+                    == semester
 
                 ):
 
-                    students[index] = (
-                        new_student
-                    )
+                    students[index] = new_student
 
                     updated += 1
 
@@ -1532,9 +1118,7 @@ def upload_document():
                 added += 1
 
 
-        save_data(
-            students
-        )
+        save_data(students)
 
 
         return jsonify({
@@ -1544,11 +1128,9 @@ def upload_document():
             "message":
                 f"Upload successful! Added: {added}, Updated: {updated}",
 
-            "added":
-                added,
+            "added": added,
 
-            "updated":
-                updated
+            "updated": updated
 
         })
 
@@ -1559,7 +1141,6 @@ def upload_document():
             "UPLOAD ERROR:",
             e
         )
-
 
         return jsonify({
 
@@ -1575,20 +1156,12 @@ def upload_document():
 # SUBJECT API
 # =========================================================
 
-@app.route(
-    "/api/subjects"
-)
+@app.route("/api/subjects")
 def get_subjects():
 
-    return jsonify({
-
-        "subjects":
-            SEMESTER_SUBJECTS,
-
-        "codes":
-            SUBJECT_CODES
-
-    })
+    return jsonify(
+        SEMESTER_SUBJECTS
+    )
 
 
 # =========================================================
@@ -1603,7 +1176,6 @@ if __name__ == "__main__":
             5000
         )
     )
-
 
     app.run(
         host="0.0.0.0",
