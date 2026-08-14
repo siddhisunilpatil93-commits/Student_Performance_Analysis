@@ -3,7 +3,1880 @@
 
 <head>
 
+<meta charset="UTF-8"><!DOCTYPE html>
+<html lang="en">
+
+<head>
+
 <meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Student Performance Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #172554;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: linear-gradient(180deg,#3730a3,#7c3aed);
+    color: white;
+    padding: 25px 18px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo .emoji {
+    font-size: 50px;
+}
+
+.logo h2 {
+    margin: 8px 0;
+}
+
+.logo p {
+    margin: 0;
+    opacity: .85;
+}
+
+.menu button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    margin: 4px 0;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.menu button:hover,
+.menu button.active {
+    background: rgba(255,255,255,.2);
+}
+
+.main {
+    margin-left: 250px;
+    padding: 28px;
+}
+
+.header {
+    background: white;
+    border-radius: 18px;
+    padding: 22px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.header p {
+    color: #64748b;
+}
+
+.semester-box {
+    background: linear-gradient(135deg,#4f46e5,#9333ea);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 12px;
+}
+
+.semester-box select {
+    border: none;
+    background: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.semester-box option {
+    color: black;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 18px;
+}
+
+.card {
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    min-height: 140px;
+}
+
+.card:nth-child(1) {
+    background: linear-gradient(135deg,#2563eb,#06b6d4);
+}
+
+.card:nth-child(2) {
+    background: linear-gradient(135deg,#059669,#22c55e);
+}
+
+.card:nth-child(3) {
+    background: linear-gradient(135deg,#f97316,#f59e0b);
+}
+
+.card:nth-child(4) {
+    background: linear-gradient(135deg,#db2777,#a855f7);
+}
+
+.card .icon {
+    font-size: 30px;
+}
+
+.card .value {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.search-box,
+.upload-box,
+.table-card,
+.chart-card {
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.search-box,
+.upload-box,
+.table-card,
+.charts {
+    margin-top: 22px;
+}
+
+.search-row {
+    display: flex;
+    gap: 12px;
+}
+
+.search-row input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+}
+
+button.primary,
+button.green {
+    border: none;
+    color: white;
+    padding: 14px 22px;
+    border-radius: 11px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #4f46e5;
+}
+
+button.green {
+    background: #059669;
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 22px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #4338ca;
+    color: white;
+    padding: 13px;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,.65);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    width: 900px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    border-radius: 20px;
+}
+
+.close {
+    float: right;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 13px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.subject-title {
+    grid-column: 1 / -1;
+    background: #eef2ff;
+    padding: 12px;
+    border-radius: 10px;
+    color: #3730a3;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    display: none;
+}
+
+.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+@media(max-width:1000px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main {
+        margin-left: 210px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <div class="emoji">🎓</div>
+
+        <h2>Student Analytics</h2>
+
+        <p>Performance Management</p>
+
+    </div>
+
+    <div class="menu">
+
+        <button class="active">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="focusSearch()">
+            🔍 Search Student
+        </button>
+
+        <button onclick="openModal()">
+            ➕ Add Student
+        </button>
+
+        <button onclick="showStudents()">
+            👨‍🎓 All Students
+        </button>
+
+        <button onclick="scrollToCharts()">
+            📊 Analytics
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+
+<div class="header">
+
+    <div>
+
+        <h1>
+            Student Performance Dashboard
+        </h1>
+
+        <p>
+            MSBTE K-Scheme • Academic Performance • Attendance • Analytics
+        </p>
+
+    </div>
+
+
+    <div class="semester-box">
+
+        🎓
+
+        <select
+            id="semesterSelect"
+            onchange="changeSemester()">
+
+            <option>Semester 1</option>
+            <option>Semester 2</option>
+            <option>Semester 3</option>
+            <option selected>Semester 4</option>
+            <option>Semester 5</option>
+            <option>Semester 6</option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+<!-- CARDS -->
+
+<div class="cards">
+
+<div class="card">
+
+    <div class="icon">👨‍🎓</div>
+
+    <h3>Total Students</h3>
+
+    <div
+        class="value"
+        id="totalStudents">
+        0
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="icon">📈</div>
+
+    <h3>Average Percentage</h3>
+
+    <div
+        class="value"
+        id="avgPercentage">
+        0%
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="icon">🏆</div>
+
+    <h3>Top Performer</h3>
+
+    <div
+        class="value"
+        id="topPerformer">
+        -
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="icon">📅</div>
+
+    <h3>Average Attendance</h3>
+
+    <div
+        class="value"
+        id="avgAttendance">
+        0%
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- SEARCH -->
+
+<div
+    class="search-box"
+    id="searchSection">
+
+    <h2>🔍 Search Student</h2>
+
+    <div class="search-row">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Enter Student Name or Student ID..."
+            onkeyup="searchStudent()">
+
+        <button
+            class="primary"
+            onclick="searchStudent()">
+
+            Search
+
+        </button>
+
+        <button
+            class="green"
+            onclick="openModal()">
+
+            ➕ Add Student
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- UPLOAD -->
+
+<div class="upload-box">
+
+    <h2>📂 Upload Excel / Word / PDF</h2>
+
+    <p>
+        Upload student result document.
+    </p>
+
+    <input
+        type="file"
+        id="documentFile"
+        accept=".xlsx,.docx,.pdf">
+
+    <button
+        class="green"
+        onclick="uploadDocument()">
+
+        ⬆ Upload
+
+    </button>
+
+    <div
+        id="uploadMessage"
+        class="message">
+    </div>
+
+</div>
+
+
+<!-- CHARTS -->
+
+<div
+    class="charts"
+    id="chartsSection">
+
+    <div class="chart-card">
+
+        <h2>
+            📊 Subject-wise Performance
+        </h2>
+
+        <canvas id="subjectChart"></canvas>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <h2>
+            🏅 Grade Distribution
+        </h2>
+
+        <canvas id="gradeChart"></canvas>
+
+    </div>
+
+</div>
+
+
+<!-- TABLE -->
+
+<div class="table-card">
+
+<h2>
+    👨‍🎓 Students
+</h2>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr id="tableHeader">
+
+<th>Student ID</th>
+<th>Name</th>
+<th>Gender</th>
+<th>Class</th>
+
+</tr>
+
+</thead>
+
+<tbody id="studentTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- ADD STUDENT MODAL -->
+
+<div
+    class="modal"
+    id="studentModal">
+
+<div class="modal-content">
+
+<span
+    class="close"
+    onclick="closeModal()">
+
+    ✕
+
+</span>
+
+<h1>
+    ➕ Add New Student
+</h1>
+
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+<label>Semester</label>
+
+<select
+    id="studentSemester"
+    onchange="createSubjectInputs()">
+
+<option>Semester 1</option>
+<option>Semester 2</option>
+<option>Semester 3</option>
+<option selected>Semester 4</option>
+<option>Semester 5</option>
+<option>Semester 6</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Student ID / Roll Number</label>
+
+<input
+    id="studentID"
+    type="text">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Name</label>
+
+<input
+    id="studentName"
+    type="text">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Gender</label>
+
+<select id="studentGender">
+
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Class</label>
+
+<input
+    id="studentClass"
+    type="text"
+    placeholder="e.g. Computer Engineering">
+
+</div>
+
+
+<div
+    id="subjectInputs"
+    class="form-grid"
+    style="grid-column:1/-1">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Attendance %</label>
+
+<input
+    id="attendance"
+    type="number"
+    min="0"
+    max="100">
+
+</div>
+
+
+</div>
+
+
+<div class="modal-actions">
+
+<button
+    class="green"
+    onclick="saveStudent()">
+
+💾 Save Student
+
+</button>
+
+<button
+    class="primary"
+    onclick="closeModal()">
+
+Cancel
+
+</button>
+
+</div>
+
+
+<div
+    id="formMessage"
+    class="message">
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let currentSemester = "Semester 4";
+
+let students = [];
+
+let subjects = {};
+
+let subjectChart = null;
+
+let gradeChart = null;
+
+
+// =====================================================
+// LOAD SUBJECTS
+// =====================================================
+
+function loadSubjects() {
+
+    fetch("/api/subjects")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        subjects = data;
+
+        createSubjectInputs();
+
+        loadStudents();
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Unable to load subjects.");
+
+    });
+
+}
+
+
+// =====================================================
+// CREATE SUBJECT INPUTS
+// =====================================================
+
+function createSubjectInputs() {
+
+    let semester =
+        document.getElementById(
+            "studentSemester"
+        ).value;
+
+    let container =
+        document.getElementById(
+            "subjectInputs"
+        );
+
+    container.innerHTML = "";
+
+
+    let list =
+        subjects[semester] || [];
+
+
+    list.forEach((subject, index) => {
+
+        let div =
+            document.createElement("div");
+
+        div.className =
+            "form-group";
+
+
+        div.innerHTML = `
+
+            <label>
+                ${subject} Marks
+            </label>
+
+            <input
+                type="number"
+                min="0"
+                max="100"
+                class="subject-mark"
+                data-subject="${subject}"
+                placeholder="0 - 100">
+
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+// =====================================================
+// LOAD STUDENTS
+// =====================================================
+
+function loadStudents() {
+
+    fetch(
+        "/api/students?semester="
+        + encodeURIComponent(
+            currentSemester
+        )
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        students = data;
+
+        updateDashboard();
+
+        createTable();
+
+        createCharts();
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server."
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// SEMESTER CHANGE
+// =====================================================
+
+function changeSemester() {
+
+    currentSemester =
+        document.getElementById(
+            "semesterSelect"
+        ).value;
+
+    document.getElementById(
+        "studentSemester"
+    ).value =
+        currentSemester;
+
+    createSubjectInputs();
+
+    document.getElementById(
+        "searchInput"
+    ).value = "";
+
+    loadStudents();
+
+}
+
+
+// =====================================================
+// DASHBOARD
+// =====================================================
+
+function updateDashboard() {
+
+    let total =
+        students.length;
+
+
+    document.getElementById(
+        "totalStudents"
+    ).innerText =
+        total;
+
+
+    if (total === 0) {
+
+        document.getElementById(
+            "avgPercentage"
+        ).innerText =
+            "0%";
+
+        document.getElementById(
+            "topPerformer"
+        ).innerText =
+            "-";
+
+        document.getElementById(
+            "avgAttendance"
+        ).innerText =
+            "0%";
+
+        return;
+
+    }
+
+
+    let avgPercentage =
+        students.reduce(
+            (sum, s) =>
+                sum +
+                Number(
+                    s.Percentage || 0
+                ),
+            0
+        ) / total;
+
+
+    let avgAttendance =
+        students.reduce(
+            (sum, s) =>
+                sum +
+                Number(
+                    s.Attendance || 0
+                ),
+            0
+        ) / total;
+
+
+    let top =
+        [...students].sort(
+            (a,b) =>
+                Number(b.Percentage || 0)
+                -
+                Number(a.Percentage || 0)
+        )[0];
+
+
+    document.getElementById(
+        "avgPercentage"
+    ).innerText =
+        avgPercentage.toFixed(2)
+        + "%";
+
+
+    document.getElementById(
+        "avgAttendance"
+    ).innerText =
+        avgAttendance.toFixed(2)
+        + "%";
+
+
+    document.getElementById(
+        "topPerformer"
+    ).innerText =
+        top.Name || "-";
+
+}
+
+
+// =====================================================
+// CREATE TABLE
+// =====================================================
+
+function createTable() {
+
+    let header =
+        document.getElementById(
+            "tableHeader"
+        );
+
+    let tbody =
+        document.getElementById(
+            "studentTable"
+        );
+
+
+    header.innerHTML = `
+
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Class</th>
+
+    `;
+
+
+    let list =
+        subjects[currentSemester] || [];
+
+
+    list.forEach(subject => {
+
+        header.innerHTML += `
+            <th>${subject}</th>
+        `;
+
+    });
+
+
+    header.innerHTML += `
+
+        <th>Total</th>
+        <th>Percentage</th>
+        <th>Attendance</th>
+        <th>Status</th>
+        <th>Grade</th>
+
+    `;
+
+
+    tbody.innerHTML = "";
+
+
+    if (students.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="${list.length + 9}">
+
+                    No students found
+                    in ${currentSemester}.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    students.forEach(student => {
+
+        let row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${student.Student_ID}
+            </td>
+
+            <td>
+                <b>${student.Name}</b>
+            </td>
+
+            <td>
+                ${student.Gender}
+            </td>
+
+            <td>
+                ${student.Class}
+            </td>
+
+        `;
+
+
+        list.forEach(subject => {
+
+            row.innerHTML += `
+
+                <td>
+                    ${student[subject] ?? 0}
+                </td>
+
+            `;
+
+        });
+
+
+        row.innerHTML += `
+
+            <td>
+                <b>${student.Total}</b>
+            </td>
+
+            <td>
+                <b>
+                    ${student.Percentage}%
+                </b>
+            </td>
+
+            <td>
+                ${student.Attendance}%
+            </td>
+
+            <td>
+                ${student["Attendance Status"]}
+            </td>
+
+            <td>
+                <b>${student.Grade}</b>
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+}
+
+
+// =====================================================
+// SEARCH
+// =====================================================
+
+function searchStudent() {
+
+    let text =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    if (text === "") {
+
+        createTable();
+
+        return;
+
+    }
+
+
+    let result =
+        students.filter(student =>
+
+            String(
+                student.Name
+            )
+            .toLowerCase()
+            .includes(text)
+
+            ||
+
+            String(
+                student.Student_ID
+            )
+            .toLowerCase()
+            .includes(text)
+
+        );
+
+
+    displaySearchResults(result);
+
+}
+
+
+// =====================================================
+// SEARCH RESULT
+// =====================================================
+
+function displaySearchResults(data) {
+
+    let tbody =
+        document.getElementById(
+            "studentTable"
+        );
+
+    tbody.innerHTML = "";
+
+
+    data.forEach(student => {
+
+        let row =
+            document.createElement("tr");
+
+
+        let list =
+            subjects[currentSemester] || [];
+
+
+        row.innerHTML = `
+
+            <td>${student.Student_ID}</td>
+
+            <td>
+                <b>${student.Name}</b>
+            </td>
+
+            <td>${student.Gender}</td>
+
+            <td>${student.Class}</td>
+
+        `;
+
+
+        list.forEach(subject => {
+
+            row.innerHTML += `
+                <td>
+                    ${student[subject] ?? 0}
+                </td>
+            `;
+
+        });
+
+
+        row.innerHTML += `
+
+            <td>${student.Total}</td>
+
+            <td>${student.Percentage}%</td>
+
+            <td>${student.Attendance}%</td>
+
+            <td>
+                ${student["Attendance Status"]}
+            </td>
+
+            <td>
+                <b>${student.Grade}</b>
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+}
+
+
+// =====================================================
+// OPEN MODAL
+// =====================================================
+
+function openModal() {
+
+    document.getElementById(
+        "studentModal"
+    ).style.display =
+        "flex";
+
+
+    document.getElementById(
+        "studentSemester"
+    ).value =
+        currentSemester;
+
+
+    createSubjectInputs();
+
+}
+
+
+// =====================================================
+// CLOSE MODAL
+// =====================================================
+
+function closeModal() {
+
+    document.getElementById(
+        "studentModal"
+    ).style.display =
+        "none";
+
+}
+
+
+// =====================================================
+// SAVE STUDENT
+// =====================================================
+
+function saveStudent() {
+
+    let semester =
+        document.getElementById(
+            "studentSemester"
+        ).value;
+
+
+    let data = {
+
+        Student_ID:
+            document.getElementById(
+                "studentID"
+            ).value.trim(),
+
+        Name:
+            document.getElementById(
+                "studentName"
+            ).value.trim(),
+
+        Gender:
+            document.getElementById(
+                "studentGender"
+            ).value,
+
+        Class:
+            document.getElementById(
+                "studentClass"
+            ).value.trim(),
+
+        Semester:
+            semester,
+
+        Attendance:
+            document.getElementById(
+                "attendance"
+            ).value
+
+    };
+
+
+    document
+        .querySelectorAll(
+            ".subject-mark"
+        )
+        .forEach(input => {
+
+            data[
+                input.dataset.subject
+            ] =
+                input.value;
+
+        });
+
+
+    fetch(
+        "/api/add_student",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body:
+                JSON.stringify(data)
+
+        }
+    )
+
+    .then(response =>
+        response.json()
+    )
+
+    .then(result => {
+
+        let msg =
+            document.getElementById(
+                "formMessage"
+            );
+
+
+        msg.style.display =
+            "block";
+
+
+        if (result.success) {
+
+            msg.className =
+                "message success";
+
+            msg.innerText =
+                result.message;
+
+
+            setTimeout(() => {
+
+                closeModal();
+
+                clearForm();
+
+                currentSemester =
+                    semester;
+
+                document.getElementById(
+                    "semesterSelect"
+                ).value =
+                    semester;
+
+                loadStudents();
+
+            },1000);
+
+
+        } else {
+
+            msg.className =
+                "message error";
+
+            msg.innerText =
+                result.message;
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Something went wrong!"
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// CLEAR FORM
+// =====================================================
+
+function clearForm() {
+
+    document.getElementById(
+        "studentID"
+    ).value = "";
+
+    document.getElementById(
+        "studentName"
+    ).value = "";
+
+    document.getElementById(
+        "studentClass"
+    ).value = "";
+
+    document.getElementById(
+        "attendance"
+    ).value = "";
+
+    document.querySelectorAll(
+        ".subject-mark"
+    )
+    .forEach(input => {
+
+        input.value = "";
+
+    });
+
+}
+
+
+// =====================================================
+// UPLOAD DOCUMENT
+// =====================================================
+
+function uploadDocument() {
+
+    let file =
+        document.getElementById(
+            "documentFile"
+        ).files[0];
+
+
+    if (!file) {
+
+        alert(
+            "Please select a file!"
+        );
+
+        return;
+
+    }
+
+
+    let formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    fetch(
+        "/api/upload_document",
+        {
+
+            method: "POST",
+
+            body:
+                formData
+
+        }
+    )
+
+    .then(response =>
+        response.json()
+    )
+
+    .then(result => {
+
+        let msg =
+            document.getElementById(
+                "uploadMessage"
+            );
+
+
+        msg.style.display =
+            "block";
+
+
+        if (result.success) {
+
+            msg.className =
+                "message success";
+
+            msg.innerText =
+                result.message;
+
+            document.getElementById(
+                "documentFile"
+            ).value = "";
+
+            loadStudents();
+
+        } else {
+
+            msg.className =
+                "message error";
+
+            msg.innerText =
+                result.message;
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Upload failed!"
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// CHARTS
+// =====================================================
+
+function createCharts() {
+
+    let list =
+        subjects[currentSemester] || [];
+
+
+    let averages =
+        list.map(subject =>
+            average(subject)
+        );
+
+
+    if (subjectChart) {
+
+        subjectChart.destroy();
+
+    }
+
+
+    subjectChart =
+        new Chart(
+
+            document.getElementById(
+                "subjectChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: list,
+
+                    datasets: [{
+
+                        label:
+                            "Average Marks",
+
+                        data:
+                            averages
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero:
+                                true,
+
+                            max: 100
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    let grades = {
+
+        "A+": 0,
+        "A": 0,
+        "B+": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "F": 0
+
+    };
+
+
+    students.forEach(student => {
+
+        if (
+            grades[
+                student.Grade
+            ] !== undefined
+        ) {
+
+            grades[
+                student.Grade
+            ]++;
+
+        }
+
+    });
+
+
+    if (gradeChart) {
+
+        gradeChart.destroy();
+
+    }
+
+
+    gradeChart =
+        new Chart(
+
+            document.getElementById(
+                "gradeChart"
+            ),
+
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels:
+                        Object.keys(
+                            grades
+                        ),
+
+                    datasets: [{
+
+                        data:
+                            Object.values(
+                                grades
+                            )
+
+                    }]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    plugins: {
+
+                        legend: {
+
+                            position:
+                                "bottom"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+// =====================================================
+// AVERAGE
+// =====================================================
+
+function average(subject) {
+
+    if (
+        students.length === 0
+    ) {
+
+        return 0;
+
+    }
+
+
+    let total =
+        students.reduce(
+
+            (sum, student) =>
+
+                sum +
+                Number(
+                    student[subject] || 0
+                ),
+
+            0
+
+        );
+
+
+    return (
+        total /
+        students.length
+    ).toFixed(2);
+
+}
+
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+
+function focusSearch() {
+
+    document.getElementById(
+        "searchSection"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+    document.getElementById(
+        "searchInput"
+    ).focus();
+
+}
+
+
+function showStudents() {
+
+    document.querySelector(
+        ".table-card"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+function scrollToCharts() {
+
+    document.getElementById(
+        "chartsSection"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+// =====================================================
+// START
+// =====================================================
+
+loadSubjects();
+
+</script>
+
+</body>
+
+</html>
 
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
