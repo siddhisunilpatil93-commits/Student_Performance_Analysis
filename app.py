@@ -927,9 +927,39 @@ if __name__ == "__main__":
     print()
 
     # 0.0.0.0 allows other devices on same Wi-Fi
-    if __name__ == "__main__":
-     app.run(
+   # =========================================================
+# RUN SERVER
+# =========================================================
+
+if __name__ == "__main__":
+
+    print()
+    print("========================================")
+    print(" STUDENT PERFORMANCE DASHBOARD")
+    print("========================================")
+
+    print(
+        "1st Year :",
+        YEAR_FILES["1st Year"]
+    )
+
+    print(
+        "2nd Year :",
+        YEAR_FILES["2nd Year"]
+    )
+
+    print(
+        "3rd Year :",
+        YEAR_FILES["3rd Year"]
+    )
+
+    print("========================================")
+    print()
+
+    port = int(os.environ.get("PORT", 5000))
+
+    app.run(
         host="0.0.0.0",
-        port=5000,
+        port=port,
         debug=False
     )
