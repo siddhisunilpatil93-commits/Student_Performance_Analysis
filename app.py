@@ -4,10 +4,6 @@ import os
 
 app = Flask(__name__)
 
-# --------------------------------------------------
-# DATA FILES
-# --------------------------------------------------
-
 DATA_FOLDER = "data"
 
 YEAR_FILES = {
@@ -16,10 +12,6 @@ YEAR_FILES = {
     "3rd Year": "third_year.xlsx"
 }
 
-
-# --------------------------------------------------
-# LOAD STUDENT DATA
-# --------------------------------------------------
 
 def load_students(year):
 
@@ -30,7 +22,10 @@ def load_students(year):
 
     filepath = os.path.join(DATA_FOLDER, filename)
 
+    print("Loading file:", filepath)
+
     if not os.path.exists(filepath):
+        print("FILE NOT FOUND:", filepath)
         return pd.DataFrame()
 
     try:
@@ -38,11 +33,19 @@ def load_students(year):
 
         df.columns = df.columns.astype(str).str.strip()
 
-        # Calculate Total
+        # Convert marks to numbers
         subjects = ["OSY", "STE", "ACN", "DAN"]
 
+        for subject in subjects:
+            if subject in df.columns:
+                df[subject] = pd.to_numeric(
+                    df[subject],
+                    errors="coerce"
+                ).fillna(0)
+
+        # Total
         existing_subjects = [
-            col for col in subjects if col in df.columns
+            s for s in subjects if s in df.columns
         ]
 
         if existing_subjects:
@@ -61,14 +64,17 @@ def load_students(year):
                 errors="coerce"
             ).fillna(0)
 
-            df["Attendance Status"] = df["Attendance"].apply(
-                lambda x: "Good" if x >= 75 else "Low"
+            df["Attendance Status"] = df[
+                "Attendance"
+            ].apply(
+                lambda x:
+                "Good" if x >= 75 else "Low"
             )
 
         # Grade
         if "Percentage" in df.columns:
 
-            def get_grade(p):
+            def grade(p):
 
                 if p >= 90:
                     return "A+"
@@ -83,7 +89,9 @@ def load_students(year):
                 else:
                     return "F"
 
-            df["Grade"] = df["Percentage"].apply(get_grade)
+            df["Grade"] = df[
+                "Percentage"
+            ].apply(grade)
 
         df = df.fillna("")
 
@@ -91,7 +99,7 @@ def load_students(year):
 
     except Exception as e:
 
-        print("ERROR:", e)
+        print("ERROR READING EXCEL:", e)
 
         return pd.DataFrame()
 
@@ -102,65 +110,91 @@ def load_students(year):
 
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
 # --------------------------------------------------
-# STUDENTS API
+# STUDENTS
 # --------------------------------------------------
 
 @app.route("/api/students")
 def students():
 
-    year = request.args.get("year", "1st Year")
+    year = request.args.get(
+        "year",
+        "1st Year"
+    )
 
     df = load_students(year)
 
-    return jsonify(df.to_dict(orient="records"))
+    return jsonify(
+        df.to_dict(
+            orient="records"
+        )
+    )
 
 
 # --------------------------------------------------
-# STUDENT SEARCH
+# SEARCH
 # --------------------------------------------------
 
 @app.route("/api/search")
 def search_student():
 
-    year = request.args.get("year", "1st Year")
-    query = request.args.get("q", "").strip().lower()
+    year = request.args.get(
+        "year",
+        "1st Year"
+    )
+
+    query = request.args.get(
+        "q",
+        ""
+    ).strip().lower()
 
     df = load_students(year)
 
     if df.empty:
         return jsonify([])
 
-    if query == "":
-        return jsonify(df.to_dict(orient="records"))
+    if not query:
+        return jsonify(
+            df.to_dict(
+                orient="records"
+            )
+        )
 
     result = df[
         df.astype(str)
         .apply(
             lambda row:
-            row.str.lower().str.contains(
+            row.str.lower()
+            .str.contains(
                 query,
                 na=False
-            ).any(),
+            )
+            .any(),
             axis=1
         )
     ]
 
-    return jsonify(result.to_dict(orient="records"))
+    return jsonify(
+        result.to_dict(
+            orient="records"
+        )
+    )
 
 
 # --------------------------------------------------
-# DASHBOARD STATISTICS
+# DASHBOARD STATS
 # --------------------------------------------------
 
 @app.route("/api/stats")
-def statistics():
+def stats():
 
-    year = request.args.get("year", "1st Year")
+    year = request.args.get(
+        "year",
+        "1st Year"
+    )
 
     df = load_students(year)
 
@@ -175,23 +209,28 @@ def statistics():
 
     total_students = len(df)
 
-    average_percentage = 0
-
+    # Average Percentage
     if "Percentage" in df.columns:
+
+        percentage = pd.to_numeric(
+            df["Percentage"],
+            errors="coerce"
+        )
+
         average_percentage = round(
-            pd.to_numeric(
-                df["Percentage"],
-                errors="coerce"
-            ).mean(),
+            percentage.mean(),
             2
         )
 
+    else:
+        average_percentage = 0
+
+    # Top Performer
     top_performer = "-"
 
     if (
         "Percentage" in df.columns
         and "Name" in df.columns
-        and len(df) > 0
     ):
 
         temp = df.copy()
@@ -201,23 +240,38 @@ def statistics():
             errors="coerce"
         )
 
-        top = temp.loc[
-            temp["Percentage"].idxmax()
-        ]
+        temp = temp.dropna(
+            subset=["Percentage"]
+        )
 
-        top_performer = str(top["Name"])
+        if not temp.empty:
 
-    average_attendance = 0
+            top_index = temp[
+                "Percentage"
+            ].idxmax()
 
+            top_performer = str(
+                temp.loc[
+                    top_index,
+                    "Name"
+                ]
+            )
+
+    # Average Attendance
     if "Attendance" in df.columns:
 
+        attendance = pd.to_numeric(
+            df["Attendance"],
+            errors="coerce"
+        )
+
         average_attendance = round(
-            pd.to_numeric(
-                df["Attendance"],
-                errors="coerce"
-            ).mean(),
+            attendance.mean(),
             2
         )
+
+    else:
+        average_attendance = 0
 
     return jsonify({
         "total_students": total_students,
