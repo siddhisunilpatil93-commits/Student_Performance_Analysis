@@ -1,8 +1,9 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 import pandas as pd
 import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "student-performance-change-this-secret")
 BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 SEMESTERS = {
@@ -75,6 +76,53 @@ def process(df, semester):
 def save_df(df, semester):
     raw=[c for c in ["Student_ID","Name","Gender","Class"]+SUBJECTS[semester]+["Attendance"] if c in df.columns]
     process(df,semester)[raw].to_excel(path_for(semester),index=False)
+
+
+# =========================================================
+# LOGIN / SECURITY
+# =========================================================
+
+LOGIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+LOGIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+
+
+def login_required():
+    return session.get("logged_in") is True
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        if username == LOGIN_USERNAME and password == LOGIN_PASSWORD:
+            session["logged_in"] = True
+            return redirect(url_for("home"))
+
+        return render_template(
+            "index.html",
+            login_page=True,
+            login_error="Invalid username or password."
+        )
+
+    return render_template("index.html", login_page=True)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+@app.before_request
+def protect_dashboard_and_api():
+    allowed = {"login", "logout", "static"}
+    if request.endpoint not in allowed and not login_required():
+        if request.path.startswith("/api/"):
+            return jsonify({"success": False, "message": "Login required."}), 401
+        return redirect(url_for("login"))
+
 
 @app.route("/")
 def home(): return render_template("index.html")
