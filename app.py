@@ -1,217 +1,98 @@
 from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import os
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 DATA_FOLDER = "data"
-os.makedirs(DATA_FOLDER, exist_ok=True)
 
-# ============================================================
-# SEMESTER → FILE + ACADEMIC YEAR
-# ============================================================
-
-SEMESTER_CONFIG = {
-    "Semester 1": {
-        "file": "first_year.xlsx",
-        "academic_year": "2025-26"
-    },
-    "Semester 2": {
-        "file": "first_year.xlsx",
-        "academic_year": "2025-26"
-    },
-    "Semester 3": {
-        "file": "second_year.xlsx",
-        "academic_year": "2026-27"
-    },
-    "Semester 4": {
-        "file": "second_year.xlsx",
-        "academic_year": "2026-27"
-    },
-    "Semester 5": {
-        "file": "third_year.xlsx",
-        "academic_year": "2027-28"
-    },
-    "Semester 6": {
-        "file": "third_year.xlsx",
-        "academic_year": "2027-28"
-    }
+YEAR_FILES = {
+    "1st Year": "first_year.xlsx",
+    "2nd Year": "second_year.xlsx",
+    "3rd Year": "third_year.xlsx"
 }
 
-STANDARD_COLUMNS = [
-    "Student_ID",
-    "Name",
-    "Gender",
-    "Class",
-    "Total",
-    "Percentage",
-    "Attendance",
-    "Attendance Status",
-    "Attendance_Status",
-    "Grade",
-    "Semester"
-]
-
-KNOWN_SUBJECTS = [
-    "OSY",
-    "STE",
-    "ACN",
-    "DAN"
-]
+SUBJECTS = ["OSY", "STE", "ACN", "DAN"]
 
 
-# ============================================================
-# FIND HEADER ROW
-# ============================================================
+# =========================================================
+# READ STUDENT FILE
+# =========================================================
 
-def find_header_row(filepath):
+def load_students(year):
+
+    filename = YEAR_FILES.get(year)
+
+    if not filename:
+        return pd.DataFrame()
+
+    filepath = os.path.join(DATA_FOLDER, filename)
+
+    if not os.path.exists(filepath):
+        return pd.DataFrame()
 
     try:
-        raw = pd.read_excel(
-            filepath,
-            header=None,
-            sheet_name=0
+
+        df = pd.read_excel(filepath)
+
+        df.columns = (
+            df.columns
+            .astype(str)
+            .str.strip()
         )
 
-        for index, row in raw.iterrows():
+        # -------------------------------------------------
+        # MAKE SURE BASIC COLUMNS EXIST
+        # -------------------------------------------------
 
-            values = [
-                str(value).strip()
-                for value in row.tolist()
-                if pd.notna(value)
-            ]
+        for col in ["Student_ID", "Name", "Gender", "Class"]:
+            if col not in df.columns:
+                df[col] = ""
 
-            if "Student_ID" in values:
-                return index
+        # -------------------------------------------------
+        # SUBJECT MARKS
+        # -------------------------------------------------
 
-    except Exception as e:
-        print("HEADER SEARCH ERROR:", e)
+        existing_subjects = []
 
-    return 0
+        for subject in SUBJECTS:
 
+            if subject in df.columns:
 
-# ============================================================
-# READ EXCEL
-# ============================================================
+                df[subject] = pd.to_numeric(
+                    df[subject],
+                    errors="coerce"
+                ).fillna(0)
 
-def read_excel_file(filepath):
+                existing_subjects.append(subject)
 
-    header_row = find_header_row(filepath)
+        # -------------------------------------------------
+        # TOTAL
+        # -------------------------------------------------
 
-    df = pd.read_excel(
-        filepath,
-        header=header_row,
-        sheet_name=0
-    )
+        if existing_subjects:
 
-    df.columns = (
-        df.columns
-        .astype(str)
-        .str.strip()
-    )
+            df["Total"] = df[
+                existing_subjects
+            ].sum(axis=1)
 
-    # Remove completely empty columns
-    df = df.dropna(axis=1, how="all")
+            max_marks = len(existing_subjects) * 100
 
-    # Remove completely empty rows
-    df = df.dropna(axis=0, how="all")
+            df["Percentage"] = (
+                df["Total"] / max_marks
+            ) * 100
 
-    # Fix common column names
-    rename_map = {}
+        else:
 
-    for column in df.columns:
+            df["Total"] = 0
+            df["Percentage"] = 0
 
-        clean = str(column).strip()
+        # -------------------------------------------------
+        # ATTENDANCE
+        # -------------------------------------------------
 
-        if clean.lower() in ["student id", "studentid", "roll no", "roll number"]:
-            rename_map[column] = "Student_ID"
-
-        elif clean.lower() == "attendance status":
-            rename_map[column] = "Attendance Status"
-
-    df = df.rename(columns=rename_map)
-
-    return df
-
-
-# ============================================================
-# SUBJECT DETECTION
-# ============================================================
-
-def get_subject_columns(df):
-
-    subjects = []
-
-    for column in df.columns:
-
-        column_name = str(column).strip()
-
-        if column_name in STANDARD_COLUMNS:
-            continue
-
-        if column_name in ["Unnamed: 0", "Unnamed: 1"]:
-            continue
-
-        # Numeric subject columns
-        if column_name not in [
-            "Student_ID",
-            "Name",
-            "Gender",
-            "Class"
-        ]:
-            subjects.append(column_name)
-
-    # Prefer actual known subjects
-    known = [
-        subject
-        for subject in KNOWN_SUBJECTS
-        if subject in df.columns
-    ]
-
-    if known:
-        return known
-
-    return subjects
-
-
-# ============================================================
-# CALCULATE DATA
-# ============================================================
-
-def process_dataframe(df):
-
-    if df.empty:
-        return df
-
-    df.columns = (
-        df.columns
-        .astype(str)
-        .str.strip()
-    )
-
-    subjects = get_subject_columns(df)
-
-    # Convert subject marks
-    for subject in subjects:
-
-        df[subject] = pd.to_numeric(
-            df[subject],
-            errors="coerce"
-        ).fillna(0)
-
-    # Total
-    if subjects:
-
-        df["Total"] = df[subjects].sum(axis=1)
-
-        df["Percentage"] = (
-            df["Total"] /
-            (len(subjects) * 100)
-        ) * 100
-
-    # Attendance
-    if "Attendance" in df.columns:
+        if "Attendance" not in df.columns:
+            df["Attendance"] = 0
 
         df["Attendance"] = pd.to_numeric(
             df["Attendance"],
@@ -221,29 +102,24 @@ def process_dataframe(df):
         df["Attendance Status"] = df[
             "Attendance"
         ].apply(
-            lambda value:
-            "Good" if value >= 75 else "Low"
+            lambda x: "Good" if x >= 75 else "Low"
         )
 
-    # Grade
-    if "Percentage" in df.columns:
+        # -------------------------------------------------
+        # GRADE
+        # -------------------------------------------------
 
-        def calculate_grade(value):
+        def calculate_grade(p):
 
-            try:
-                value = float(value)
-            except:
-                return "F"
-
-            if value >= 90:
+            if p >= 90:
                 return "A+"
-            elif value >= 80:
+            elif p >= 80:
                 return "A"
-            elif value >= 70:
+            elif p >= 70:
                 return "B"
-            elif value >= 60:
+            elif p >= 60:
                 return "C"
-            elif value >= 50:
+            elif p >= 50:
                 return "D"
             else:
                 return "F"
@@ -252,64 +128,41 @@ def process_dataframe(df):
             "Percentage"
         ].apply(calculate_grade)
 
-    df = df.fillna("")
+        # -------------------------------------------------
+        # ROUND VALUES
+        # -------------------------------------------------
 
-    return df
+        df["Total"] = df["Total"].round(2)
+        df["Percentage"] = df["Percentage"].round(2)
+        df["Attendance"] = df["Attendance"].round(2)
 
-
-# ============================================================
-# LOAD STUDENTS
-# ============================================================
-
-def load_students(semester):
-
-    config = SEMESTER_CONFIG.get(semester)
-
-    if not config:
-        return pd.DataFrame()
-
-    filepath = os.path.join(
-        DATA_FOLDER,
-        config["file"]
-    )
-
-    print("Loading:", filepath)
-
-    if not os.path.exists(filepath):
-
-        print("FILE NOT FOUND:", filepath)
-
-        return pd.DataFrame()
-
-    try:
-
-        df = read_excel_file(filepath)
-
-        df = process_dataframe(df)
+        df = df.fillna("")
 
         return df
 
-    except Exception as error:
+    except Exception as e:
 
-        print("EXCEL ERROR:", error)
+        print("ERROR:", e)
 
         return pd.DataFrame()
 
 
-# ============================================================
+# =========================================================
 # SAVE DATA
-# ============================================================
+# =========================================================
 
-def save_students(semester, df):
+def save_students(year, df):
 
-    config = SEMESTER_CONFIG.get(semester)
+    filename = YEAR_FILES.get(year)
 
-    if not config:
+    if not filename:
         return False
+
+    os.makedirs(DATA_FOLDER, exist_ok=True)
 
     filepath = os.path.join(
         DATA_FOLDER,
-        config["file"]
+        filename
     )
 
     try:
@@ -321,77 +174,38 @@ def save_students(semester, df):
 
         return True
 
-    except Exception as error:
+    except Exception as e:
 
-        print("SAVE ERROR:", error)
+        print("SAVE ERROR:", e)
 
         return False
 
 
-# ============================================================
+# =========================================================
 # HOME
-# ============================================================
+# =========================================================
 
 @app.route("/")
 def home():
 
-    return render_template("index.html")
-
-
-# ============================================================
-# SEMESTER SUBJECT API
-# ============================================================
-
-@app.route("/api/subjects")
-def subjects_api():
-
-    semester = request.args.get(
-        "semester",
-        "Semester 1"
+    return render_template(
+        "index.html"
     )
 
-    config = SEMESTER_CONFIG.get(
-        semester,
-        SEMESTER_CONFIG["Semester 1"]
-    )
 
-    df = load_students(semester)
-
-    subjects = get_subject_columns(df)
-
-    subject_data = []
-
-    for subject in subjects:
-
-        subject_data.append({
-            "code": str(subject),
-            "name": str(subject)
-        })
-
-    return jsonify({
-        "success": True,
-        "semester": semester,
-        "academic_year": config["academic_year"],
-        "subjects": subject_data
-    })
-
-
-# ============================================================
-# STUDENTS API
-# ============================================================
+# =========================================================
+# GET STUDENTS
+# =========================================================
 
 @app.route("/api/students")
-def students_api():
+def students():
 
-    semester = request.args.get(
-        "semester",
-        "Semester 1"
+    year = request.args.get(
+        "year",
+        "3rd Year"
     )
 
-    df = load_students(semester)
-
-    if df.empty:
-        return jsonify([])
+    df = load_students(year)
 
     return jsonify(
         df.to_dict(
@@ -400,16 +214,16 @@ def students_api():
     )
 
 
-# ============================================================
-# SEARCH API
-# ============================================================
+# =========================================================
+# SEARCH
+# =========================================================
 
 @app.route("/api/search")
-def search_api():
+def search_student():
 
-    semester = request.args.get(
-        "semester",
-        "Semester 1"
+    year = request.args.get(
+        "year",
+        "3rd Year"
     )
 
     query = request.args.get(
@@ -417,7 +231,7 @@ def search_api():
         ""
     ).strip().lower()
 
-    df = load_students(semester)
+    df = load_students(year)
 
     if df.empty:
         return jsonify([])
@@ -431,14 +245,21 @@ def search_api():
         )
 
     result = df[
-        df.astype(str)
-        .apply(
+        df.apply(
             lambda row:
-            row.str.lower()
-            .str.contains(
-                query,
-                na=False
-            ).any(),
+            query in str(
+                row.get(
+                    "Name",
+                    ""
+                )
+            ).lower()
+            or
+            query in str(
+                row.get(
+                    "Student_ID",
+                    ""
+                )
+            ).lower(),
             axis=1
         )
     ]
@@ -450,19 +271,19 @@ def search_api():
     )
 
 
-# ============================================================
+# =========================================================
 # DASHBOARD STATS
-# ============================================================
+# =========================================================
 
 @app.route("/api/stats")
-def stats_api():
+def stats():
 
-    semester = request.args.get(
-        "semester",
-        "Semester 1"
+    year = request.args.get(
+        "year",
+        "3rd Year"
     )
 
-    df = load_students(semester)
+    df = load_students(year)
 
     if df.empty:
 
@@ -475,71 +296,41 @@ def stats_api():
 
     total_students = len(df)
 
-    # Percentage
-    if "Percentage" in df.columns:
-
-        percentage = pd.to_numeric(
+    # Average Percentage
+    average_percentage = round(
+        pd.to_numeric(
             df["Percentage"],
             errors="coerce"
-        )
+        ).mean(),
+        2
+    )
 
-        average_percentage = round(
-            percentage.mean(),
-            2
-        )
-
-    else:
-
-        average_percentage = 0
-
-    # Top performer
+    # Top Performer
     top_performer = "-"
 
-    if (
-        "Percentage" in df.columns
-        and "Name" in df.columns
-    ):
+    if "Name" in df.columns:
 
-        temp = df.copy()
+        index = df[
+            "Percentage"
+        ].idxmax()
 
-        temp["Percentage"] = pd.to_numeric(
-            temp["Percentage"],
-            errors="coerce"
-        )
-
-        temp = temp.dropna(
-            subset=["Percentage"]
-        )
-
-        if not temp.empty:
-
-            index = temp[
-                "Percentage"
-            ].idxmax()
+        if index is not None:
 
             top_performer = str(
-                temp.loc[
+                df.loc[
                     index,
                     "Name"
                 ]
             )
 
-    # Attendance
-    if "Attendance" in df.columns:
-
-        attendance = pd.to_numeric(
+    # Average Attendance
+    average_attendance = round(
+        pd.to_numeric(
             df["Attendance"],
             errors="coerce"
-        )
-
-        average_attendance = round(
-            attendance.mean(),
-            2
-        )
-
-    else:
-
-        average_attendance = 0
+        ).mean(),
+        2
+    )
 
     return jsonify({
 
@@ -557,9 +348,9 @@ def stats_api():
     })
 
 
-# ============================================================
+# =========================================================
 # ADD STUDENT
-# ============================================================
+# =========================================================
 
 @app.route(
     "/api/add_student",
@@ -571,133 +362,125 @@ def add_student():
 
         data = request.get_json()
 
-        semester = data.get(
-            "Semester",
-            "Semester 1"
+        year = data.get(
+            "year",
+            "3rd Year"
         )
 
-        df = load_students(semester)
+        df = load_students(year)
 
-        config = SEMESTER_CONFIG.get(
-            semester
-        )
+        student_id = str(
+            data.get(
+                "Student_ID",
+                ""
+            )
+        ).strip()
 
-        if not config:
+        name = str(
+            data.get(
+                "Name",
+                ""
+            )
+        ).strip()
+
+        if not student_id or not name:
 
             return jsonify({
                 "success": False,
-                "message": "Invalid semester."
+                "message":
+                    "Student ID and Name are required."
             })
 
-        subjects = get_subject_columns(df)
+        # Check duplicate ID
+        if not df.empty:
 
-        new_student = {}
+            if "Student_ID" in df.columns:
 
-        new_student["Student_ID"] = data.get(
-            "Student_ID",
-            ""
-        )
+                duplicate = df[
+                    df["Student_ID"]
+                    .astype(str)
+                    .str.lower()
+                    == student_id.lower()
+                ]
 
-        new_student["Name"] = data.get(
-            "Name",
-            ""
-        )
+                if not duplicate.empty:
 
-        new_student["Gender"] = data.get(
-            "Gender",
-            ""
-        )
+                    return jsonify({
+                        "success": False,
+                        "message":
+                            "Student ID already exists."
+                    })
 
-        new_student["Class"] = data.get(
-            "Class",
-            "Computer Engineering"
-        )
+        new_student = {
 
-        for subject in subjects:
+            "Student_ID":
+                student_id,
 
-            value = data.get(
-                subject,
-                0
+            "Name":
+                name,
+
+            "Gender":
+                data.get(
+                    "Gender",
+                    ""
+                ),
+
+            "Class":
+                data.get(
+                    "Class",
+                    ""
+                )
+        }
+
+        # Subjects
+        for subject in SUBJECTS:
+
+            new_student[subject] = float(
+                data.get(
+                    subject,
+                    0
+                ) or 0
             )
 
-            try:
-                value = float(value)
-            except:
-                value = 0
-
-            new_student[subject] = value
-
-        attendance = data.get(
-            "Attendance",
-            0
-        )
-
-        try:
-            attendance = float(attendance)
-        except:
-            attendance = 0
-
-        new_student["Attendance"] = attendance
-
-        # Calculate total
-        total = sum(
-            new_student.get(
-                subject,
+        new_student["Attendance"] = float(
+            data.get(
+                "Attendance",
                 0
-            )
-            for subject in subjects
+            ) or 0
         )
 
-        new_student["Total"] = total
+        new_df = pd.DataFrame(
+            [new_student]
+        )
 
-        if subjects:
+        # Combine
+        if df.empty:
 
-            percentage = (
-                total /
-                (len(subjects) * 100)
-            ) * 100
+            final_df = new_df
 
         else:
 
-            percentage = 0
-
-        new_student["Percentage"] = round(
-            percentage,
-            2
-        )
-
-        new_student["Attendance Status"] = (
-            "Good"
-            if attendance >= 75
-            else "Low"
-        )
-
-        if percentage >= 90:
-            grade = "A+"
-        elif percentage >= 80:
-            grade = "A"
-        elif percentage >= 70:
-            grade = "B"
-        elif percentage >= 60:
-            grade = "C"
-        elif percentage >= 50:
-            grade = "D"
-        else:
-            grade = "F"
-
-        new_student["Grade"] = grade
-
-        result = pd.concat(
-            [
-                df,
-                pd.DataFrame([new_student])
-            ],
-            ignore_index=True
-        )
+            final_df = pd.concat(
+                [
+                    df[
+                        [
+                            c for c in df.columns
+                            if c not in [
+                                "Total",
+                                "Percentage",
+                                "Attendance Status",
+                                "Grade"
+                            ]
+                        ]
+                    ],
+                    new_df
+                ],
+                ignore_index=True
+            )
 
         if save_students(
-            semester,
-            result
+            year,
+            final_df
         ):
 
             return jsonify({
@@ -712,19 +495,20 @@ def add_student():
                 "Unable to save student."
         })
 
-    except Exception as error:
+    except Exception as e:
 
-        print("ADD STUDENT ERROR:", error)
+        print("ADD STUDENT ERROR:", e)
 
         return jsonify({
             "success": False,
-            "message": str(error)
+            "message":
+                "Error while adding student."
         })
 
 
-# ============================================================
-# UPLOAD EXCEL / CSV
-# ============================================================
+# =========================================================
+# UPLOAD CSV / EXCEL
+# =========================================================
 
 @app.route(
     "/api/upload",
@@ -749,62 +533,36 @@ def upload_file():
             return jsonify({
                 "success": False,
                 "message":
-                    "No file selected."
+                    "Please select a file."
             })
 
-        semester = request.form.get(
-            "semester",
-            "Semester 1"
+        year = request.form.get(
+            "year",
+            "3rd Year"
         )
 
-        filename = secure_filename(
-            file.filename
-        )
+        filename = file.filename.lower()
 
-        extension = os.path.splitext(
-            filename
-        )[1].lower()
+        # -------------------------------------------------
+        # READ CSV
+        # -------------------------------------------------
 
-        # Excel
-        if extension in [
-            ".xlsx",
-            ".xls"
-        ]:
-
-            uploaded_df = pd.read_excel(
-                file,
-                header=None
-            )
-
-            header_row = None
-
-            for index, row in uploaded_df.iterrows():
-
-                values = [
-                    str(x).strip()
-                    for x in row.tolist()
-                    if pd.notna(x)
-                ]
-
-                if "Student_ID" in values:
-
-                    header_row = index
-                    break
-
-            if header_row is None:
-                header_row = 0
-
-            file.stream.seek(0)
-
-            uploaded_df = pd.read_excel(
-                file,
-                header=header_row
-            )
-
-        # CSV
-        elif extension == ".csv":
+        if filename.endswith(".csv"):
 
             uploaded_df = pd.read_csv(
+                file
+            )
+
+        # -------------------------------------------------
+        # READ EXCEL
+        # -------------------------------------------------
+
+        elif (
+            filename.endswith(".xlsx")
+            or filename.endswith(".xls")
+        ):
+
+            uploaded_df = pd.read_excel(
                 file
             )
 
@@ -813,7 +571,7 @@ def upload_file():
             return jsonify({
                 "success": False,
                 "message":
-                    "Please upload Excel or CSV file."
+                    "Only CSV or Excel files are supported."
             })
 
         uploaded_df.columns = (
@@ -822,13 +580,49 @@ def upload_file():
             .str.strip()
         )
 
-        uploaded_df = process_dataframe(
-            uploaded_df
-        )
+        if uploaded_df.empty:
+
+            return jsonify({
+                "success": False,
+                "message":
+                    "File is empty."
+            })
+
+        # -------------------------------------------------
+        # EXISTING DATA
+        # -------------------------------------------------
 
         existing_df = load_students(
-            semester
+            year
         )
+
+        # Remove calculated columns
+        calculated_columns = [
+            "Total",
+            "Percentage",
+            "Attendance Status",
+            "Grade"
+        ]
+
+        if not existing_df.empty:
+
+            existing_df = existing_df[
+                [
+                    c for c in existing_df.columns
+                    if c not in calculated_columns
+                ]
+            ]
+
+        uploaded_df = uploaded_df[
+            [
+                c for c in uploaded_df.columns
+                if c not in calculated_columns
+            ]
+        ]
+
+        # -------------------------------------------------
+        # COMBINE
+        # -------------------------------------------------
 
         if existing_df.empty:
 
@@ -844,15 +638,24 @@ def upload_file():
                 ignore_index=True
             )
 
+        # Remove duplicate Student IDs
+        if "Student_ID" in final_df.columns:
+
+            final_df = final_df.drop_duplicates(
+                subset=["Student_ID"],
+                keep="last"
+            )
+
+        # Save
         if save_students(
-            semester,
+            year,
             final_df
         ):
 
             return jsonify({
                 "success": True,
                 "message":
-                    "Student data imported successfully."
+                    f"{len(uploaded_df)} student record(s) imported successfully."
             })
 
         return jsonify({
@@ -861,19 +664,20 @@ def upload_file():
                 "Unable to save uploaded data."
         })
 
-    except Exception as error:
+    except Exception as e:
 
-        print("UPLOAD ERROR:", error)
+        print("UPLOAD ERROR:", e)
 
         return jsonify({
             "success": False,
-            "message": str(error)
+            "message":
+                "File upload failed. Check the file format."
         })
 
 
-# ============================================================
+# =========================================================
 # RUN
-# ============================================================
+# =========================================================
 
 if __name__ == "__main__":
 
