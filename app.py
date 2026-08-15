@@ -4,12 +4,16 @@ import os
 
 app = Flask(__name__)
 
-DATA_FOLDER = "data"
-os.makedirs(DATA_FOLDER, exist_ok=True)
+# =========================================================
+# BASE FOLDER
+# =========================================================
+# semester_1.xlsx ते semester_6.xlsx GitHub root मध्ये आहेत.
+BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
-# ---------------------------------------------------------
+
+# =========================================================
 # YEAR + SEMESTER
-# ---------------------------------------------------------
+# =========================================================
 
 SEMESTERS = {
     "1st Year": ["Semester 1", "Semester 2"],
@@ -26,54 +30,68 @@ SEMESTER_YEAR = {
     "Semester 6": "3rd Year"
 }
 
-# Default Computer Engineering subjects.
-# If Excel contains these columns, their actual marks are used.
+
+# =========================================================
+# COMPUTER ENGINEERING SUBJECTS
+# =========================================================
+
 SUBJECTS = {
     "Semester 1": [
-        ("BMS", "Basic Mathematics"),
-        ("BEE", "Basic Electrical Engineering"),
-        ("PCC", "Programming in C"),
-        ("EG", "Engineering Graphics")
+        ("Basic Mathematics", "Basic Mathematics"),
+        ("Communication Skills", "Communication Skills"),
+        ("Engineering Physics", "Engineering Physics"),
+        ("Engineering Chemistry", "Engineering Chemistry"),
+        ("Basic Science", "Basic Science")
     ],
+
     "Semester 2": [
-        ("AMS", "Applied Mathematics"),
-        ("PWP", "Python Programming"),
-        ("DMS", "Data Management System"),
-        ("DTE", "Digital Techniques")
+        ("Applied Mathematics", "Applied Mathematics"),
+        ("Engineering Graphics", "Engineering Graphics"),
+        ("Basic Electrical Engineering", "Basic Electrical Engineering"),
+        ("Programming in C", "Programming in C"),
+        ("Web Page Design", "Web Page Design")
     ],
+
     "Semester 3": [
-        ("DSU", "Data Structure"),
-        ("DBMS", "Database Management System"),
-        ("CG", "Computer Graphics"),
-        ("DTE", "Digital Techniques")
+        ("Object Oriented Programming", "Object Oriented Programming"),
+        ("Data Structure", "Data Structure"),
+        ("Database Management System", "Database Management System"),
+        ("Computer Networks", "Computer Networks"),
+        ("Operating System", "Operating System")
     ],
+
     "Semester 4": [
-        ("JPR", "Java Programming"),
-        ("DCN", "Data Communication and Computer Network"),
-        ("MIC", "Microprocessor"),
-        ("DAD", "Database Management")
+        ("Java Programming", "Java Programming"),
+        ("Data Communication and Network", "Data Communication and Network"),
+        ("Microprocessor", "Microprocessor"),
+        ("Software Engineering", "Software Engineering"),
+        ("Python Programming", "Python Programming")
     ],
+
     "Semester 5": [
-        ("AJP", "Advanced Java Programming"),
-        ("OS", "Operating System"),
-        ("ETI", "Emerging Trends in IT"),
-        ("ML", "Machine Learning")
+        ("Advanced Java", "Advanced Java"),
+        ("Web Based Application Development", "Web Based Application Development"),
+        ("Software Testing", "Software Testing"),
+        ("Computer Security", "Computer Security"),
+        ("Project Management", "Project Management")
     ],
+
     "Semester 6": [
-        ("WBP", "Web Based Application Development"),
-        ("MAD", "Mobile Application Development"),
-        ("CSS", "Cloud and Security"),
-        ("PWP", "Project Work")
+        ("Mobile Application Development", "Mobile Application Development"),
+        ("Cloud Computing", "Cloud Computing"),
+        ("Artificial Intelligence", "Artificial Intelligence"),
+        ("Internet of Things", "Internet of Things"),
+        ("Major Project", "Major Project")
     ]
 }
 
 
-# ---------------------------------------------------------
-# FILE NAME
-# IMPORTANT: semester-wise files prevent marks mixing
-# ---------------------------------------------------------
+# =========================================================
+# SEMESTER FILE
+# =========================================================
 
 def semester_file(semester):
+
     names = {
         "Semester 1": "semester_1.xlsx",
         "Semester 2": "semester_2.xlsx",
@@ -83,15 +101,20 @@ def semester_file(semester):
         "Semester 6": "semester_6.xlsx"
     }
 
+    filename = names.get(semester)
+
+    if not filename:
+        return None
+
     return os.path.join(
-        DATA_FOLDER,
-        names[semester]
+        BASE_FOLDER,
+        filename
     )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # GRADE
-# ---------------------------------------------------------
+# =========================================================
 
 def get_grade(percentage):
 
@@ -116,32 +139,40 @@ def get_grade(percentage):
         return "F"
 
 
-# ---------------------------------------------------------
+# =========================================================
 # ATTENDANCE STATUS
-# ---------------------------------------------------------
+# =========================================================
 
 def attendance_status(value):
 
     try:
-        a = float(value)
+        attendance = float(value)
     except:
         return "Bad"
 
-    if a >= 75:
+    if attendance >= 75:
         return "Good"
-    else:
-        return "Bad"
+
+    return "Bad"
 
 
-# ---------------------------------------------------------
+# =========================================================
 # READ EXCEL
-# ---------------------------------------------------------
+# =========================================================
 
 def read_excel(semester):
 
     file = semester_file(semester)
 
+    if not file:
+        return pd.DataFrame()
+
     if not os.path.exists(file):
+
+        print(
+            f"Excel file not found: {file}"
+        )
+
         return pd.DataFrame()
 
     try:
@@ -158,32 +189,50 @@ def read_excel(semester):
 
     except Exception as e:
 
-        print("Excel read error:", e)
+        print(
+            "Excel read error:",
+            e
+        )
 
         return pd.DataFrame()
 
 
-# ---------------------------------------------------------
+# =========================================================
 # FIND SUBJECT COLUMNS
-# ---------------------------------------------------------
+# =========================================================
 
 def get_subject_columns(df, semester):
 
+    if df.empty:
+        return []
+
     default_subjects = [
-        code for code, name
-        in SUBJECTS.get(semester, [])
+        code
+        for code, name
+        in SUBJECTS.get(
+            semester,
+            []
+        )
     ]
 
     found = []
 
-    # First preference: semester's proper subject codes
-    for code in default_subjects:
+    # -----------------------------------------------------
+    # First check predefined subject names
+    # -----------------------------------------------------
 
-        if code in df.columns:
-            found.append(code)
+    for subject in default_subjects:
 
-    # If Excel has different subject columns,
-    # use those numeric columns instead of showing 0.
+        if subject in df.columns:
+
+            found.append(subject)
+
+
+    # -----------------------------------------------------
+    # If not found, detect numeric subject columns
+    # automatically.
+    # -----------------------------------------------------
+
     if not found:
 
         ignored = {
@@ -211,14 +260,15 @@ def get_subject_columns(df, semester):
             )
 
             if numeric.notna().sum() > 0:
+
                 found.append(col)
 
     return found
 
 
-# ---------------------------------------------------------
+# =========================================================
 # PROCESS DATA
-# ---------------------------------------------------------
+# =========================================================
 
 def process_data(df, semester):
 
@@ -233,38 +283,62 @@ def process_data(df, semester):
         .str.strip()
     )
 
+
+    # -----------------------------------------------------
     # Required columns
-    for col in [
+    # -----------------------------------------------------
+
+    required_columns = [
         "Student_ID",
         "Name",
         "Gender",
         "Class",
         "Attendance"
-    ]:
+    ]
+
+    for col in required_columns:
 
         if col not in df.columns:
+
             df[col] = ""
 
+
+    # -----------------------------------------------------
     # Student ID
+    # -----------------------------------------------------
+
     df["Student_ID"] = (
         df["Student_ID"]
         .astype(str)
-        .str.replace(".0", "", regex=False)
+        .str.replace(
+            ".0",
+            "",
+            regex=False
+        )
         .str.strip()
     )
 
+
+    # -----------------------------------------------------
     # Attendance
+    # -----------------------------------------------------
+
     df["Attendance"] = pd.to_numeric(
         df["Attendance"],
         errors="coerce"
     ).fillna(0)
+
+
+    # -----------------------------------------------------
+    # Subjects
+    # -----------------------------------------------------
 
     subjects = get_subject_columns(
         df,
         semester
     )
 
-    # Convert subject marks
+
     for subject in subjects:
 
         df[subject] = pd.to_numeric(
@@ -272,59 +346,89 @@ def process_data(df, semester):
             errors="coerce"
         ).fillna(0)
 
-    # Total
+
+    # -----------------------------------------------------
+    # TOTAL + PERCENTAGE
+    # -----------------------------------------------------
+
     if subjects:
 
-        df["Total"] = df[subjects].sum(
-            axis=1
-        )
+        df["Total"] = df[
+            subjects
+        ].sum(axis=1)
 
         max_marks = len(subjects) * 100
 
-        df["Percentage"] = (
-            df["Total"] /
-            max_marks
-        ) * 100
+        if max_marks > 0:
+
+            df["Percentage"] = (
+                df["Total"] /
+                max_marks
+            ) * 100
+
+        else:
+
+            df["Percentage"] = 0
 
     else:
 
         df["Total"] = 0
         df["Percentage"] = 0
 
-    df["Percentage"] = df[
-        "Percentage"
-    ].round(2)
 
-    df["Grade"] = df[
-        "Percentage"
-    ].apply(get_grade)
+    df["Percentage"] = (
+        df["Percentage"]
+        .round(2)
+    )
 
-    df["Attendance Status"] = df[
-        "Attendance"
-    ].apply(attendance_status)
+
+    # -----------------------------------------------------
+    # GRADE
+    # -----------------------------------------------------
+
+    df["Grade"] = (
+        df["Percentage"]
+        .apply(get_grade)
+    )
+
+
+    # -----------------------------------------------------
+    # ATTENDANCE STATUS
+    # -----------------------------------------------------
+
+    df["Attendance Status"] = (
+        df["Attendance"]
+        .apply(attendance_status)
+    )
+
 
     return df
 
 
-# ---------------------------------------------------------
-# SAVE
-# ---------------------------------------------------------
+# =========================================================
+# SAVE EXCEL
+# =========================================================
 
 def save_excel(df, semester):
 
     file = semester_file(semester)
 
-    # Don't permanently store calculated columns
+    if not file:
+        return
+
     save_df = df.copy()
 
-    for col in [
+    calculated_columns = [
         "Total",
         "Percentage",
         "Grade",
         "Attendance Status"
-    ]:
+    ]
+
+    for col in calculated_columns:
 
         if col in save_df.columns:
+
             save_df = save_df.drop(
                 columns=[col]
             )
@@ -335,30 +439,33 @@ def save_excel(df, semester):
     )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # HOME
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route("/")
 def home():
 
-    response = render_template(
+    return render_template(
         "index.html"
     )
 
-    return response
 
-
-# ---------------------------------------------------------
+# =========================================================
 # NO CACHE
-# ---------------------------------------------------------
+# =========================================================
 
 @app.after_request
 def no_cache(response):
 
     response.headers[
         "Cache-Control"
-    ] = "no-store, no-cache, must-revalidate, max-age=0"
+    ] = (
+        "no-store, "
+        "no-cache, "
+        "must-revalidate, "
+        "max-age=0"
+    )
 
     response.headers[
         "Pragma"
@@ -371,9 +478,9 @@ def no_cache(response):
     return response
 
 
-# ---------------------------------------------------------
+# =========================================================
 # SUBJECT API
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route("/api/subjects")
 def subject_api():
@@ -388,6 +495,7 @@ def subject_api():
             "code": code,
             "name": name
         }
+
         for code, name
         in SUBJECTS.get(
             semester,
@@ -396,20 +504,29 @@ def subject_api():
     ]
 
     return jsonify({
+
         "success": True,
-        "branch": "Computer Engineering",
-        "semester": semester,
-        "year": SEMESTER_YEAR.get(
+
+        "branch":
+            "Computer Engineering",
+
+        "semester":
             semester,
-            "1st Year"
-        ),
-        "subjects": subjects
+
+        "year":
+            SEMESTER_YEAR.get(
+                semester,
+                "1st Year"
+            ),
+
+        "subjects":
+            subjects
     })
 
 
-# ---------------------------------------------------------
+# =========================================================
 # STUDENTS API
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route("/api/students")
 def students_api():
@@ -419,20 +536,26 @@ def students_api():
         "Semester 1"
     )
 
-    df = read_excel(semester)
+    df = read_excel(
+        semester
+    )
 
     if df.empty:
+
         return jsonify([])
+
 
     df = process_data(
         df,
         semester
     )
 
+
     subjects = get_subject_columns(
         df,
         semester
     )
+
 
     columns = [
         "Student_ID",
@@ -441,7 +564,9 @@ def students_api():
         "Class"
     ]
 
+
     columns += subjects
+
 
     columns += [
         "Total",
@@ -451,21 +576,28 @@ def students_api():
         "Grade"
     ]
 
+
     columns = [
-        c for c in columns
+        c
+        for c in columns
         if c in df.columns
     ]
 
+
     return jsonify(
-        df[columns].fillna("").to_dict(
+        df[
+            columns
+        ]
+        .fillna("")
+        .to_dict(
             orient="records"
         )
     )
 
 
-# ---------------------------------------------------------
+# =========================================================
 # ANALYTICS
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route("/api/analytics")
 def analytics():
@@ -475,28 +607,45 @@ def analytics():
         "Semester 1"
     )
 
-    df = read_excel(semester)
+    df = read_excel(
+        semester
+    )
+
 
     if df.empty:
 
         return jsonify({
+
             "total_students": 0,
+
             "average_percentage": 0,
+
             "top_performer": "-",
+
             "average_attendance": 0,
+
             "subjects": {},
+
             "grades": {}
+
         })
+
 
     df = process_data(
         df,
         semester
     )
 
+
     subjects = get_subject_columns(
         df,
         semester
     )
+
+
+    # -----------------------------------------------------
+    # TOP PERFORMER
+    # -----------------------------------------------------
 
     top_name = "-"
 
@@ -507,8 +656,16 @@ def analytics():
         ].idxmax()
 
         top_name = str(
-            df.loc[index, "Name"]
+            df.loc[
+                index,
+                "Name"
+            ]
         )
+
+
+    # -----------------------------------------------------
+    # SUBJECT AVERAGE
+    # -----------------------------------------------------
 
     subject_average = {}
 
@@ -523,11 +680,17 @@ def analytics():
             2
         )
 
+
+    # -----------------------------------------------------
+    # GRADES
+    # -----------------------------------------------------
+
     grades = (
         df["Grade"]
         .value_counts()
         .to_dict()
     )
+
 
     return jsonify({
 
@@ -537,7 +700,9 @@ def analytics():
         "average_percentage":
             round(
                 float(
-                    df["Percentage"].mean()
+                    df[
+                        "Percentage"
+                    ].mean()
                 ),
                 2
             ),
@@ -548,7 +713,9 @@ def analytics():
         "average_attendance":
             round(
                 float(
-                    df["Attendance"].mean()
+                    df[
+                        "Attendance"
+                    ].mean()
                 ),
                 2
             ),
@@ -561,9 +728,9 @@ def analytics():
     })
 
 
-# ---------------------------------------------------------
+# =========================================================
 # EXCEL UPLOAD
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route(
     "/api/upload_excel",
@@ -578,37 +745,60 @@ def upload_excel():
             "Semester 1"
         )
 
+
         if "file" not in request.files:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "Excel file select करा."
+
             })
 
-        file = request.files["file"]
+
+        file = request.files[
+            "file"
+        ]
+
 
         if not file.filename:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "No file selected."
+
             })
 
-        filename = file.filename.lower()
+
+        filename = (
+            file.filename
+            .lower()
+        )
+
 
         if not filename.endswith(
             (".xlsx", ".xls")
         ):
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "फक्त Excel .xlsx किंवा .xls file upload करा."
+
             })
 
-        df = pd.read_excel(file)
+
+        df = pd.read_excel(
+            file
+        )
+
 
         df.columns = (
             df.columns
@@ -616,46 +806,69 @@ def upload_excel():
             .str.strip()
         )
 
+
+        # -------------------------------------------------
         # Required fields
+        # -------------------------------------------------
+
         if "Student_ID" not in df.columns:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "Excel मध्ये Student_ID column पाहिजे."
+
             })
+
 
         if "Name" not in df.columns:
 
             return jsonify({
+
                 "success": False,
+
                 "message":
                     "Excel मध्ये Name column पाहिजे."
+
             })
 
-        # Save exactly to selected semester
+
+        # -------------------------------------------------
+        # Save to selected semester
+        # -------------------------------------------------
+
         save_excel(
             df,
             semester
         )
 
+
         return jsonify({
+
             "success": True,
+
             "message":
                 f"{semester} Excel successfully uploaded."
+
         })
+
 
     except Exception as e:
 
         return jsonify({
+
             "success": False,
+
             "message": str(e)
+
         })
 
 
-# ---------------------------------------------------------
+# =========================================================
 # ADD STUDENT
-# ---------------------------------------------------------
+# =========================================================
 
 @app.route(
     "/api/add_student",
@@ -672,14 +885,37 @@ def add_student():
             "Semester 1"
         )
 
+
         df = read_excel(
             semester
         )
+
 
         subjects = get_subject_columns(
             df,
             semester
         )
+
+
+        # -------------------------------------------------
+        # If Excel is empty, use semester subjects
+        # -------------------------------------------------
+
+        if not subjects:
+
+            subjects = [
+
+                code
+
+                for code, name
+
+                in SUBJECTS.get(
+                    semester,
+                    []
+                )
+
+            ]
+
 
         student = {
 
@@ -714,44 +950,48 @@ def add_student():
                 )
         }
 
-        # If no Excel exists yet,
-        # use default semester subjects
-        if not subjects:
 
-            subjects = [
-                code
-                for code, name
-                in SUBJECTS.get(
-                    semester,
-                    []
-                )
-            ]
+        # -------------------------------------------------
+        # Subject marks
+        # -------------------------------------------------
 
         for subject in subjects:
 
-            student[subject] = data.get(
+            student[
+                subject
+            ] = data.get(
                 subject,
                 0
             )
+
 
         new_df = pd.DataFrame(
             [student]
         )
 
+
+        # -------------------------------------------------
+        # Existing data
+        # -------------------------------------------------
+
         if not df.empty:
 
-            # Remove calculated columns
-            for col in [
+            calculated_columns = [
                 "Total",
                 "Percentage",
                 "Grade",
                 "Attendance Status"
-            ]:
+            ]
+
+
+            for col in calculated_columns:
 
                 if col in df.columns:
+
                     df = df.drop(
                         columns=[col]
                     )
+
 
             df = pd.concat(
                 [
@@ -761,42 +1001,55 @@ def add_student():
                 ignore_index=True
             )
 
+
         else:
 
             df = new_df
+
 
         save_excel(
             df,
             semester
         )
 
+
         return jsonify({
+
             "success": True,
+
             "message":
                 "Student added successfully."
+
         })
+
 
     except Exception as e:
 
         return jsonify({
+
             "success": False,
+
             "message": str(e)
+
         })
 
 
-# ---------------------------------------------------------
+# =========================================================
 # RUN
-# ---------------------------------------------------------
+# =========================================================
 
 if __name__ == "__main__":
 
     app.run(
+
         host="0.0.0.0",
+
         port=int(
             os.environ.get(
                 "PORT",
                 5000
             )
         ),
+
         debug=False
     )
