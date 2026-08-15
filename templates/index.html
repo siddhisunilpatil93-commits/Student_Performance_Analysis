@@ -16,6 +16,32 @@ select,input{padding:12px;border:2px solid #dbeafe;border-radius:9px}select{min-
 .modal{display:none;position:fixed;inset:0;background:#0f172acc;justify-content:center;align-items:center;z-index:20}.modal-content{background:white;width:900px;max-width:95%;max-height:92vh;overflow:auto;padding:25px;border-radius:18px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.grid label{font-weight:bold;display:block;margin-bottom:5px}.grid input{width:100%}.close{float:right;font-size:24px;cursor:pointer}
 @media(max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}.subjects{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;max-width:100%}.cards,.charts,.subjects,.grid{grid-template-columns:1fr}.search{flex-direction:column}}
 </style></head><body>
+{% if login_page %}
+<style>
+.login-page{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed);}
+.login-card{width:420px;max-width:92%;background:white;padding:35px;border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.login-icon{text-align:center;font-size:55px}.login-card h1{text-align:center;color:#172554;margin:10px 0 6px}.login-card p{text-align:center;color:#64748b;margin-bottom:25px}
+.login-card label{display:block;font-weight:bold;margin:14px 0 7px;color:#172554}.login-card input{width:100%;padding:13px;border:2px solid #c7d2fe;border-radius:10px;font-size:15px}
+.login-card button{width:100%;margin-top:22px;padding:14px;border:0;border-radius:10px;background:#4f46e5;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+.login-error{margin-top:15px;padding:10px;border-radius:8px;background:#fee2e2;color:#b91c1c;text-align:center;font-weight:bold}.login-note{font-size:13px;margin-top:18px}
+</style>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-icon">🔐</div>
+    <h1>Student Analytics</h1>
+    <p>Computer Engineering • Secure Login</p>
+    <form method="POST" action="{{ url_for('login') }}">
+      <label>Username</label>
+      <input type="text" name="username" required autocomplete="username">
+      <label>Password</label>
+      <input type="password" name="password" required autocomplete="current-password">
+      <button type="submit">🔓 Login</button>
+    </form>
+    {% if login_error %}<div class="login-error">{{ login_error }}</div>{% endif %}
+    <p class="login-note">Authorized users only.</p>
+  </div>
+</div>
+{% else %}
 <aside class="sidebar"><div class="logo"><div class="logo-icon">🎓</div><h2>Student Analytics</h2><p>Computer Engineering</p></div>
 <div class="menu"><button onclick="topPage()">🏠 Dashboard</button><button onclick="go('searchBox')">🔍 Search Student</button><button onclick="openAdd()">➕ Add Student</button><button onclick="go('students')">👨‍🎓 All Students</button><button onclick="go('charts')">📊 Analytics</button></div></aside>
 <main class="main">
@@ -49,4 +75,5 @@ async function uploadExcel(){let f=$('excel').files[0];if(!f)return alert('Excel
 function draw(d){if(chart1)chart1.destroy();if(chart2)chart2.destroy();chart1=new Chart($('subjectChart'),{type:'bar',data:{labels:Object.keys(d.subjects),datasets:[{label:'Average Marks',data:Object.values(d.subjects)}]},options:{responsive:true,scales:{y:{beginAtZero:true,max:100}}}});chart2=new Chart($('gradeChart'),{type:'doughnut',data:{labels:Object.keys(d.grades),datasets:[{data:Object.values(d.grades)}]},options:{responsive:true}})}
 function go(id){$(id).scrollIntoView({behavior:'smooth'})}function topPage(){scrollTo({top:0,behavior:'smooth'})}
 setYear('1st Year');
-</script></body></html>
+</script>{% endif %}
+</body></html>
