@@ -42,6 +42,7 @@ body {
     );
     color: white;
     padding: 25px 18px;
+    z-index: 100;
 }
 
 .logo {
@@ -472,10 +473,7 @@ tr:hover {
 
 <body>
 
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
+<!-- ================= SIDEBAR ================= -->
 
 <div class="sidebar">
 
@@ -493,7 +491,6 @@ tr:hover {
 
     </div>
 
-
     <div class="menu">
 
         <button
@@ -504,14 +501,12 @@ tr:hover {
 
         </button>
 
-
         <button
             onclick="focusSearch()">
 
             🔍 Search Student
 
         </button>
-
 
         <button
             onclick="openModal()">
@@ -520,14 +515,12 @@ tr:hover {
 
         </button>
 
-
         <button
             onclick="showStudents()">
 
             👨‍🎓 All Students
 
         </button>
-
 
         <button
             onclick="scrollCharts()">
@@ -541,12 +534,9 @@ tr:hover {
 </div>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
+<!-- ================= MAIN ================= -->
 
 <div class="main">
-
 
     <!-- HEADER -->
 
@@ -574,9 +564,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         SEMESTER SELECTOR
-    ================================================= -->
+    <!-- ================= SEMESTER SELECTOR ================= -->
 
     <div class="selector-box">
 
@@ -591,7 +579,6 @@ tr:hover {
             2026-27
 
         </div>
-
 
         <label>
             Semester:
@@ -630,9 +617,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         SUBJECTS
-    ================================================= -->
+    <!-- ================= SUBJECTS ================= -->
 
     <div class="subject-box">
 
@@ -649,9 +634,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         CARDS
-    ================================================= -->
+    <!-- ================= CARDS ================= -->
 
     <div class="cards">
 
@@ -741,9 +724,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         SEARCH
-    ================================================= -->
+    <!-- ================= SEARCH ================= -->
 
     <div
         class="search-box"
@@ -761,7 +742,6 @@ tr:hover {
                 placeholder="Enter Student Name or Student ID..."
                 onkeyup="searchStudent()">
 
-
             <button
                 class="primary"
                 onclick="searchStudent()">
@@ -769,7 +749,6 @@ tr:hover {
                 Search
 
             </button>
-
 
             <button
                 class="green"
@@ -784,9 +763,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         FILE UPLOAD
-    ================================================= -->
+    <!-- ================= FILE UPLOAD ================= -->
 
     <div class="upload-box">
 
@@ -795,16 +772,17 @@ tr:hover {
         </h2>
 
         <p>
-            Excel, Word किंवा PDF file upload करा.
+            Excel file upload करा. Selected semester च्या data मध्ये students add होतील.
         </p>
 
         <div class="upload-row">
 
+            <!-- IMPORTANT: Excel added here -->
+
             <input
                 type="file"
                 id="studentFile"
-                accept=".xlsx,.docx,.pdf">
-
+                accept=".xlsx,.xls,.docx,.pdf">
 
             <button
                 class="green"
@@ -825,9 +803,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         CHARTS
-    ================================================= -->
+    <!-- ================= CHARTS ================= -->
 
     <div
         class="charts"
@@ -861,9 +837,7 @@ tr:hover {
     </div>
 
 
-    <!-- =================================================
-         TABLE
-    ================================================= -->
+    <!-- ================= TABLE ================= -->
 
     <div class="table-card">
 
@@ -893,9 +867,7 @@ tr:hover {
 </div>
 
 
-<!-- =====================================================
-     ADD STUDENT MODAL
-===================================================== -->
+<!-- ================= ADD STUDENT MODAL ================= -->
 
 <div
     class="modal"
@@ -915,9 +887,7 @@ tr:hover {
             ➕ Add New Student
         </h2>
 
-
         <div class="form-grid">
-
 
             <div class="form-group">
 
@@ -967,8 +937,7 @@ tr:hover {
             </div>
 
 
-            <div
-                class="form-group">
+            <div class="form-group">
 
                 <label>
                     Attendance %
@@ -1005,7 +974,6 @@ tr:hover {
                 💾 Save Student
 
             </button>
-
 
             <button
                 class="primary"
@@ -1054,23 +1022,39 @@ function loadSubjects() {
     )
 
     .then(
-        response => response.json()
+        response => {
+
+            if (!response.ok) {
+                throw new Error(
+                    "Subject API error"
+                );
+            }
+
+            return response.json();
+
+        }
     )
 
     .then(
         data => {
 
             if (!data.success) {
+
+                console.error(
+                    data.message
+                );
+
                 return;
+
             }
 
             subjects =
-                data.subjects;
+                data.subjects || [];
 
             document.getElementById(
                 "academicYear"
             ).innerText =
-                data.academic_year;
+                data.academic_year || "-";
 
             renderSubjects();
 
@@ -1079,6 +1063,22 @@ function loadSubjects() {
             renderSubjectInputs();
 
             loadStudents();
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "LOAD SUBJECT ERROR:",
+                error
+            );
+
+            document.getElementById(
+                "subjectList"
+            ).innerHTML =
+                "<div class='subject'>Unable to load subjects.</div>";
 
         }
     );
@@ -1097,6 +1097,15 @@ function renderSubjects() {
         );
 
     box.innerHTML = "";
+
+    if (subjects.length === 0) {
+
+        box.innerHTML =
+            "<div class='subject'>No subjects available.</div>";
+
+        return;
+
+    }
 
     subjects.forEach(
         subject => {
@@ -1136,21 +1145,28 @@ function renderTableHead() {
     head.innerHTML = "";
 
     let html = `
+
         <tr>
 
             <th>Student ID</th>
+
             <th>Name</th>
+
             <th>Gender</th>
+
             <th>Class</th>
+
     `;
 
     subjects.forEach(
         subject => {
 
             html += `
+
                 <th>
                     ${subject.code}
                 </th>
+
             `;
 
         }
@@ -1159,12 +1175,17 @@ function renderTableHead() {
     html += `
 
             <th>Total</th>
+
             <th>Percentage</th>
+
             <th>Attendance</th>
+
             <th>Status</th>
+
             <th>Grade</th>
 
         </tr>
+
     `;
 
     head.innerHTML = html;
@@ -1189,7 +1210,8 @@ function renderSubjectInputs() {
 
             box.innerHTML += `
 
-                <div class="form-group subject-input">
+                <div
+                    class="form-group subject-input">
 
                     <label>
                         ${subject.code}
@@ -1200,7 +1222,8 @@ function renderSubjectInputs() {
                         type="number"
                         min="0"
                         max="100"
-                        id="mark_${subject.code}">
+                        id="mark_${subject.code}"
+                        placeholder="Enter marks">
 
                 </div>
 
@@ -1226,6 +1249,10 @@ function changeSemester() {
         "searchInput"
     ).value = "";
 
+    document.getElementById(
+        "uploadMessage"
+    ).style.display = "none";
+
     loadSubjects();
 }
 
@@ -1238,17 +1265,34 @@ function loadStudents() {
 
     fetch(
         "/api/students?semester="
-        + encodeURIComponent(currentSemester)
+        + encodeURIComponent(
+            currentSemester
+        )
     )
 
     .then(
-        response => response.json()
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Student API error"
+                );
+
+            }
+
+            return response.json();
+
+        }
     )
 
     .then(
         data => {
 
-            students = data;
+            students =
+                Array.isArray(data)
+                ? data
+                : [];
 
             updateDashboard();
 
@@ -1264,7 +1308,18 @@ function loadStudents() {
     .catch(
         error => {
 
-            console.error(error);
+            console.error(
+                "LOAD STUDENTS ERROR:",
+                error
+            );
+
+            students = [];
+
+            updateDashboard();
+
+            displayStudents([]);
+
+            createCharts();
 
         }
     );
@@ -1305,39 +1360,47 @@ function updateDashboard() {
         return;
     }
 
-
     let avg =
         students.reduce(
-            (sum, student) =>
-                sum +
-                Number(
-                    student.Percentage || 0
-                ),
+            (sum, student) => {
+
+                return sum +
+                    Number(
+                        student.Percentage || 0
+                    );
+
+            },
             0
         ) / total;
 
 
     let attendance =
         students.reduce(
-            (sum, student) =>
-                sum +
-                Number(
-                    student.Attendance || 0
-                ),
+            (sum, student) => {
+
+                return sum +
+                    Number(
+                        student.Attendance || 0
+                    );
+
+            },
             0
         ) / total;
 
 
     let top =
         [...students].sort(
-            (a,b) =>
-                Number(
+            (a,b) => {
+
+                return Number(
                     b.Percentage || 0
                 )
                 -
                 Number(
                     a.Percentage || 0
-                )
+                );
+
+            }
         )[0];
 
 
@@ -1376,7 +1439,7 @@ function displayStudents(data) {
     tbody.innerHTML = "";
 
 
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
 
         tbody.innerHTML = `
 
@@ -1409,21 +1472,21 @@ function displayStudents(data) {
             let html = `
 
                 <td>
-                    ${student.Student_ID}
+                    ${student.Student_ID ?? ""}
                 </td>
 
                 <td>
                     <b>
-                        ${student.Name}
+                        ${student.Name ?? ""}
                     </b>
                 </td>
 
                 <td>
-                    ${student.Gender}
+                    ${student.Gender ?? ""}
                 </td>
 
                 <td>
-                    ${student.Class}
+                    ${student.Class ?? ""}
                 </td>
 
             `;
@@ -1435,11 +1498,13 @@ function displayStudents(data) {
                     html += `
 
                         <td>
+
                             ${
                                 student[
                                     subject.code
                                 ] ?? 0
                             }
+
                         </td>
 
                     `;
@@ -1452,27 +1517,27 @@ function displayStudents(data) {
 
                 <td>
                     <b>
-                        ${student.Total}
+                        ${student.Total ?? 0}
                     </b>
                 </td>
 
                 <td>
                     <b>
-                        ${student.Percentage}%
+                        ${student.Percentage ?? 0}%
                     </b>
                 </td>
 
                 <td>
-                    ${student.Attendance}%
+                    ${student.Attendance ?? 0}%
                 </td>
 
                 <td>
-                    ${student.Attendance_Status}
+                    ${student.Attendance_Status ?? ""}
                 </td>
 
                 <td>
                     <b>
-                        ${student.Grade}
+                        ${student.Grade ?? ""}
                     </b>
                 </td>
 
@@ -1518,21 +1583,27 @@ function searchStudent() {
 
     let result =
         students.filter(
-            student =>
+            student => {
 
-                String(
-                    student.Name
-                )
-                .toLowerCase()
-                .includes(text)
+                let name =
+                    String(
+                        student.Name ?? ""
+                    )
+                    .toLowerCase();
 
-                ||
+                let id =
+                    String(
+                        student.Student_ID ?? ""
+                    )
+                    .toLowerCase();
 
-                String(
-                    student.Student_ID
-                )
-                .toLowerCase()
-                .includes(text)
+                return (
+                    name.includes(text)
+                    ||
+                    id.includes(text)
+                );
+
+            }
         );
 
 
@@ -1554,6 +1625,7 @@ function openModal() {
         "flex";
 
     renderSubjectInputs();
+
 }
 
 
@@ -1567,6 +1639,7 @@ function closeModal() {
         "studentModal"
     ).style.display =
         "none";
+
 }
 
 
@@ -1576,17 +1649,49 @@ function closeModal() {
 
 function saveStudent() {
 
+    let studentID =
+        document.getElementById(
+            "studentID"
+        ).value.trim();
+
+
+    let studentName =
+        document.getElementById(
+            "studentName"
+        ).value.trim();
+
+
+    if (!studentID) {
+
+        showFormMessage(
+            "Please enter Student ID.",
+            false
+        );
+
+        return;
+
+    }
+
+
+    if (!studentName) {
+
+        showFormMessage(
+            "Please enter Student Name.",
+            false
+        );
+
+        return;
+
+    }
+
+
     let data = {
 
         Student_ID:
-            document.getElementById(
-                "studentID"
-            ).value,
+            studentID,
 
         Name:
-            document.getElementById(
-                "studentName"
-            ).value,
+            studentName,
 
         Gender:
             document.getElementById(
@@ -1601,7 +1706,7 @@ function saveStudent() {
         Attendance:
             document.getElementById(
                 "attendance"
-            ).value,
+            ).value || 0,
 
         Semester:
             currentSemester
@@ -1612,13 +1717,18 @@ function saveStudent() {
     subjects.forEach(
         subject => {
 
-            data[
-                subject.code
-            ] =
+            let input =
                 document.getElementById(
                     "mark_"
                     + subject.code
-                ).value;
+                );
+
+            data[
+                subject.code
+            ] =
+                input
+                ? input.value || 0
+                : 0;
 
         }
     );
@@ -1631,8 +1741,10 @@ function saveStudent() {
             method: "POST",
 
             headers: {
+
                 "Content-Type":
                     "application/json"
+
             },
 
             body:
@@ -1642,29 +1754,30 @@ function saveStudent() {
     )
 
     .then(
-        response =>
-            response.json()
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Add student API error"
+                );
+
+            }
+
+            return response.json();
+
+        }
     )
 
     .then(
         result => {
 
-            let msg =
-                document.getElementById(
-                    "formMessage"
-                );
-
-            msg.style.display =
-                "block";
-
-
             if (result.success) {
 
-                msg.className =
-                    "message success";
-
-                msg.innerText =
-                    result.message;
+                showFormMessage(
+                    result.message,
+                    true
+                );
 
                 setTimeout(
                     () => {
@@ -1681,16 +1794,55 @@ function saveStudent() {
 
             } else {
 
-                msg.className =
-                    "message error";
-
-                msg.innerText =
-                    result.message;
+                showFormMessage(
+                    result.message,
+                    false
+                );
 
             }
 
         }
+    )
+
+    .catch(
+        error => {
+
+            console.error(error);
+
+            showFormMessage(
+                "Unable to save student.",
+                false
+            );
+
+        }
     );
+}
+
+
+/* =====================================================
+   FORM MESSAGE
+===================================================== */
+
+function showFormMessage(
+    message,
+    success
+) {
+
+    let msg =
+        document.getElementById(
+            "formMessage"
+        );
+
+    msg.style.display =
+        "block";
+
+    msg.className =
+        success
+        ? "message success"
+        : "message error";
+
+    msg.innerText =
+        message;
 }
 
 
@@ -1720,6 +1872,12 @@ function clearForm() {
         "attendance"
     ).value = "";
 
+    document.getElementById(
+        "formMessage"
+    ).style.display =
+        "none";
+
+
     subjects.forEach(
         subject => {
 
@@ -1730,7 +1888,9 @@ function clearForm() {
                 );
 
             if (input) {
+
                 input.value = "";
+
             }
 
         }
@@ -1752,11 +1912,40 @@ function uploadFile() {
 
     if (!file) {
 
-        alert(
-            "Please select Excel, Word or PDF file."
+        showUploadMessage(
+            "Please select an Excel file.",
+            false
         );
 
         return;
+
+    }
+
+
+    let extension =
+        file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    if (
+        extension !== "xlsx"
+        &&
+        extension !== "xls"
+        &&
+        extension !== "docx"
+        &&
+        extension !== "pdf"
+    ) {
+
+        showUploadMessage(
+            "Please select a valid Excel, Word or PDF file.",
+            false
+        );
+
+        return;
+
     }
 
 
@@ -1776,6 +1965,12 @@ function uploadFile() {
     );
 
 
+    showUploadMessage(
+        "Uploading file...",
+        true
+    );
+
+
     fetch(
         "/api/upload",
         {
@@ -1788,29 +1983,30 @@ function uploadFile() {
     )
 
     .then(
-        response =>
-            response.json()
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Upload API error"
+                );
+
+            }
+
+            return response.json();
+
+        }
     )
 
     .then(
         result => {
 
-            let msg =
-                document.getElementById(
-                    "uploadMessage"
-                );
-
-            msg.style.display =
-                "block";
-
-
             if (result.success) {
 
-                msg.className =
-                    "message success";
-
-                msg.innerText =
-                    result.message;
+                showUploadMessage(
+                    result.message,
+                    true
+                );
 
                 document.getElementById(
                     "studentFile"
@@ -1820,11 +2016,10 @@ function uploadFile() {
 
             } else {
 
-                msg.className =
-                    "message error";
-
-                msg.innerText =
-                    result.message;
+                showUploadMessage(
+                    result.message,
+                    false
+                );
 
             }
 
@@ -1834,14 +2029,45 @@ function uploadFile() {
     .catch(
         error => {
 
-            console.error(error);
+            console.error(
+                "UPLOAD ERROR:",
+                error
+            );
 
-            alert(
-                "File upload failed."
+            showUploadMessage(
+                "File upload failed.",
+                false
             );
 
         }
     );
+}
+
+
+/* =====================================================
+   UPLOAD MESSAGE
+===================================================== */
+
+function showUploadMessage(
+    message,
+    success
+) {
+
+    let msg =
+        document.getElementById(
+            "uploadMessage"
+        );
+
+    msg.style.display =
+        "block";
+
+    msg.className =
+        success
+        ? "message success"
+        : "message error";
+
+    msg.innerText =
+        message;
 }
 
 
@@ -1859,13 +2085,16 @@ function createCharts() {
 
             let total =
                 students.reduce(
-                    (sum, student) =>
-                        sum +
-                        Number(
-                            student[
-                                subject.code
-                            ] || 0
-                        ),
+                    (sum, student) => {
+
+                        return sum +
+                            Number(
+                                student[
+                                    subject.code
+                                ] || 0
+                            );
+
+                    },
                     0
                 );
 
@@ -1877,7 +2106,9 @@ function createCharts() {
 
 
             averages.push(
-                average.toFixed(2)
+                Number(
+                    average.toFixed(2)
+                )
             );
 
         }
@@ -1885,7 +2116,9 @@ function createCharts() {
 
 
     if (subjectChart) {
+
         subjectChart.destroy();
+
     }
 
 
@@ -1960,14 +2193,19 @@ function createCharts() {
     students.forEach(
         student => {
 
+            let grade =
+                String(
+                    student.Grade ?? ""
+                );
+
             if (
                 grades[
-                    student.Grade
+                    grade
                 ] !== undefined
             ) {
 
                 grades[
-                    student.Grade
+                    grade
                 ]++;
 
             }
@@ -1977,7 +2215,9 @@ function createCharts() {
 
 
     if (gradeChart) {
+
         gradeChart.destroy();
+
     }
 
 
@@ -2045,6 +2285,7 @@ function focusSearch() {
     document.getElementById(
         "searchInput"
     ).focus();
+
 }
 
 
@@ -2055,6 +2296,7 @@ function showStudents() {
     ).scrollIntoView({
         behavior: "smooth"
     });
+
 }
 
 
@@ -2065,15 +2307,20 @@ function scrollCharts() {
     ).scrollIntoView({
         behavior: "smooth"
     });
+
 }
 
 
 function goTop() {
 
     window.scrollTo({
+
         top: 0,
+
         behavior: "smooth"
+
     });
+
 }
 
 
@@ -2081,7 +2328,14 @@ function goTop() {
    START
 ===================================================== */
 
-loadSubjects();
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadSubjects();
+
+    }
+);
 
 </script>
 
