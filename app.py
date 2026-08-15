@@ -82,8 +82,8 @@ def save_df(df, semester):
 # LOGIN / SECURITY
 # =========================================================
 
-LOGIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
-LOGIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+LOGIN_USERNAME = os.environ.get("ADMIN_USERNAME", "silicon")
+LOGIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "patil")
 
 
 def login_required():
@@ -125,7 +125,10 @@ def protect_dashboard_and_api():
 
 
 @app.route("/")
-def home(): return render_template("index.html")
+def home():
+    if not login_required():
+        return redirect(url_for("login"))
+    return render_template("index.html", login_page=False)
 
 @app.route("/api/subjects")
 def api_subjects():
