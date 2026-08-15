@@ -82,8 +82,8 @@ def save_df(df, semester):
 # LOGIN / SECURITY
 # =========================================================
 
-LOGIN_USERNAME = "silicon"
-LOGIN_PASSWORD = "patil"
+LOGIN_USERNAME = os.environ.get("ADMIN_USERNAME", "silicon")
+LOGIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "patil")
 
 
 def login_required():
