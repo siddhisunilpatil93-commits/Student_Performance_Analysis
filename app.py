@@ -3,461 +3,165 @@ import pandas as pd
 import os
 
 app = Flask(__name__)
-
 BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
+SEMESTERS = {
+    "1st Year": ["Semester 1", "Semester 2"],
+    "2nd Year": ["Semester 3", "Semester 4"],
+    "3rd Year": ["Semester 5", "Semester 6"]
+}
+
 SEMESTER_YEAR = {
-    "Semester 1": "1st Year",
-    "Semester 2": "1st Year",
-    "Semester 3": "2nd Year",
-    "Semester 4": "2nd Year",
-    "Semester 5": "3rd Year",
-    "Semester 6": "3rd Year",
+    "Semester 1": "1st Year", "Semester 2": "1st Year",
+    "Semester 3": "2nd Year", "Semester 4": "2nd Year",
+    "Semester 5": "3rd Year", "Semester 6": "3rd Year"
 }
 
-SEMESTER_FILES = {
-    "Semester 1": "semester_1.xlsx",
-    "Semester 2": "semester_2.xlsx",
-    "Semester 3": "semester_3.xlsx",
-    "Semester 4": "semester_4.xlsx",
-    "Semester 5": "semester_5.xlsx",
-    "Semester 6": "semester_6.xlsx",
+SEMESTER_FILES = {f"Semester {i}": f"semester_{i}.xlsx" for i in range(1, 7)}
+
+SUBJECTS = {
+    "Semester 1": ["Basic Mathematics","Communication Skills","Engineering Physics","Engineering Chemistry","Basic Science"],
+    "Semester 2": ["Applied Mathematics","Engineering Graphics","Basic Electrical Engineering","Programming in C","Web Page Design"],
+    "Semester 3": ["Object Oriented Programming","Data Structure","Database Management System","Computer Networks","Operating System"],
+    "Semester 4": ["Java Programming","Data Communication and Network","Microprocessor","Software Engineering","Python Programming"],
+    "Semester 5": ["Advanced Java","Web Based Application Development","Software Testing","Computer Security","Project Management"],
+    "Semester 6": ["Mobile Application Development","Cloud Computing","Artificial Intelligence","Internet of Things","Major Project"]
 }
 
-FALLBACK_SUBJECTS = {
-    "Semester 1": [
-        "Basic Mathematics", "Communication Skills", "Engineering Physics",
-        "Engineering Chemistry", "Basic Science"
-    ],
-    "Semester 2": [
-        "Applied Mathematics", "Engineering Graphics",
-        "Basic Electrical Engineering", "Programming in C", "Web Page Design"
-    ],
-    "Semester 3": [
-        "Object Oriented Programming", "Data Structure",
-        "Database Management System", "Computer Networks", "Operating System"
-    ],
-    "Semester 4": [
-        "Java Programming", "Data Communication and Network",
-        "Microprocessor", "Software Engineering", "Python Programming"
-    ],
-    "Semester 5": [
-        "Advanced Java", "Web Based Application Development",
-        "Software Testing", "Computer Security", "Project Management"
-    ],
-    "Semester 6": [
-        "Mobile Application Development", "Cloud Computing",
-        "Artificial Intelligence", "Internet of Things", "Major Project"
-    ],
-}
+def path_for(semester):
+    return os.path.join(BASE_FOLDER, SEMESTER_FILES[semester])
 
-META_COLUMNS = {
-    "Student_ID", "Name", "Gender", "Class", "Attendance",
-    "Total", "Percentage", "Attendance Status", "Grade",
-    "Semester", "Year"
-}
+def valid_semester(s):
+    return s in SEMESTER_FILES
 
-
-def semester_file(semester):
-    filename = SEMESTER_FILES.get(semester)
-    return os.path.join(BASE_FOLDER, filename) if filename else None
-
-
-def valid_semester(semester):
-    return semester in SEMESTER_FILES
-
-
-def clean_columns(df):
-    df = df.copy()
-    df.columns = [str(c).strip() for c in df.columns]
-    return df
-
-
-def get_grade(value):
-    try:
-        p = float(value)
-    except Exception:
-        return "F"
-    if p >= 90: return "A+"
-    if p >= 80: return "A"
-    if p >= 70: return "B+"
-    if p >= 60: return "B"
-    if p >= 50: return "C"
-    if p >= 40: return "D"
+def grade(p):
+    try: p=float(p)
+    except: return "F"
+    if p>=90:return "A+"
+    if p>=80:return "A"
+    if p>=70:return "B+"
+    if p>=60:return "B"
+    if p>=50:return "C"
+    if p>=40:return "D"
     return "F"
 
-
-def attendance_status(value):
+def read_df(semester):
+    if not valid_semester(semester) or not os.path.exists(path_for(semester)):
+        return pd.DataFrame()
     try:
-        return "Good" if float(value) >= 75 else "Bad"
-    except Exception:
-        return "Bad"
+        df=pd.read_excel(path_for(semester))
+        df.columns=df.columns.astype(str).str.strip()
+        return df
+    except Exception as e:
+        print(e); return pd.DataFrame()
 
-
-def fallback_subjects(semester):
-    return FALLBACK_SUBJECTS.get(semester, [])
-
-
-def get_subject_columns(df, semester):
-    if df is None or df.empty:
-        return fallback_subjects(semester)
-
-    subjects = []
-
-    # Prefer the known Computer Engineering subjects when present.
-    for subject in fallback_subjects(semester):
-        if subject in df.columns:
-            subjects.append(subject)
-
-    # Also accept any other numeric columns from the uploaded Excel.
-    for col in df.columns:
-        if col in META_COLUMNS or col in subjects:
-            continue
-        numeric = pd.to_numeric(df[col], errors="coerce")
-        if numeric.notna().sum() > 0:
-            subjects.append(col)
-
-    return subjects
-
-
-def process_data(df, semester):
-    if df is None or df.empty:
-        return pd.DataFrame(columns=["Student_ID", "Name", "Gender", "Class", "Attendance"])
-
-    df = clean_columns(df)
-
-    # Make standard columns if absent.
-    for col in ["Student_ID", "Name", "Gender", "Class", "Attendance"]:
-        if col not in df.columns:
-            df[col] = ""
-
-    df["Student_ID"] = (
-        df["Student_ID"].fillna("").astype(str)
-        .str.replace(r"\.0$", "", regex=True).str.strip()
-    )
-    df["Name"] = df["Name"].fillna("").astype(str).str.strip()
-    df["Gender"] = df["Gender"].fillna("").astype(str).str.strip()
-    df["Class"] = df["Class"].fillna("").astype(str).str.strip()
-
-    df["Attendance"] = pd.to_numeric(df["Attendance"], errors="coerce").fillna(0)
-    df["Attendance"] = df["Attendance"].clip(0, 100).round(2)
-
-    subjects = get_subject_columns(df, semester)
-
-    for subject in subjects:
-        if subject not in df.columns:
-            df[subject] = 0
-        df[subject] = pd.to_numeric(df[subject], errors="coerce").fillna(0).clip(0, 100)
-
-    if subjects:
-        df["Total"] = df[subjects].sum(axis=1).round(2)
-        df["Percentage"] = (df["Total"] / (len(subjects) * 100) * 100).round(2)
-    else:
-        df["Total"] = 0
-        df["Percentage"] = 0
-
-    df["Grade"] = df["Percentage"].apply(get_grade)
-    df["Attendance Status"] = df["Attendance"].apply(attendance_status)
-
+def process(df, semester):
+    df=df.copy()
+    for c in ["Student_ID","Name","Gender","Class","Attendance"]:
+        if c not in df.columns: df[c]="" if c!="Attendance" else 0
+    df["Student_ID"]=df["Student_ID"].astype(str).str.replace(r"\.0$","",regex=True).str.strip()
+    df["Name"]=df["Name"].fillna("").astype(str).str.strip()
+    df["Attendance"]=pd.to_numeric(df["Attendance"],errors="coerce").fillna(0).clip(0,100).round(2)
+    subs=SUBJECTS[semester]
+    for s in subs:
+        if s not in df.columns: df[s]=0
+        df[s]=pd.to_numeric(df[s],errors="coerce").fillna(0).clip(0,100)
+    df["Total"]=df[subs].sum(axis=1).round(2)
+    df["Percentage"]=(df["Total"]/(len(subs)*100)*100).round(2)
+    df["Attendance Status"]=df["Attendance"].apply(lambda x:"Good" if x>=75 else "Bad")
+    df["Grade"]=df["Percentage"].apply(grade)
     return df
 
-
-def read_excel(semester):
-    if not valid_semester(semester):
-        return pd.DataFrame()
-
-    path = semester_file(semester)
-    if not path or not os.path.exists(path):
-        return pd.DataFrame()
-
-    try:
-        # If workbook has a sheet with the exact semester name, use it.
-        book = pd.ExcelFile(path)
-        target_sheet = semester if semester in book.sheet_names else book.sheet_names[0]
-        return clean_columns(pd.read_excel(path, sheet_name=target_sheet))
-    except Exception as e:
-        print("Excel read error:", e)
-        return pd.DataFrame()
-
-
-def split_combined_dataframe(df):
-    """
-    Handles an Excel sheet where Semester 1, 2, 3... are placed side-by-side
-    and Student_ID/Name/... are repeated for every semester.
-    Returns a list of semester dataframes.
-    """
-    df = clean_columns(df)
-    cols = list(df.columns)
-    starts = [i for i, c in enumerate(cols) if c == "Student_ID"]
-
-    if len(starts) <= 1:
-        return [df]
-
-    blocks = []
-    for pos, start in enumerate(starts):
-        end = starts[pos + 1] if pos + 1 < len(starts) else len(cols)
-        block_cols = cols[start:end]
-        block = df.loc[:, block_cols].copy()
-        # Remove duplicate column names inside a block if any.
-        block = block.loc[:, ~block.columns.duplicated()]
-        blocks.append(block)
-
-    return blocks
-
-
-def extract_uploaded_semester(file_storage, semester):
-    """
-    Accepts:
-    1) a normal one-semester Excel,
-    2) a workbook with Semester 1..6 sheets,
-    3) one sheet containing semester blocks side-by-side.
-    """
-    raw = file_storage.read()
-    from io import BytesIO
-
-    xls = pd.ExcelFile(BytesIO(raw))
-    desired_sheet = semester
-
-    if desired_sheet in xls.sheet_names:
-        return clean_columns(pd.read_excel(BytesIO(raw), sheet_name=desired_sheet))
-
-    # If workbook has six semester sheets but exact names differ, use index.
-    semester_index = int(semester.split()[-1]) - 1
-    if len(xls.sheet_names) >= 6 and semester_index < len(xls.sheet_names):
-        return clean_columns(pd.read_excel(BytesIO(raw), sheet_name=xls.sheet_names[semester_index]))
-
-    # Otherwise read first sheet and split repeated Student_ID blocks.
-    first = clean_columns(pd.read_excel(BytesIO(raw), sheet_name=xls.sheet_names[0]))
-    blocks = split_combined_dataframe(first)
-
-    if len(blocks) >= semester_index + 1:
-        return blocks[semester_index]
-
-    return first
-
-
-def save_excel(df, semester):
-    path = semester_file(semester)
-    if not path:
-        return False
-    try:
-        save_df = process_data(df, semester)
-        calculated = ["Total", "Percentage", "Grade", "Attendance Status"]
-        raw_df = save_df.drop(columns=[c for c in calculated if c in save_df.columns], errors="ignore")
-        raw_df.to_excel(path, index=False)
-        return True
-    except Exception as e:
-        print("Excel save error:", e)
-        return False
-
+def save_df(df, semester):
+    raw=[c for c in ["Student_ID","Name","Gender","Class"]+SUBJECTS[semester]+["Attendance"] if c in df.columns]
+    process(df,semester)[raw].to_excel(path_for(semester),index=False)
 
 @app.route("/")
-def home():
-    return render_template("index.html")
-
-
-@app.after_request
-def no_cache(response):
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-    return response
-
+def home(): return render_template("index.html")
 
 @app.route("/api/subjects")
-def subjects_api():
-    semester = request.args.get("semester", "Semester 1")
-    if not valid_semester(semester):
-        return jsonify({"success": False, "subjects": []}), 400
-
-    df = read_excel(semester)
-    processed = process_data(df, semester) if not df.empty else df
-    subjects = get_subject_columns(processed, semester)
-
-    return jsonify({
-        "success": True,
-        "branch": "Computer Engineering",
-        "scheme": "MSBTE K-Scheme",
-        "semester": semester,
-        "year": SEMESTER_YEAR[semester],
-        "subjects": [{"code": s, "name": s} for s in subjects]
-    })
-
+def api_subjects():
+    s=request.args.get("semester","Semester 1")
+    if not valid_semester(s): return jsonify({"success":False}),400
+    return jsonify({"success":True,"branch":"Computer Engineering","year":SEMESTER_YEAR[s],
+                    "semester":s,"subjects":[{"code":x,"name":x} for x in SUBJECTS[s]]})
 
 @app.route("/api/students")
-def students_api():
-    semester = request.args.get("semester", "Semester 1")
-    if not valid_semester(semester):
-        return jsonify([])
-
-    df = process_data(read_excel(semester), semester)
-    if df.empty:
-        return jsonify([])
-
-    subjects = get_subject_columns(df, semester)
-    columns = ["Student_ID", "Name", "Gender", "Class"] + subjects + [
-        "Total", "Percentage", "Attendance", "Attendance Status", "Grade"
-    ]
-    columns = [c for c in columns if c in df.columns]
-
-    return jsonify(df[columns].fillna("").to_dict(orient="records"))
-
+def api_students():
+    s=request.args.get("semester","Semester 1")
+    df=read_df(s)
+    if df.empty:return jsonify([])
+    df=process(df,s)
+    cols=["Student_ID","Name","Gender","Class"]+SUBJECTS[s]+["Total","Percentage","Attendance","Attendance Status","Grade"]
+    return jsonify(df[cols].fillna("").to_dict("records"))
 
 @app.route("/api/analytics")
-def analytics():
-    semester = request.args.get("semester", "Semester 1")
-    empty = {
-        "total_students": 0,
-        "average_percentage": 0,
-        "top_performer": "-",
-        "average_attendance": 0,
-        "subjects": {},
-        "grades": {}
-    }
+def api_analytics():
+    s=request.args.get("semester","Semester 1"); df=read_df(s)
+    if df.empty:return jsonify({"total_students":0,"average_percentage":0,"top_performer":"-","average_attendance":0,"subjects":{},"grades":{}})
+    df=process(df,s)
+    top=df.loc[df["Percentage"].idxmax(),"Name"] if len(df) else "-"
+    return jsonify({"total_students":len(df),
+                    "average_percentage":round(df["Percentage"].mean(),2),
+                    "top_performer":str(top),
+                    "average_attendance":round(df["Attendance"].mean(),2),
+                    "subjects":{x:round(df[x].mean(),2) for x in SUBJECTS[s]},
+                    "grades":df["Grade"].value_counts().to_dict()})
 
-    if not valid_semester(semester):
-        return jsonify(empty)
-
-    df = process_data(read_excel(semester), semester)
-    if df.empty:
-        return jsonify(empty)
-
-    subjects = get_subject_columns(df, semester)
-    top_name = "-"
-    if not df.empty:
-        idx = df["Percentage"].idxmax()
-        top_name = str(df.loc[idx, "Name"]) or "-"
-
-    subject_average = {
-        subject: round(float(df[subject].mean()), 2)
-        for subject in subjects if subject in df.columns
-    }
-
-    grades = {str(k): int(v) for k, v in df["Grade"].value_counts().items()}
-
-    return jsonify({
-        "total_students": int(len(df)),
-        "average_percentage": round(float(df["Percentage"].mean()), 2),
-        "top_performer": top_name,
-        "average_attendance": round(float(df["Attendance"].mean()), 2),
-        "subjects": subject_average,
-        "grades": grades
-    })
-
-
-@app.route("/api/upload_excel", methods=["POST"])
-def upload_excel():
+@app.route("/api/upload_excel",methods=["POST"])
+def upload():
     try:
-        semester = request.form.get("semester", "Semester 1")
-
-        if not valid_semester(semester):
-            return jsonify({"success": False, "message": "Invalid semester selected."})
-
-        if "file" not in request.files:
-            return jsonify({"success": False, "message": "Please select an Excel file."})
-
-        file = request.files["file"]
-        if not file.filename:
-            return jsonify({"success": False, "message": "No file selected."})
-
-        if not file.filename.lower().endswith((".xlsx", ".xls")):
-            return jsonify({"success": False, "message": "Only .xlsx or .xls files are allowed."})
-
-        df = extract_uploaded_semester(file, semester)
-        df = clean_columns(df)
-
+        s=request.form.get("semester","Semester 1")
+        f=request.files.get("file")
+        if not valid_semester(s) or not f or not f.filename.lower().endswith((".xlsx",".xls")):
+            return jsonify({"success":False,"message":"Valid Excel file select करा."})
+        df=pd.read_excel(f); df.columns=df.columns.astype(str).str.strip()
         if "Student_ID" not in df.columns or "Name" not in df.columns:
-            return jsonify({
-                "success": False,
-                "message": "Excel मध्ये Student_ID आणि Name columns पाहिजेत."
-            })
+            return jsonify({"success":False,"message":"Student_ID आणि Name columns required आहेत."})
+        save_df(df,s)
+        return jsonify({"success":True,"message":f"{s} Excel successfully saved."})
+    except Exception as e:return jsonify({"success":False,"message":str(e)})
 
-        for col in ["Gender", "Class", "Attendance"]:
-            if col not in df.columns:
-                df[col] = "" if col != "Attendance" else 0
-
-        # Ignore previously calculated values; system recalculates them.
-        df = df.drop(
-            columns=["Total", "Percentage", "Grade", "Attendance Status"],
-            errors="ignore"
-        )
-
-        processed = process_data(df, semester)
-        raw_df = processed.drop(
-            columns=["Total", "Percentage", "Grade", "Attendance Status"],
-            errors="ignore"
-        )
-
-        path = semester_file(semester)
-        raw_df.to_excel(path, index=False)
-
-        return jsonify({
-            "success": True,
-            "message": f"{semester} Excel successfully uploaded.",
-            "students": int(len(raw_df)),
-            "file": SEMESTER_FILES[semester]
-        })
-
-    except Exception as e:
-        print("Upload error:", e)
-        return jsonify({"success": False, "message": f"Upload failed: {str(e)}"})
-
-
-@app.route("/api/add_student", methods=["POST"])
+@app.route("/api/add_student",methods=["POST"])
 def add_student():
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"success": False, "message": "Invalid student data."})
+        d=request.get_json(); s=d.get("semester","Semester 1")
+        df=read_df(s)
+        row={c:d.get(c,"") for c in ["Student_ID","Name","Gender","Class","Attendance"]+SUBJECTS[s]}
+        if not str(row["Student_ID"]).strip() or not str(row["Name"]).strip():
+            return jsonify({"success":False,"message":"Student ID आणि Name required आहेत."})
+        if not df.empty and str(row["Student_ID"]) in df["Student_ID"].astype(str).values:
+            return jsonify({"success":False,"message":"Student ID already exists."})
+        df=pd.concat([df,pd.DataFrame([row])],ignore_index=True)
+        save_df(df,s)
+        return jsonify({"success":True,"message":"Student added and Excel updated."})
+    except Exception as e:return jsonify({"success":False,"message":str(e)})
 
-        semester = data.get("semester", "Semester 1")
-        if not valid_semester(semester):
-            return jsonify({"success": False, "message": "Invalid semester."})
+@app.route("/api/edit_student",methods=["POST"])
+def edit_student():
+    try:
+        d=request.get_json(); s=d.get("semester","Semester 1"); sid=str(d.get("Student_ID","")).strip()
+        df=read_df(s)
+        if df.empty:return jsonify({"success":False,"message":"Student not found."})
+        df["Student_ID"]=df["Student_ID"].astype(str).str.replace(r"\.0$","",regex=True).str.strip()
+        idx=df.index[df["Student_ID"]==sid].tolist()
+        if not idx:return jsonify({"success":False,"message":"Student not found."})
+        i=idx[0]
+        for c in ["Name","Gender","Class","Attendance"]+SUBJECTS[s]: df.loc[i,c]=d.get(c,df.loc[i,c])
+        save_df(df,s)
+        return jsonify({"success":True,"message":"Student updated in Excel."})
+    except Exception as e:return jsonify({"success":False,"message":str(e)})
 
-        df = read_excel(semester)
-        existing_subjects = get_subject_columns(df, semester)
-        subjects = existing_subjects or fallback_subjects(semester)
+@app.route("/api/delete_student",methods=["POST"])
+def delete_student():
+    try:
+        d=request.get_json(); s=d.get("semester","Semester 1"); sid=str(d.get("Student_ID","")).strip()
+        df=read_df(s); df["Student_ID"]=df["Student_ID"].astype(str).str.replace(r"\.0$","",regex=True).str.strip()
+        new=df[df["Student_ID"]!=sid]
+        if len(new)==len(df):return jsonify({"success":False,"message":"Student not found."})
+        save_df(new,s)
+        return jsonify({"success":True,"message":"Student deleted from Excel."})
+    except Exception as e:return jsonify({"success":False,"message":str(e)})
 
-        student = {
-            "Student_ID": str(data.get("Student_ID", "")).strip(),
-            "Name": str(data.get("Name", "")).strip(),
-            "Gender": str(data.get("Gender", "")).strip(),
-            "Class": str(data.get("Class", "")).strip(),
-            "Attendance": data.get("Attendance", 0),
-        }
-
-        for subject in subjects:
-            student[subject] = data.get(subject, 0)
-
-        new_df = pd.DataFrame([student])
-
-        if not df.empty:
-            df = df.drop(
-                columns=["Total", "Percentage", "Grade", "Attendance Status"],
-                errors="ignore"
-            )
-            # Ensure both dataframes have the same subject/meta columns.
-            for col in new_df.columns:
-                if col not in df.columns:
-                    df[col] = 0
-            for col in df.columns:
-                if col not in new_df.columns:
-                    new_df[col] = 0
-            new_df = new_df[df.columns]
-            df = pd.concat([df, new_df], ignore_index=True)
-        else:
-            df = new_df
-
-        if not save_excel(df, semester):
-            return jsonify({"success": False, "message": "Student save failed."})
-
-        return jsonify({"success": True, "message": "Student added successfully."})
-
-    except Exception as e:
-        print("Add student error:", e)
-        return jsonify({"success": False, "message": str(e)})
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+if __name__=="__main__":
+    app.run(host="0.0.0.0",port=int(os.environ.get("PORT",5000)))
