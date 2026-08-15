@@ -3,23 +3,22 @@ import pandas as pd
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "student-performance-change-this-secret")
+app.secret_key = os.environ.get("SECRET_KEY", "student-performance-secret-key")
 
 BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
-SEMESTERS = {
-    "1st Year": ["Semester 1", "Semester 2"],
-    "2nd Year": ["Semester 3", "Semester 4"],
-    "3rd Year": ["Semester 5", "Semester 6"]
-}
-
 SEMESTER_YEAR = {
-    "Semester 1": "1st Year", "Semester 2": "1st Year",
-    "Semester 3": "2nd Year", "Semester 4": "2nd Year",
-    "Semester 5": "3rd Year", "Semester 6": "3rd Year"
+    "Semester 1": "1st Year",
+    "Semester 2": "1st Year",
+    "Semester 3": "2nd Year",
+    "Semester 4": "2nd Year",
+    "Semester 5": "3rd Year",
+    "Semester 6": "3rd Year"
 }
 
-SEMESTER_FILES = {f"Semester {i}": f"semester_{i}.xlsx" for i in range(1, 7)}
+SEMESTER_FILES = {
+    f"Semester {i}": f"semester_{i}.xlsx" for i in range(1, 7)
+}
 
 SUBJECTS = {
     "Semester 1": ["Basic Mathematics", "Communication Skills", "Engineering Physics", "Engineering Chemistry", "Basic Science"],
@@ -59,7 +58,6 @@ def grade(p):
 def read_df(semester):
     if not valid_semester(semester) or not os.path.exists(path_for(semester)):
         return pd.DataFrame()
-
     try:
         df = pd.read_excel(path_for(semester))
         df.columns = df.columns.astype(str).str.strip()
@@ -85,9 +83,7 @@ def process(df, semester):
 
     df["Attendance"] = (
         pd.to_numeric(df["Attendance"], errors="coerce")
-        .fillna(0)
-        .clip(0, 100)
-        .round(2)
+        .fillna(0).clip(0, 100).round(2)
     )
 
     subs = SUBJECTS[semester]
@@ -97,9 +93,7 @@ def process(df, semester):
             df[subject] = 0
         df[subject] = (
             pd.to_numeric(df[subject], errors="coerce")
-            .fillna(0)
-            .clip(0, 100)
-            .round(2)
+            .fillna(0).clip(0, 100).round(2)
         )
 
     df["Total"] = df[subs].sum(axis=1).round(2)
@@ -114,17 +108,14 @@ def process(df, semester):
 
 def save_df(df, semester):
     processed = process(df, semester)
-
     columns = (
         ["Student_ID", "Name", "Gender", "Class"]
         + SUBJECTS[semester]
         + ["Attendance"]
     )
-
     for col in columns:
         if col not in processed.columns:
             processed[col] = ""
-
     processed[columns].to_excel(path_for(semester), index=False)
 
 
@@ -159,17 +150,14 @@ def logout():
 
 @app.before_request
 def protect_pages():
-    allowed_endpoints = {"login", "static"}
+    allowed = {"login", "static"}
 
-    if request.endpoint in allowed_endpoints:
+    if request.endpoint in allowed:
         return None
 
     if not login_required():
         if request.path.startswith("/api/"):
-            return jsonify({
-                "success": False,
-                "message": "Login required."
-            }), 401
+            return jsonify({"success": False, "message": "Login required."}), 401
         return redirect(url_for("login"))
 
     return None
@@ -205,7 +193,6 @@ def api_students():
         return jsonify([])
 
     df = process(df, semester)
-
     columns = (
         ["Student_ID", "Name", "Gender", "Class"]
         + SUBJECTS[semester]
@@ -231,10 +218,7 @@ def api_analytics():
         })
 
     df = process(df, semester)
-
-    top = "-"
-    if len(df):
-        top = str(df.loc[df["Percentage"].idxmax(), "Name"])
+    top = str(df.loc[df["Percentage"].idxmax(), "Name"]) if len(df) else "-"
 
     return jsonify({
         "total_students": len(df),
@@ -290,10 +274,6 @@ def add_student():
     try:
         data = request.get_json() or {}
         semester = data.get("semester", "Semester 1")
-
-        if not valid_semester(semester):
-            return jsonify({"success": False, "message": "Invalid semester."})
-
         df = read_df(semester)
 
         student_id = str(data.get("Student_ID", "")).strip()
@@ -306,14 +286,13 @@ def add_student():
             })
 
         if not df.empty:
-            existing_ids = (
+            ids = (
                 df["Student_ID"].astype(str)
                 .str.replace(r"\.0$", "", regex=True)
                 .str.strip()
                 .tolist()
             )
-
-            if student_id in existing_ids:
+            if student_id in ids:
                 return jsonify({
                     "success": False,
                     "message": "Student ID already exists."
@@ -343,34 +322,24 @@ def edit_student():
         data = request.get_json() or {}
         semester = data.get("semester", "Semester 1")
         student_id = str(data.get("Student_ID", "")).strip()
-
         df = read_df(semester)
 
         if df.empty:
-            return jsonify({
-                "success": False,
-                "message": "Student not found."
-            })
+            return jsonify({"success": False, "message": "Student not found."})
 
         df["Student_ID"] = (
             df["Student_ID"].astype(str)
-            .str.replace(r"\.0$", "", regex=True)
-            .str.strip()
+            .str.replace(r"\.0$", "", regex=True).str.strip()
         )
 
         matches = df.index[df["Student_ID"] == student_id].tolist()
 
         if not matches:
-            return jsonify({
-                "success": False,
-                "message": "Student not found."
-            })
+            return jsonify({"success": False, "message": "Student not found."})
 
         index = matches[0]
 
-        editable = ["Name", "Gender", "Class", "Attendance"] + SUBJECTS[semester]
-
-        for column in editable:
+        for column in ["Name", "Gender", "Class", "Attendance"] + SUBJECTS[semester]:
             if column in data:
                 df.loc[index, column] = data[column]
 
@@ -391,28 +360,20 @@ def delete_student():
         data = request.get_json() or {}
         semester = data.get("semester", "Semester 1")
         student_id = str(data.get("Student_ID", "")).strip()
-
         df = read_df(semester)
 
         if df.empty:
-            return jsonify({
-                "success": False,
-                "message": "Student not found."
-            })
+            return jsonify({"success": False, "message": "Student not found."})
 
         df["Student_ID"] = (
             df["Student_ID"].astype(str)
-            .str.replace(r"\.0$", "", regex=True)
-            .str.strip()
+            .str.replace(r"\.0$", "", regex=True).str.strip()
         )
 
         new_df = df[df["Student_ID"] != student_id]
 
         if len(new_df) == len(df):
-            return jsonify({
-                "success": False,
-                "message": "Student not found."
-            })
+            return jsonify({"success": False, "message": "Student not found."})
 
         save_df(new_df, semester)
 
