@@ -1,5 +1,8 @@
 Flask
 pandas
+numpy
+matplotlib
 openpyxl
-xlrd
+python-docx
+pypdf
 gunicorn
