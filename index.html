@@ -14,7 +14,7 @@ body{margin:0;background:#eef2ff;color:#172554}
 .loginbox button{width:100%;padding:13px;border:0;border-radius:9px;background:#4f46e5;color:#fff;font-weight:bold;cursor:pointer}
 .err{background:#fee2e2;color:#b91c1c;padding:10px;text-align:center;border-radius:8px;margin-top:12px}
 .side{position:fixed;left:0;top:0;width:240px;height:100vh;background:linear-gradient(#312e81,#7c3aed);color:#fff;padding:25px;overflow-y:auto}
-.side h2{margin-top:0}.side button{width:100%;padding:13px;margin:5px 0;background:transparent;border:0;color:#fff;text-align:left;cursor:pointer;border-radius:8px;font-size:14px}.side button:hover{background:#ffffff22}
+.side h2{margin-top:0}.side button{width:100%;padding:13px;margin:5px 0;background:transparent;border:0;color:#fff;text-align:left;cursor:pointer;border-radius:8px;font-size:14px}.side button:hover{background:#ffffff22}.side .sem-active{background:#ffffff33;font-weight:bold}
 .logout-btn{background:#dc2626!important;margin-top:20px!important}
 .main{margin-left:240px;padding:25px}.box,.chart{background:#fff;padding:20px;border-radius:16px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
 .years{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.years button{padding:11px 18px;border:0;border-radius:8px;cursor:pointer;background:#e0e7ff;color:#172554;font-weight:bold}.years button.active{background:#4f46e5;color:#fff}
@@ -60,6 +60,14 @@ select,input{padding:12px;border:2px solid #dbeafe;border-radius:9px;outline:non
 <button onclick="openAdd()">➕ Add Student</button>
 <button onclick="go('students')">👨‍🎓 All Students</button>
 <button onclick="go('charts')">📊 Analytics</button>
+<hr style="border-color:#ffffff33;margin:18px 0 10px">
+<div style="font-weight:bold;margin:8px 0">📚 Semesters</div>
+<button onclick="selectSemester('Semester 1')">1️⃣ Semester 1</button>
+<button onclick="selectSemester('Semester 2')">2️⃣ Semester 2</button>
+<button onclick="selectSemester('Semester 3')">3️⃣ Semester 3</button>
+<button onclick="selectSemester('Semester 4')">4️⃣ Semester 4</button>
+<button onclick="selectSemester('Semester 5')">5️⃣ Semester 5</button>
+<button onclick="selectSemester('Semester 6')">6️⃣ Semester 6</button>
 <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
 </aside>
 <main class="main">
@@ -71,7 +79,7 @@ select,input{padding:12px;border:2px solid #dbeafe;border-radius:9px;outline:non
 </div>
 
 <div class="box">
-<h2>🎓 Academic Year & Semester</h2>
+<h2>🎓 Academic Year & Semester</h2><p class="muted">Select any Semester 1 to Semester 6 below.</p>
 <b>Select Year</b>
 <div class="years">
 <button id="y1" onclick="setYear('1st Year')">1st Year</button>
@@ -126,7 +134,13 @@ $('selectionMessage').innerText=semester+' loaded successfully.';
 function selectSemester(selectedSemester){
 if(!selectedSemester)return;semester=selectedSemester;$('currentSemesterText').innerText=selectedSemester;$('uploadSemester').innerText=selectedSemester;$('modalSemester').innerText=selectedSemester;updateSemesterButton(selectedSemester);updateYearButton(years[selectedSemester]);load();
 }
-function updateSemesterButton(selectedSemester){document.querySelectorAll('.semester-buttons button').forEach(b=>b.classList.remove('active'));const n=selectedSemester.replace('Semester ','');const b=$('sem'+n);if(b)b.classList.add('active')}
+function updateSemesterButton(selectedSemester){
+document.querySelectorAll('.semester-buttons button').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.side button').forEach(b=>b.classList.remove('sem-active'));
+const n=selectedSemester.replace('Semester ','');
+const b=$('sem'+n);if(b)b.classList.add('active');
+document.querySelectorAll('.side button').forEach(b=>{if(b.textContent.includes(selectedSemester))b.classList.add('sem-active')});
+}
 function setYear(year){updateYearButton(year);if(year==='1st Year')selectSemester('Semester 1');else if(year==='2nd Year')selectSemester('Semester 3');else selectSemester('Semester 5')}
 function updateYearButton(year){document.querySelectorAll('.years button').forEach(b=>b.classList.remove('active'));if(year==='1st Year')$('y1').classList.add('active');else if(year==='2nd Year')$('y2').classList.add('active');else if(year==='3rd Year')$('y3').classList.add('active')}
 function escapeHTML(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
