@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Performance Analysis System</title>
+
+<title>Student Performance Analysis</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -36,7 +38,7 @@ body{
     background:white;
     padding:35px;
     border-radius:22px;
-    box-shadow:0 20px 60px rgba(0,0,0,.3);
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
 
 .login-icon{
@@ -58,8 +60,7 @@ body{
 .login-card label{
     display:block;
     font-weight:bold;
-    margin-top:14px;
-    margin-bottom:6px;
+    margin:12px 0 5px;
 }
 
 .login-card input{
@@ -67,13 +68,12 @@ body{
     padding:13px;
     border:2px solid #c7d2fe;
     border-radius:10px;
-    font-size:15px;
 }
 
 .login-card button{
     width:100%;
-    margin-top:22px;
     padding:14px;
+    margin-top:20px;
     border:0;
     border-radius:10px;
     background:#4f46e5;
@@ -85,12 +85,11 @@ body{
 
 .login-error{
     margin-top:15px;
+    padding:10px;
     background:#fee2e2;
     color:#b91c1c;
-    padding:10px;
-    border-radius:8px;
     text-align:center;
-    font-weight:bold;
+    border-radius:8px;
 }
 
 /* ================= SIDEBAR ================= */
@@ -101,9 +100,9 @@ body{
     top:0;
     width:250px;
     height:100vh;
+    padding:25px 18px;
     background:linear-gradient(180deg,#312e81,#4f46e5,#7c3aed);
     color:white;
-    padding:25px 18px;
 }
 
 .logo{
@@ -121,17 +120,16 @@ body{
 
 .logo p{
     margin-top:5px;
-    opacity:.9;
 }
 
 .menu button{
     width:100%;
-    border:0;
-    background:transparent;
-    color:white;
     padding:14px;
     margin:5px 0;
-    border-radius:9px;
+    border:0;
+    border-radius:10px;
+    background:transparent;
+    color:white;
     text-align:left;
     font-size:15px;
     cursor:pointer;
@@ -142,8 +140,8 @@ body{
 }
 
 .logout{
-    background:#dc2626!important;
-    margin-top:20px!important;
+    background:#dc2626 !important;
+    margin-top:20px !important;
 }
 
 /* ================= MAIN ================= */
@@ -157,14 +155,14 @@ body{
 .box,
 .chart{
     background:white;
-    border-radius:18px;
     padding:22px;
+    border-radius:18px;
     margin-bottom:20px;
     box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
 .header h1{
-    font-size:30px;
+    margin-bottom:8px;
 }
 
 .branch{
@@ -181,7 +179,7 @@ body{
 }
 
 .years button{
-    padding:12px 18px;
+    padding:12px 20px;
     border:0;
     border-radius:9px;
     background:#e2e8f0;
@@ -195,15 +193,17 @@ body{
     color:white;
 }
 
-/* ================= SEMESTER ================= */
+/* ================= SELECT ================= */
 
-#semester{
-    width:100%;
-    max-width:350px;
-    padding:13px;
-    border:2px solid #c7d2fe;
+select,
+input{
+    padding:12px;
+    border:2px solid #dbeafe;
     border-radius:9px;
-    font-size:15px;
+}
+
+select{
+    width:250px;
 }
 
 /* ================= SUBJECTS ================= */
@@ -233,8 +233,8 @@ body{
 
 .card{
     color:white;
-    border-radius:18px;
     padding:20px;
+    border-radius:18px;
     min-height:140px;
     box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
@@ -256,69 +256,52 @@ body{
 }
 
 .value{
-    font-size:26px;
+    font-size:25px;
     font-weight:bold;
     margin-top:12px;
 }
 
-/* ================= INPUTS ================= */
-
-input,
-select{
-    padding:12px;
-    border:2px solid #dbeafe;
-    border-radius:9px;
-}
+/* ================= SEARCH ================= */
 
 .search{
     display:flex;
     gap:10px;
-    margin-top:12px;
 }
 
 .search input{
     flex:1;
 }
 
+/* ================= BUTTON ================= */
+
 .btn{
     border:0;
     padding:11px 16px;
     border-radius:8px;
+    color:white;
     font-weight:bold;
     cursor:pointer;
 }
 
-.blue{
-    background:#4f46e5;
-    color:white;
-}
-
 .green{
     background:#059669;
-    color:white;
+}
+
+.blue{
+    background:#4f46e5;
 }
 
 .red{
     background:#dc2626;
-    color:white;
-}
-
-.orange{
-    background:#ea580c;
-    color:white;
 }
 
 /* ================= UPLOAD ================= */
 
 .upload{
-    margin-top:15px;
+    margin-top:12px;
     padding:18px;
     border:2px dashed #818cf8;
     border-radius:12px;
-}
-
-.upload input{
-    width:auto;
 }
 
 /* ================= CHARTS ================= */
@@ -334,7 +317,6 @@ select{
 .table-wrap{
     overflow:auto;
     max-height:520px;
-    margin-top:15px;
 }
 
 table{
@@ -390,13 +372,13 @@ tr:hover{
     max-height:92vh;
     overflow:auto;
     background:white;
-    border-radius:18px;
     padding:25px;
+    border-radius:18px;
 }
 
 .close{
     float:right;
-    font-size:25px;
+    font-size:24px;
     cursor:pointer;
 }
 
@@ -457,6 +439,7 @@ tr:hover{
         flex-wrap:wrap;
     }
 }
+
 </style>
 </head>
 
@@ -486,8 +469,8 @@ Computer Engineering • Secure Login
 type="text"
 name="username"
 placeholder="Enter username"
-autocomplete="username"
 required
+autocomplete="username"
 >
 
 <label>Password</label>
@@ -496,8 +479,8 @@ required
 type="password"
 name="password"
 placeholder="Enter password"
-autocomplete="current-password"
 required
+autocomplete="current-password"
 >
 
 <button type="submit">
@@ -514,7 +497,7 @@ required
 
 {% endif %}
 
-<p style="margin-top:18px;font-size:13px;">
+<p style="font-size:13px;margin-top:18px;">
 Authorized users only.
 </p>
 
@@ -561,7 +544,7 @@ Authorized users only.
 </button>
 
 <button class="logout"
-onclick="window.location.href='/logout'">
+onclick="location.href='/logout'">
 🚪 Logout
 </button>
 
@@ -573,16 +556,13 @@ onclick="window.location.href='/logout'">
 
 <main class="main">
 
-<!-- HEADER -->
-
 <div class="header">
 
 <h1>
 Student Performance Analysis System
 </h1>
 
-<p style="margin-top:8px;">
-
+<p>
 <span class="branch">
 COMPUTER ENGINEERING
 </span>
@@ -590,7 +570,6 @@ COMPUTER ENGINEERING
 &nbsp; | &nbsp;
 
 MSBTE K-Scheme
-
 </p>
 
 <p style="margin-top:7px;color:#64748b;">
@@ -600,7 +579,7 @@ Academic Performance • Attendance • Analytics
 </div>
 
 
-<!-- ================= YEAR / SEMESTER ================= -->
+<!-- ================= YEAR SEMESTER ================= -->
 
 <div class="box">
 
@@ -608,35 +587,29 @@ Academic Performance • Attendance • Analytics
 
 <div class="years">
 
-<button
-id="y1"
+<button id="y1"
 onclick="selectYear('1st Year')">
 1st Year
 </button>
 
-<button
-id="y2"
+<button id="y2"
 onclick="selectYear('2nd Year')">
 2nd Year
 </button>
 
-<button
-id="y3"
+<button id="y3"
 onclick="selectYear('3rd Year')">
 3rd Year
 </button>
 
 </div>
 
-<h3 style="margin-top:15px;">
-Select Semester
-</h3>
+<h3>Select Semester</h3>
 
 <br>
 
-<select
-id="semester"
-onchange="semesterChanged()">
+<select id="semester"
+onchange="selectSemester(this.value)">
 
 <option value="Semester 1">
 Semester 1
@@ -693,9 +666,7 @@ class="subjects">
 
 👨‍🎓
 
-<h3>
-Total Students
-</h3>
+<h3>Total Students</h3>
 
 <div
 id="total"
@@ -710,9 +681,7 @@ class="value">
 
 📈
 
-<h3>
-Average Percentage
-</h3>
+<h3>Average Percentage</h3>
 
 <div
 id="average"
@@ -727,9 +696,7 @@ class="value">
 
 🏆
 
-<h3>
-Top Performer
-</h3>
+<h3>Top Performer</h3>
 
 <div
 id="top"
@@ -744,9 +711,7 @@ class="value">
 
 📅
 
-<h3>
-Average Attendance
-</h3>
+<h3>Average Attendance</h3>
 
 <div
 id="attendance"
@@ -769,6 +734,8 @@ id="searchBox">
 🔍 Search Student
 </h2>
 
+<br>
+
 <div class="search">
 
 <input
@@ -788,7 +755,7 @@ onclick="openAdd()">
 </div>
 
 
-<!-- ================= EXCEL UPLOAD ================= -->
+<!-- ================= UPLOAD ================= -->
 
 <div class="box">
 
@@ -797,7 +764,7 @@ onclick="openAdd()">
 </h2>
 
 <p style="margin-top:8px;color:#64748b;">
-Excel will be saved to the currently selected semester.
+Excel will be saved according to selected semester.
 </p>
 
 <div class="upload">
@@ -838,6 +805,8 @@ id="charts">
 📊 Subject-wise Performance
 </h2>
 
+<br>
+
 <canvas id="subjectChart">
 </canvas>
 
@@ -849,6 +818,8 @@ id="charts">
 <h2>
 🏅 Grade Distribution
 </h2>
+
+<br>
 
 <canvas id="gradeChart">
 </canvas>
@@ -993,7 +964,7 @@ Cancel
 
 <div
 id="formMessage"
-style="margin-top:12px;font-weight:bold;">
+style="margin-top:10px;font-weight:bold;">
 </div>
 
 </div>
@@ -1018,91 +989,75 @@ let chart1 = null;
 let chart2 = null;
 
 
-const years = {
+const semesterYear = {
 
-    "Semester 1":"1st Year",
-    "Semester 2":"1st Year",
+"Semester 1":"1st Year",
 
-    "Semester 3":"2nd Year",
-    "Semester 4":"2nd Year",
+"Semester 2":"1st Year",
 
-    "Semester 5":"3rd Year",
-    "Semester 6":"3rd Year"
+"Semester 3":"2nd Year",
+
+"Semester 4":"2nd Year",
+
+"Semester 5":"3rd Year",
+
+"Semester 6":"3rd Year"
 
 };
 
 
-function $(id){
-
-    return document.getElementById(id);
-
-}
+const $ = id =>
+document.getElementById(id);
 
 
 /* ================= API ================= */
 
 async function api(url, options={}){
 
-    try{
+    const response =
+    await fetch(url, options);
 
-        const response =
-            await fetch(url, options);
+    if(response.status === 401){
 
-        if(response.status === 401){
-
-            window.location.href="/login";
-
-            return null;
-        }
-
-        return await response.json();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Server connection error. Please refresh the page."
-        );
+        window.location.href="/login";
 
         return null;
     }
+
+    return await response.json();
 }
 
 
 /* ================= LOAD ================= */
 
-async function load(){
+async function loadDashboard(){
 
     const subjectData =
-        await api(
-            "/api/subjects?semester="
-            + encodeURIComponent(semester)
-        );
+    await api(
+        "/api/subjects?semester="
+        + encodeURIComponent(semester)
+    );
 
-    if(!subjectData || !subjectData.success){
-
-        return;
-    }
+    if(!subjectData) return;
 
 
     subjects =
-        subjectData.subjects.map(
-            x => x.code
-        );
+    subjectData.subjects.map(
+        item => item.code
+    );
 
 
     $("subjectTitle").innerText =
-        semester + " Subjects";
+    semester + " Subjects";
 
 
     $("subjects").innerHTML =
-        subjects.map(
-            subject =>
-            `<div class="subject">
-                <b>${escapeHtml(subject)}</b>
-            </div>`
-        ).join("");
+    subjects.map(
+        subject =>
+        `<div class="subject">
+            <b>${escapeHtml(subject)}</b>
+        </div>`
+    ).join("");
 
 
     renderHead();
@@ -1110,49 +1065,40 @@ async function load(){
     renderMarks();
 
 
-    const studentData =
-        await api(
-            "/api/students?semester="
-            + encodeURIComponent(semester)
-        );
-
-
     students =
-        Array.isArray(studentData)
-        ? studentData
-        : [];
+    await api(
+        "/api/students?semester="
+        + encodeURIComponent(semester)
+    ) || [];
 
 
     render(students);
 
 
     const analytics =
-        await api(
-            "/api/analytics?semester="
-            + encodeURIComponent(semester)
-        );
+    await api(
+        "/api/analytics?semester="
+        + encodeURIComponent(semester)
+    );
 
 
-    if(!analytics){
-
-        return;
-    }
+    if(!analytics) return;
 
 
     $("total").innerText =
-        analytics.total_students;
+    analytics.total_students;
 
 
     $("average").innerText =
-        analytics.average_percentage + "%";
+    analytics.average_percentage + "%";
 
 
     $("top").innerText =
-        analytics.top_performer;
+    analytics.top_performer;
 
 
     $("attendance").innerText =
-        analytics.average_attendance + "%";
+    analytics.average_attendance + "%";
 
 
     drawCharts(analytics);
@@ -1160,114 +1106,70 @@ async function load(){
 }
 
 
-/* ================= YEAR SELECTION ================= */
+/* ================= YEAR ================= */
 
 function selectYear(year){
 
-    document.querySelectorAll(
-        ".years button"
-    ).forEach(
-        button =>
-        button.classList.remove("active")
-    );
-
+    let selectedSemester;
 
     if(year === "1st Year"){
 
-        $("y1").classList.add("active");
+        selectedSemester = "Semester 1";
 
     }
-
     else if(year === "2nd Year"){
 
-        $("y2").classList.add("active");
+        selectedSemester = "Semester 3";
 
     }
-
-    else if(year === "3rd Year"){
-
-        $("y3").classList.add("active");
-
-    }
-
-
-    /*
-       IMPORTANT:
-       Year button selects the FIRST semester
-       of that year.
-    */
-
-    if(year === "1st Year"){
-
-        semester = "Semester 1";
-
-    }
-
-    else if(year === "2nd Year"){
-
-        semester = "Semester 3";
-
-    }
-
     else{
 
-        semester = "Semester 5";
+        selectedSemester = "Semester 5";
 
     }
 
-
-    $("semester").value = semester;
-
-    load();
+    selectSemester(selectedSemester);
 
 }
 
 
-/* ================= SEMESTER SELECTION ================= */
+/* ================= SEMESTER ================= */
 
-function semesterChanged(){
+function selectSemester(selected){
 
-    /*
-       Do NOT change selected semester here.
-       This fixes Semester 2, 4 and 6 problem.
-    */
+    semester = selected;
 
-    semester =
-        $("semester").value;
+    $("semester").value =
+    selected;
 
 
-    const year =
-        years[semester];
-
-
-    document.querySelectorAll(
-        ".years button"
-    ).forEach(
-        button =>
+    document
+    .querySelectorAll(".years button")
+    .forEach(button =>
         button.classList.remove("active")
     );
 
 
-    if(year === "1st Year"){
+    if(semesterYear[selected] === "1st Year"){
 
         $("y1").classList.add("active");
 
     }
 
-    else if(year === "2nd Year"){
+    if(semesterYear[selected] === "2nd Year"){
 
         $("y2").classList.add("active");
 
     }
 
-    else if(year === "3rd Year"){
+    if(semesterYear[selected] === "3rd Year"){
 
         $("y3").classList.add("active");
 
     }
 
 
-    load();
+    loadDashboard();
 
 }
 
@@ -1278,47 +1180,50 @@ function renderHead(){
 
     $("head").innerHTML =
 
-    `<tr>
+    "<tr>" +
 
-        <th>Student ID</th>
+    "<th>Student ID</th>" +
 
-        <th>Name</th>
+    "<th>Name</th>" +
 
-        <th>Gender</th>
+    "<th>Gender</th>" +
 
-        <th>Class</th>
+    "<th>Class</th>" +
 
-        ${subjects.map(
-            s => `<th>${escapeHtml(s)}</th>`
-        ).join("")}
+    subjects
+    .map(
+        subject =>
+        `<th>${escapeHtml(subject)}</th>`
+    )
+    .join("") +
 
-        <th>Total</th>
+    "<th>Total</th>" +
 
-        <th>Percentage</th>
+    "<th>Percentage</th>" +
 
-        <th>Attendance</th>
+    "<th>Attendance</th>" +
 
-        <th>Status</th>
+    "<th>Status</th>" +
 
-        <th>Grade</th>
+    "<th>Grade</th>" +
 
-        <th>Action</th>
+    "<th>Action</th>" +
 
-    </tr>`;
+    "</tr>";
 
 }
 
 
-/* ================= ESCAPE HTML ================= */
+/* ================= ESCAPE ================= */
 
 function escapeHtml(value){
 
     return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
@@ -1327,23 +1232,21 @@ function escapeHtml(value){
 
 function render(data){
 
-    if(!data || data.length === 0){
+    if(!data.length){
 
         $("body").innerHTML =
 
         `<tr>
-
             <td
-                colspan="30"
-                style="padding:30px;text-align:center;">
+            colspan="30"
+            style="padding:30px;text-align:center">
 
-                No students available for
-                ${escapeHtml(semester)}.
+            No students available for
+            ${escapeHtml(semester)}.
 
-                Upload Excel.
+            Upload Excel.
 
             </td>
-
         </tr>`;
 
         return;
@@ -1354,96 +1257,88 @@ function render(data){
 
     data.map(student => {
 
-        const studentJson =
-            JSON.stringify(student)
-            .replaceAll("'","&#39;");
-
-
-        const studentId =
-            JSON.stringify(
-                String(student.Student_ID)
-            );
-
-
         return `
 
         <tr>
 
-            <td>
-                ${escapeHtml(student.Student_ID)}
-            </td>
+        <td>
+        ${escapeHtml(student.Student_ID)}
+        </td>
 
-            <td>
-                <b>
-                    ${escapeHtml(student.Name)}
-                </b>
-            </td>
+        <td>
+        <b>
+        ${escapeHtml(student.Name)}
+        </b>
+        </td>
 
-            <td>
-                ${escapeHtml(student.Gender)}
-            </td>
+        <td>
+        ${escapeHtml(student.Gender)}
+        </td>
 
-            <td>
-                ${escapeHtml(student.Class)}
-            </td>
+        <td>
+        ${escapeHtml(student.Class)}
+        </td>
 
 
-            ${subjects.map(
+        ${
+            subjects.map(
                 subject =>
-                `<td>
-                    ${student[subject] ?? 0}
-                </td>`
-            ).join("")}
+                `<td>${student[subject] ?? 0}</td>`
+            ).join("")
+        }
 
 
-            <td>
-                ${student.Total ?? 0}
-            </td>
+        <td>
+        ${student.Total}
+        </td>
 
 
-            <td>
-                ${student.Percentage ?? 0}%
-            </td>
+        <td>
+        ${student.Percentage}%
+        </td>
 
 
-            <td>
-                ${student.Attendance ?? 0}%
-            </td>
+        <td>
+        ${student.Attendance}%
+        </td>
 
 
-            <td class="${
-                student["Attendance Status"] === "Good"
-                ? "good"
-                : "bad"
-            }">
+        <td class="${
+            student["Attendance Status"] === "Good"
+            ? "good"
+            : "bad"
+        }">
 
-                ${escapeHtml(
-                    student["Attendance Status"]
-                )}
+        ${student["Attendance Status"]}
 
-            </td>
+        </td>
 
 
-            <td>
-                ${escapeHtml(student.Grade)}
-            </td>
+        <td>
+        ${student.Grade}
+        </td>
 
 
-            <td>
+        <td>
 
-                <button
-                    class="btn blue"
-                    onclick='editStudent(${studentJson})'>
-                    Edit
-                </button>
+        <button
+        class="btn blue"
+        onclick='editStudent(${JSON.stringify(student).replaceAll("'","&#39;")})'>
 
-                <button
-                    class="btn red"
-                    onclick='deleteStudent(${studentId})'>
-                    Delete
-                </button>
+        Edit
 
-            </td>
+        </button>
+
+
+        <button
+        class="btn red"
+        onclick='deleteStudent(${JSON.stringify(String(student.Student_ID))})'>
+
+        Delete
+
+        </button>
+
+        </td>
 
         </tr>
 
@@ -1459,9 +1354,9 @@ function render(data){
 function searchStudent(){
 
     const query =
-        $("search").value
-        .toLowerCase()
-        .trim();
+    $("search").value
+    .toLowerCase()
+    .trim();
 
 
     if(!query){
@@ -1472,37 +1367,35 @@ function searchStudent(){
     }
 
 
-    const result =
-        students.filter(student =>
+    const filtered =
+    students.filter(student =>
 
-            String(student.Name)
-                .toLowerCase()
-                .includes(query)
+        String(student.Name)
+        .toLowerCase()
+        .includes(query)
 
-            ||
+        ||
 
-            String(student.Student_ID)
-                .toLowerCase()
-                .includes(query)
+        String(student.Student_ID)
+        .toLowerCase()
+        .includes(query)
 
-        );
+    );
 
 
-    render(result);
+    render(filtered);
 
 }
 
 
-/* ================= MARK INPUTS ================= */
+/* ================= MARK INPUT ================= */
 
-function markInputId(subject){
+function markId(subject){
 
     return "mark_" +
-        subject
-        .replaceAll(" ","_")
-        .replaceAll("/","_")
-        .replaceAll("-","_")
-        .replaceAll(".","_");
+    subject
+    .replaceAll(" ","_")
+    .replaceAll("/","_");
 
 }
 
@@ -1511,32 +1404,29 @@ function renderMarks(values={}){
 
     $("markInputs").innerHTML =
 
-        subjects.map(subject => {
+    subjects.map(subject =>
 
-            const id =
-                markInputId(subject);
+    `
 
+    <div>
 
-            return `
+    <label>
+    ${escapeHtml(subject)}
+    </label>
 
-            <div>
+    <input
+    id="${markId(subject)}"
+    type="number"
+    min="0"
+    max="100"
+    value="${values[subject] ?? 0}"
+    >
 
-                <label>
-                    ${escapeHtml(subject)}
-                </label>
+    </div>
 
-                <input
-                    id="${id}"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value="${values[subject] ?? 0}">
+    `
 
-            </div>
-
-            `;
-
-        }).join("");
+    ).join("");
 
 }
 
@@ -1547,29 +1437,32 @@ function openAdd(){
 
     editMode = false;
 
-
     $("modalTitle").innerText =
-        "➕ Add Student";
+    "➕ Add Student";
 
 
     $("sid").disabled = false;
 
 
-    $("sid").value = "";
-    $("sname").value = "";
-    $("gender").value = "";
-    $("sclass").value = "";
-    $("att").value = "";
+    [
+        "sid",
+        "sname",
+        "gender",
+        "sclass",
+        "att"
+    ]
+    .forEach(
+        id => $(id).value = ""
+    );
 
 
     $("formMessage").innerText = "";
-
 
     renderMarks();
 
 
     $("modal").style.display =
-        "flex";
+    "flex";
 
 }
 
@@ -1580,94 +1473,75 @@ function editStudent(student){
 
     editMode = true;
 
-
     $("modalTitle").innerText =
-        "✏️ Edit Student";
+    "✏️ Edit Student";
 
 
     $("sid").value =
-        student.Student_ID;
-
+    student.Student_ID;
 
     $("sid").disabled = true;
 
 
     $("sname").value =
-        student.Name ?? "";
-
+    student.Name;
 
     $("gender").value =
-        student.Gender ?? "";
-
+    student.Gender;
 
     $("sclass").value =
-        student.Class ?? "";
-
+    student.Class;
 
     $("att").value =
-        student.Attendance ?? "";
-
-
-    $("formMessage").innerText = "";
+    student.Attendance;
 
 
     renderMarks(student);
 
 
+    $("formMessage").innerText = "";
+
+
     $("modal").style.display =
-        "flex";
+    "flex";
 
 }
 
 
-/* ================= CLOSE MODAL ================= */
+/* ================= CLOSE ================= */
 
 function closeModal(){
 
     $("modal").style.display =
-        "none";
+    "none";
 
     $("sid").disabled = false;
 
 }
 
 
-/* ================= SAVE STUDENT ================= */
+/* ================= SAVE ================= */
 
 async function saveStudent(){
-
-    const studentId =
-        $("sid").value.trim();
-
-    const name =
-        $("sname").value.trim();
-
-
-    if(!studentId || !name){
-
-        $("formMessage").innerText =
-            "Student ID आणि Name required आहेत.";
-
-        return;
-    }
-
 
     const data = {
 
         semester: semester,
 
-        Student_ID: studentId,
+        Student_ID:
+        $("sid").value.trim(),
 
-        Name: name,
+        Name:
+        $("sname").value.trim(),
 
         Gender:
-            $("gender").value.trim(),
+        $("gender").value.trim(),
 
         Class:
-            $("sclass").value.trim(),
+        $("sclass").value.trim(),
 
         Attendance:
-            $("att").value
+        $("att").value
 
     };
 
@@ -1675,20 +1549,21 @@ async function saveStudent(){
     subjects.forEach(subject => {
 
         data[subject] =
-            $(markInputId(subject)).value;
+        $(markId(subject)).value;
 
     });
 
 
-    const url =
-        editMode
-        ? "/api/edit_student"
-        : "/api/add_student";
+    const endpoint =
+    editMode
+    ? "/api/edit_student"
+    : "/api/add_student";
 
 
     const result =
-        await api(url,{
-
+    await api(
+        endpoint,
+        {
             method:"POST",
 
             headers:{
@@ -1697,24 +1572,21 @@ async function saveStudent(){
             },
 
             body:
-                JSON.stringify(data)
+            JSON.stringify(data)
+        }
+    );
 
-        });
 
-
-    if(!result){
-
-        return;
-    }
+    if(!result) return;
 
 
     $("formMessage").innerText =
-        result.message;
+    result.message;
 
 
     if(result.success){
 
-        await load();
+        await loadDashboard();
 
         setTimeout(
             closeModal,
@@ -1730,47 +1602,41 @@ async function saveStudent(){
 
 async function deleteStudent(id){
 
-    const confirmDelete =
-        confirm(
-            "Delete this student?\n\nExcel मधूनही data delete होईल."
-        );
-
-
-    if(!confirmDelete){
+    if(
+        !confirm(
+            "Delete this student? Excel मधूनही delete होईल."
+        )
+    ){
 
         return;
+
     }
 
 
     const result =
-        await api(
-            "/api/delete_student",
-            {
+    await api(
+        "/api/delete_student",
+        {
+            method:"POST",
 
-                method:"POST",
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
 
-                headers:{
-                    "Content-Type":
-                    "application/json"
-                },
+            body:
+            JSON.stringify({
 
-                body:
-                    JSON.stringify({
+                semester:semester,
 
-                        semester:semester,
+                Student_ID:id
 
-                        Student_ID:id
-
-                    })
-
-            }
-        );
+            })
+        }
+    );
 
 
-    if(!result){
-
-        return;
-    }
+    if(!result) return;
 
 
     alert(result.message);
@@ -1778,51 +1644,34 @@ async function deleteStudent(id){
 
     if(result.success){
 
-        await load();
+        await loadDashboard();
 
     }
 
 }
 
 
-/* ================= EXCEL UPLOAD ================= */
+/* ================= UPLOAD ================= */
 
 async function uploadExcel(){
 
     const file =
-        $("excel").files[0];
+    $("excel").files[0];
 
 
     if(!file){
 
         alert(
-            "Please select Excel file."
+            "Excel file select करा."
         );
 
         return;
-    }
 
-
-    const fileName =
-        file.name.toLowerCase();
-
-
-    if(
-        !fileName.endsWith(".xlsx")
-        &&
-        !fileName.endsWith(".xls")
-    ){
-
-        alert(
-            "Only Excel files (.xlsx / .xls) allowed."
-        );
-
-        return;
     }
 
 
     const formData =
-        new FormData();
+    new FormData();
 
 
     formData.append(
@@ -1837,38 +1686,28 @@ async function uploadExcel(){
     );
 
 
-    $("uploadMessage").innerText =
-        "Uploading...";
-
-
     const result =
-        await api(
-            "/api/upload_excel",
-            {
-
-                method:"POST",
-
-                body:formData
-
-            }
-        );
+    await api(
+        "/api/upload_excel",
+        {
+            method:"POST",
+            body:formData
+        }
+    );
 
 
-    if(!result){
-
-        return;
-    }
+    if(!result) return;
 
 
     $("uploadMessage").innerText =
-        result.message;
+    result.message;
 
 
     if(result.success){
 
         $("excel").value = "";
 
-        await load();
+        await loadDashboard();
 
     }
 
@@ -1885,7 +1724,6 @@ function drawCharts(data){
 
     }
 
-
     if(chart2){
 
         chart2.destroy();
@@ -1894,88 +1732,74 @@ function drawCharts(data){
 
 
     chart1 =
-        new Chart(
-            $("subjectChart"),
-            {
+    new Chart(
+        $("subjectChart"),
+        {
+            type:"bar",
 
-                type:"bar",
+            data:{
+                labels:
+                Object.keys(data.subjects),
 
-                data:{
+                datasets:[{
 
-                    labels:
-                        Object.keys(
-                            data.subjects
-                        ),
+                    label:
+                    "Average Marks",
 
-                    datasets:[{
+                    data:
+                    Object.values(data.subjects)
 
-                        label:
-                            "Average Marks",
+                }]
+            },
 
-                        data:
-                            Object.values(
-                                data.subjects
-                            )
+            options:{
 
-                    }]
+                responsive:true,
 
-                },
+                scales:{
 
-                options:{
+                    y:{
 
-                    responsive:true,
+                        beginAtZero:true,
 
-                    scales:{
-
-                        y:{
-
-                            beginAtZero:true,
-
-                            max:100
-
-                        }
+                        max:100
 
                     }
 
                 }
 
             }
-        );
+
+        }
+    );
 
 
     chart2 =
-        new Chart(
-            $("gradeChart"),
-            {
+    new Chart(
+        $("gradeChart"),
+        {
+            type:"doughnut",
 
-                type:"doughnut",
+            data:{
 
-                data:{
+                labels:
+                Object.keys(data.grades),
 
-                    labels:
-                        Object.keys(
-                            data.grades
-                        ),
+                datasets:[{
 
-                    datasets:[{
+                    data:
+                    Object.values(data.grades)
 
-                        data:
-                            Object.values(
-                                data.grades
-                            )
+                }]
 
-                    }]
+            },
 
-                },
-
-                options:{
-
-                    responsive:true
-
-                }
-
+            options:{
+                responsive:true
             }
-        );
+
+        }
+    );
 
 }
 
@@ -1984,21 +1808,13 @@ function drawCharts(data){
 
 function go(id){
 
-    const element =
-        $(id);
+    $(id).scrollIntoView({
 
+        behavior:"smooth",
 
-    if(element){
+        block:"start"
 
-        element.scrollIntoView({
-
-            behavior:"smooth",
-
-            block:"start"
-
-        });
-
-    }
+    });
 
 }
 
@@ -2016,26 +1832,15 @@ function topPage(){
 }
 
 
-/* ================= INITIAL LOAD ================= */
+/* ================= START ================= */
 
 window.addEventListener(
     "load",
     function(){
 
-        semester =
-            "Semester 1";
-
-
-        $("semester").value =
-            "Semester 1";
-
-
-        $("y1").classList.add(
-            "active"
+        selectSemester(
+            "Semester 1"
         );
-
-
-        load();
 
     }
 );
