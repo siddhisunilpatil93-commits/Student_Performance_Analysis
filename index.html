@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -165,6 +166,7 @@ select{
     width:100%;
     margin-top:8px;
     background:white;
+    cursor:pointer;
 }
 
 /* ================= CARDS ================= */
@@ -377,13 +379,14 @@ tr:hover{
 }
 
 </style>
+
 </head>
 
 <body>
 
 {% if login_page %}
 
-<!-- ================= LOGIN ================= -->
+<!-- ================= LOGIN PAGE ================= -->
 
 <div class="login">
 
@@ -410,6 +413,7 @@ tr:hover{
             <b>Username</b>
 
             <input
+                type="text"
                 name="username"
                 required
                 placeholder="Enter username"
@@ -489,6 +493,8 @@ tr:hover{
         📊 Analytics
     </button>
 
+    <!-- LOGOUT -->
+
     <button
         style="background:#dc2626;"
         onclick="logoutUser()"
@@ -527,7 +533,7 @@ tr:hover{
     </div>
 
 
-    <!-- YEAR + SEMESTER -->
+    <!-- ================= YEAR + SEMESTER ================= -->
 
     <div class="box">
 
@@ -566,6 +572,8 @@ tr:hover{
 
         <b>Select Semester</b>
 
+        <!-- ALL 6 SEMESTERS -->
+
         <select id="semester" onchange="semesterChanged()">
 
             <option value="Semester 1">
@@ -599,7 +607,7 @@ tr:hover{
     </div>
 
 
-    <!-- SUBJECTS -->
+    <!-- ================= SUBJECTS ================= -->
 
     <div class="box">
 
@@ -618,7 +626,7 @@ tr:hover{
     </div>
 
 
-    <!-- CARDS -->
+    <!-- ================= CARDS ================= -->
 
     <div class="cards">
 
@@ -636,6 +644,7 @@ tr:hover{
 
         </div>
 
+
         <div class="card">
 
             📈
@@ -650,6 +659,7 @@ tr:hover{
 
         </div>
 
+
         <div class="card">
 
             🏆
@@ -663,6 +673,7 @@ tr:hover{
             </div>
 
         </div>
+
 
         <div class="card">
 
@@ -681,7 +692,7 @@ tr:hover{
     </div>
 
 
-    <!-- SEARCH -->
+    <!-- ================= SEARCH ================= -->
 
     <div class="box" id="searchBox">
 
@@ -707,7 +718,7 @@ tr:hover{
     </div>
 
 
-    <!-- EXCEL -->
+    <!-- ================= EXCEL ================= -->
 
     <div class="box">
 
@@ -744,7 +755,7 @@ tr:hover{
     </div>
 
 
-    <!-- CHARTS -->
+    <!-- ================= CHARTS ================= -->
 
     <div class="charts" id="charts">
 
@@ -757,6 +768,7 @@ tr:hover{
             <canvas id="subjectChart"></canvas>
 
         </div>
+
 
         <div class="chart">
 
@@ -771,7 +783,7 @@ tr:hover{
     </div>
 
 
-    <!-- STUDENTS -->
+    <!-- ================= STUDENTS ================= -->
 
     <div class="box" id="students">
 
@@ -814,11 +826,15 @@ tr:hover{
         </h2>
 
         <p class="muted">
+
             Current Semester:
+
             <b id="modalSemester">
                 Semester 1
             </b>
+
         </p>
+
 
         <div class="grid">
 
@@ -833,6 +849,7 @@ tr:hover{
 
             </div>
 
+
             <div>
 
                 <b>Name</b>
@@ -843,6 +860,7 @@ tr:hover{
                 >
 
             </div>
+
 
             <div>
 
@@ -855,6 +873,7 @@ tr:hover{
 
             </div>
 
+
             <div>
 
                 <b>Class</b>
@@ -865,6 +884,7 @@ tr:hover{
                 >
 
             </div>
+
 
             <div>
 
@@ -882,16 +902,20 @@ tr:hover{
 
         </div>
 
+
         <h3>
             📚 Subject Marks
         </h3>
+
 
         <div
             id="markInputs"
             class="grid"
         ></div>
 
+
         <br>
+
 
         <button
             class="btn green"
@@ -900,12 +924,14 @@ tr:hover{
             💾 Save Student
         </button>
 
+
         <button
             class="btn"
             onclick="closeModal()"
         >
             Cancel
         </button>
+
 
         <p id="formMessage"></p>
 
@@ -956,7 +982,9 @@ const years = {
 ===================================================== */
 
 function $(id){
+
     return document.getElementById(id);
+
 }
 
 
@@ -964,22 +992,21 @@ function $(id){
    API
 ===================================================== */
 
-async function api(url,options={}){
+async function api(url, options = {}){
 
     try{
 
-        const response =
-            await fetch(url,options);
+        const response = await fetch(url, options);
 
         if(response.status === 401){
 
-            window.location.href="/login";
+            window.location.href = "/login";
+
             return null;
 
         }
 
-        const text =
-            await response.text();
+        const text = await response.text();
 
         if(!text){
 
@@ -992,9 +1019,9 @@ async function api(url,options={}){
             return JSON.parse(text);
 
         }
-        catch(e){
+        catch(error){
 
-            console.error("Invalid JSON:",text);
+            console.error("Invalid JSON:", text);
 
             alert("Server returned invalid response.");
 
@@ -1022,23 +1049,20 @@ async function api(url,options={}){
 
 async function load(){
 
-    $("modalSemester").innerText =
-        semester;
+    $("modalSemester").innerText = semester;
 
-    $("uploadSemester").innerText =
-        semester;
+    $("uploadSemester").innerText = semester;
 
     $("selectionMessage").innerText =
         "Loading " + semester + "...";
 
 
-    /* SUBJECTS */
+    /* ================= SUBJECTS ================= */
 
-    const subjectData =
-        await api(
-            "/api/subjects?semester=" +
-            encodeURIComponent(semester)
-        );
+    const subjectData = await api(
+        "/api/subjects?semester=" +
+        encodeURIComponent(semester)
+    );
 
 
     if(!subjectData){
@@ -1051,11 +1075,8 @@ async function load(){
     }
 
 
-    subjects =
-        Array.isArray(subjectData.subjects)
-        ? subjectData.subjects.map(
-            item => item.code
-        )
+    subjects = Array.isArray(subjectData.subjects)
+        ? subjectData.subjects.map(item => item.code)
         : [];
 
 
@@ -1066,13 +1087,17 @@ async function load(){
     if(subjects.length){
 
         $("subjects").innerHTML =
-            subjects.map(
-                subject => `
-                    <div class="subject">
-                        <b>${escapeHTML(subject)}</b>
-                    </div>
-                `
-            ).join("");
+            subjects.map(subject => `
+
+                <div class="subject">
+
+                    <b>
+                        ${escapeHTML(subject)}
+                    </b>
+
+                </div>
+
+            `).join("");
 
     }
     else{
@@ -1088,13 +1113,12 @@ async function load(){
     renderMarks();
 
 
-    /* STUDENTS */
+    /* ================= STUDENTS ================= */
 
-    const studentData =
-        await api(
-            "/api/students?semester=" +
-            encodeURIComponent(semester)
-        );
+    const studentData = await api(
+        "/api/students?semester=" +
+        encodeURIComponent(semester)
+    );
 
 
     students =
@@ -1106,13 +1130,12 @@ async function load(){
     render(students);
 
 
-    /* ANALYTICS */
+    /* ================= ANALYTICS ================= */
 
-    const data =
-        await api(
-            "/api/analytics?semester=" +
-            encodeURIComponent(semester)
-        );
+    const data = await api(
+        "/api/analytics?semester=" +
+        encodeURIComponent(semester)
+    );
 
 
     if(data){
@@ -1128,6 +1151,7 @@ async function load(){
 
         $("attendance").innerText =
             (data.average_attendance ?? 0) + "%";
+
 
         drawCharts(data);
 
@@ -1154,11 +1178,13 @@ function setYear(year){
         selectedSemester = "Semester 1";
 
     }
+
     else if(year === "2nd Year"){
 
         selectedSemester = "Semester 3";
 
     }
+
     else{
 
         selectedSemester = "Semester 5";
@@ -1166,8 +1192,7 @@ function setYear(year){
     }
 
 
-    semester =
-        selectedSemester;
+    semester = selectedSemester;
 
 
     $("semester").value =
@@ -1183,7 +1208,7 @@ function setYear(year){
 
 /* =====================================================
    SEMESTER CHANGE
-   1,2,3,4,5,6 ALL WORK
+   ALL 6 SEMESTERS WORK
 ===================================================== */
 
 function semesterChanged(){
@@ -1199,15 +1224,20 @@ function semesterChanged(){
     }
 
 
-    semester =
-        selected;
+    /* IMPORTANT */
+
+    semester = selected;
 
 
-    const year =
-        years[semester];
+    /* Automatically select correct year */
+
+    const year = years[semester];
 
 
     updateYearButton(year);
+
+
+    /* Load selected semester */
 
     load();
 
@@ -1215,7 +1245,7 @@ function semesterChanged(){
 
 
 /* =====================================================
-   ACTIVE YEAR
+   ACTIVE YEAR BUTTON
 ===================================================== */
 
 function updateYearButton(year){
@@ -1234,11 +1264,13 @@ function updateYearButton(year){
         $("y1").classList.add("active");
 
     }
+
     else if(year === "2nd Year"){
 
         $("y2").classList.add("active");
 
     }
+
     else if(year === "3rd Year"){
 
         $("y3").classList.add("active");
@@ -1266,13 +1298,13 @@ function renderHead(){
 
             <th>Class</th>
 
-            ${subjects.map(
-                subject => `
-                    <th>
-                        ${escapeHTML(subject)}
-                    </th>
-                `
-            ).join("")}
+            ${subjects.map(subject => `
+
+                <th>
+                    ${escapeHTML(subject)}
+                </th>
+
+            `).join("")}
 
             <th>Total</th>
 
@@ -1324,7 +1356,10 @@ function render(data){
                 <td colspan="30">
 
                     No students available for
-                    <b>${escapeHTML(semester)}</b>.
+
+                    <b>
+                        ${escapeHTML(semester)}
+                    </b>.
 
                     Upload Excel or Add Student.
 
@@ -1340,6 +1375,7 @@ function render(data){
 
 
     $("body").innerHTML =
+
         data.map(student => {
 
             const safeStudent =
@@ -1356,9 +1392,11 @@ function render(data){
                     </td>
 
                     <td>
+
                         <b>
                             ${escapeHTML(student.Name)}
                         </b>
+
                     </td>
 
                     <td>
@@ -1369,27 +1407,32 @@ function render(data){
                         ${escapeHTML(student.Class)}
                     </td>
 
+
                     ${
-                        subjects.map(
-                            subject => `
-                                <td>
-                                    ${student[subject] ?? 0}
-                                </td>
-                            `
-                        ).join("")
+                        subjects.map(subject => `
+
+                            <td>
+                                ${student[subject] ?? 0}
+                            </td>
+
+                        `).join("")
                     }
+
 
                     <td>
                         ${student.Total ?? 0}
                     </td>
 
+
                     <td>
                         ${student.Percentage ?? 0}%
                     </td>
 
+
                     <td>
                         ${student.Attendance ?? 0}%
                     </td>
+
 
                     <td class="${
                         student["Attendance Status"] === "Good"
@@ -1403,9 +1446,11 @@ function render(data){
 
                     </td>
 
+
                     <td>
                         ${student.Grade ?? "-"}
                     </td>
+
 
                     <td>
 
@@ -1415,6 +1460,7 @@ function render(data){
                         >
                             Edit
                         </button>
+
 
                         <button
                             class="btn red"
@@ -1469,6 +1515,7 @@ function searchStudent(){
                 String(student.Student_ID ?? "")
                     .toLowerCase();
 
+
             return (
                 name.includes(q) ||
                 id.includes(q)
@@ -1486,7 +1533,7 @@ function searchStudent(){
    MARK INPUTS
 ===================================================== */
 
-function renderMarks(values={}){
+function renderMarks(values = {}){
 
     if(!subjects.length){
 
@@ -1499,6 +1546,7 @@ function renderMarks(values={}){
 
 
     $("markInputs").innerHTML =
+
         subjects.map(subject => {
 
             const id =
@@ -1648,6 +1696,7 @@ async function saveStudent(){
     const studentID =
         $("sid").value.trim();
 
+
     const name =
         $("sname").value.trim();
 
@@ -1667,17 +1716,17 @@ async function saveStudent(){
 
     const data = {
 
-        semester:semester,
+        semester: semester,
 
-        Student_ID:studentID,
+        Student_ID: studentID,
 
-        Name:name,
+        Name: name,
 
-        Gender:$("gender").value.trim(),
+        Gender: $("gender").value.trim(),
 
-        Class:$("sclass").value.trim(),
+        Class: $("sclass").value.trim(),
 
-        Attendance:$("att").value
+        Attendance: $("att").value
 
     };
 
@@ -1752,7 +1801,7 @@ async function saveStudent(){
 
 
 /* =====================================================
-   DELETE
+   DELETE STUDENT
 ===================================================== */
 
 async function deleteStudent(id){
@@ -1783,9 +1832,9 @@ async function deleteStudent(id){
                 body:
                     JSON.stringify({
 
-                        semester:semester,
+                        semester: semester,
 
-                        Student_ID:id
+                        Student_ID: id
 
                     })
 
@@ -1940,6 +1989,7 @@ function drawCharts(data){
     const subjectData =
         data.subjects || {};
 
+
     const gradeData =
         data.grades || {};
 
@@ -2067,7 +2117,11 @@ function goTop(){
 
 function logoutUser(){
 
-    if(confirm("Logout करायचे आहे का?")){
+    if(
+        confirm(
+            "Logout करायचे आहे का?"
+        )
+    ){
 
         window.location.href =
             "/logout";
@@ -2112,7 +2166,9 @@ window.addEventListener(
     "click",
     function(event){
 
-        if(event.target === $("modal")){
+        if(
+            event.target === $("modal")
+        ){
 
             closeModal();
 
@@ -2126,4 +2182,5 @@ window.addEventListener(
 {% endif %}
 
 </body>
+
 </html>
