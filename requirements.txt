@@ -2,3 +2,4 @@ pandas
 matplotlib
 Flask
 gunicorn
+openpyxl
