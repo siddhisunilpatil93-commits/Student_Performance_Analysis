@@ -10,22 +10,24 @@
 <style>
 *{
     box-sizing:border-box;
-    font-family:Arial,sans-serif
+    font-family:Arial,sans-serif;
 }
 
 body{
     margin:0;
     background:#eef2ff;
-    color:#172554
+    color:#172554;
 }
 
-/* ================= LOGIN ================= */
+button{
+    cursor:pointer;
+}
 
 .login{
     min-height:100vh;
     display:grid;
     place-items:center;
-    background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed)
+    background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed);
 }
 
 .loginbox{
@@ -34,7 +36,7 @@ body{
     border-radius:20px;
     width:420px;
     max-width:92%;
-    box-shadow:0 20px 60px #0004
+    box-shadow:0 20px 60px #0004;
 }
 
 .loginbox input{
@@ -42,7 +44,7 @@ body{
     padding:13px;
     margin:7px 0 15px;
     border:2px solid #dbeafe;
-    border-radius:9px
+    border-radius:9px;
 }
 
 .loginbox button{
@@ -53,7 +55,6 @@ body{
     background:#4f46e5;
     color:#fff;
     font-weight:bold;
-    cursor:pointer
 }
 
 .err{
@@ -62,10 +63,8 @@ body{
     padding:10px;
     text-align:center;
     border-radius:8px;
-    margin-top:12px
+    margin-top:12px;
 }
-
-/* ================= SIDEBAR ================= */
 
 .side{
     position:fixed;
@@ -76,11 +75,11 @@ body{
     background:linear-gradient(#312e81,#7c3aed);
     color:#fff;
     padding:25px;
-    overflow-y:auto
+    overflow-y:auto;
 }
 
 .side h2{
-    margin-top:0
+    margin-top:0;
 }
 
 .side button{
@@ -91,30 +90,27 @@ body{
     border:0;
     color:#fff;
     text-align:left;
-    cursor:pointer;
     border-radius:8px;
-    font-size:14px
+    font-size:14px;
 }
 
 .side button:hover{
-    background:#ffffff22
+    background:#ffffff22;
 }
 
 .side .sem-active{
     background:#ffffff33;
-    font-weight:bold
+    font-weight:bold;
 }
 
 .logout-btn{
     background:#dc2626!important;
-    margin-top:20px!important
+    margin-top:20px!important;
 }
-
-/* ================= MAIN ================= */
 
 .main{
     margin-left:240px;
-    padding:25px
+    padding:25px;
 }
 
 .box,
@@ -123,44 +119,35 @@ body{
     padding:16px;
     border-radius:16px;
     margin-bottom:18px;
-    box-shadow:0 4px 18px #0001
+    box-shadow:0 4px 18px #0001;
 }
-
-/* ================= YEAR ================= */
 
 .years{
     display:flex;
     gap:10px;
     flex-wrap:wrap;
-    margin-top:10px
+    margin-top:10px;
 }
 
 .years button{
     padding:11px 18px;
     border:0;
     border-radius:8px;
-    cursor:pointer;
     background:#e0e7ff;
     color:#172554;
-    font-weight:bold
-}
-
-.years button:hover{
-    background:#c7d2fe
+    font-weight:bold;
 }
 
 .years button.active{
     background:#4f46e5;
-    color:#fff
+    color:#fff;
 }
-
-/* ================= SEMESTER ================= */
 
 .semester-buttons{
     display:grid;
-    grid-template-columns:repeat(6,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:10px;
-    margin-top:12px
+    margin-top:12px;
 }
 
 .semester-buttons button{
@@ -170,18 +157,17 @@ body{
     background:#eef2ff;
     color:#172554;
     font-weight:bold;
-    cursor:pointer;
-    font-size:14px
+    font-size:14px;
 }
 
 .semester-buttons button:hover{
-    background:#c7d2fe
+    background:#c7d2fe;
 }
 
 .semester-buttons button.active{
     background:#4f46e5;
     color:#fff;
-    border-color:#4f46e5
+    border-color:#4f46e5;
 }
 
 .current-semester{
@@ -190,32 +176,22 @@ body{
     background:#ede9fe;
     border-radius:9px;
     color:#4c1d95;
-    font-weight:bold
+    font-weight:bold;
 }
-
-/* ================= INPUT ================= */
 
 select,
 input{
     padding:12px;
     border:2px solid #dbeafe;
     border-radius:9px;
-    outline:none
+    outline:none;
 }
-
-select{
-    width:100%;
-    margin-top:8px;
-    background:#fff
-}
-
-/* ================= CARDS ================= */
 
 .cards{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:15px;
-    margin-bottom:18px
+    margin-bottom:18px;
 }
 
 .card{
@@ -224,30 +200,26 @@ select{
     padding:20px;
     border-radius:16px;
     background:linear-gradient(135deg,#2563eb,#7c3aed);
-    box-shadow:0 4px 18px #0002
+    box-shadow:0 4px 18px #0002;
 }
 
 .value{
     font-size:25px;
-    font-weight:bold
+    font-weight:bold;
 }
-
-/* ================= SUBJECTS ================= */
 
 .subjects{
     display:grid;
     grid-template-columns:repeat(5,1fr);
-    gap:10px
+    gap:10px;
 }
 
 .subject{
     padding:13px;
     background:#eef2ff;
     border-left:4px solid #4f46e5;
-    border-radius:8px
+    border-radius:8px;
 }
-
-/* ================= BUTTON ================= */
 
 .btn{
     background:#4f46e5;
@@ -256,48 +228,26 @@ select{
     padding:11px 16px;
     border-radius:8px;
     font-weight:bold;
-    cursor:pointer;
-    margin:3px
-}
-
-.btn:hover{
-    opacity:.9
+    margin:3px;
 }
 
 .green{
-    background:#059669
+    background:#059669;
 }
 
 .red{
-    background:#dc2626
+    background:#dc2626;
 }
-
-/* ================= SEARCH ================= */
 
 #search{
     width:100%;
-    margin-bottom:10px
-}
-
-/* ================= CHART AREA ================= */
-
-#charts{
-    width:100%;
-}
-
-.chart-section-title{
     margin-bottom:10px;
 }
 
-/*
-   IMPORTANT:
-   Graphs are intentionally small.
-*/
-
 .bar-chart-box{
     width:100%;
-    max-width:850px;
-    margin:0 auto 18px auto;
+    max-width:900px;
+    margin:0 auto 18px;
     background:#fff;
     padding:16px;
     border-radius:16px;
@@ -305,23 +255,21 @@ select{
 }
 
 .bar-chart-wrapper{
-    height:250px;
+    height:280px;
     position:relative;
 }
 
 .bar-chart-wrapper canvas{
     width:100%!important;
-    height:250px!important;
+    height:280px!important;
 }
-
-/* Two PIE charts */
 
 .pie-container{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:18px;
-    max-width:850px;
-    margin:0 auto
+    max-width:900px;
+    margin:0 auto;
 }
 
 .pie-box{
@@ -329,30 +277,28 @@ select{
     padding:16px;
     border-radius:16px;
     box-shadow:0 4px 18px #0001;
-    text-align:center
+    text-align:center;
 }
 
 .pie-wrapper{
-    height:220px;
-    position:relative
+    height:240px;
+    position:relative;
 }
 
 .pie-wrapper canvas{
     width:100%!important;
-    height:220px!important
+    height:240px!important;
 }
-
-/* ================= TABLE ================= */
 
 .table{
     overflow:auto;
-    max-height:500px
+    max-height:500px;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1200px
+    min-width:1200px;
 }
 
 th{
@@ -361,26 +307,24 @@ th{
     padding:10px;
     position:sticky;
     top:0;
-    z-index:2
+    z-index:2;
 }
 
 td{
     padding:9px;
     text-align:center;
-    border-bottom:1px solid #ddd
+    border-bottom:1px solid #ddd;
 }
 
 .good{
     color:green;
-    font-weight:bold
+    font-weight:bold;
 }
 
 .bad{
     color:red;
-    font-weight:bold
+    font-weight:bold;
 }
-
-/* ================= MODAL ================= */
 
 .modal{
     display:none;
@@ -388,7 +332,7 @@ td{
     inset:0;
     background:#0008;
     place-items:center;
-    z-index:100
+    z-index:100;
 }
 
 .modalbox{
@@ -398,27 +342,27 @@ td{
     width:850px;
     max-width:95%;
     max-height:90vh;
-    overflow:auto
+    overflow:auto;
 }
 
 .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:10px
+    gap:10px;
 }
 
 .grid input{
     width:100%;
-    margin-top:5px
+    margin-top:5px;
 }
 
 .success{
     color:#047857;
-    font-weight:bold
+    font-weight:bold;
 }
 
 .muted{
-    color:#64748b
+    color:#64748b;
 }
 
 .close{
@@ -428,7 +372,6 @@ td{
     border:0;
     border-radius:6px;
     padding:7px 10px;
-    cursor:pointer
 }
 
 .top-logout{
@@ -439,27 +382,20 @@ td{
     border-radius:8px;
     padding:10px 16px;
     font-weight:bold;
-    cursor:pointer
 }
-
-/* ================= MOBILE ================= */
 
 @media(max-width:1000px){
 
     .cards{
-        grid-template-columns:repeat(2,1fr)
+        grid-template-columns:repeat(2,1fr);
     }
 
     .subjects{
-        grid-template-columns:repeat(2,1fr)
-    }
-
-    .semester-buttons{
-        grid-template-columns:repeat(3,1fr)
+        grid-template-columns:repeat(2,1fr);
     }
 
     .pie-container{
-        grid-template-columns:1fr
+        grid-template-columns:1fr;
     }
 }
 
@@ -468,29 +404,21 @@ td{
     .side{
         position:relative;
         width:100%;
-        height:auto
+        height:auto;
     }
 
     .main{
-        margin-left:0
+        margin-left:0;
     }
 
     .cards,
     .subjects,
     .grid{
-        grid-template-columns:1fr
+        grid-template-columns:1fr;
     }
 
     .semester-buttons{
-        grid-template-columns:repeat(2,1fr)
-    }
-
-    .bar-chart-wrapper{
-        height:220px
-    }
-
-    .bar-chart-wrapper canvas{
-        height:220px!important
+        grid-template-columns:1fr 1fr;
     }
 }
 </style>
@@ -500,696 +428,553 @@ td{
 
 {% if login_page %}
 
-<!-- ================= LOGIN PAGE ================= -->
-
 <div class="login">
 
-    <div class="loginbox">
+<div class="loginbox">
 
-        <div style="text-align:center;font-size:55px">🔐</div>
+<div style="text-align:center;font-size:55px">🔐</div>
 
-        <h1 style="text-align:center">
-            Student Analytics
-        </h1>
+<h1 style="text-align:center">
+Student Analytics
+</h1>
 
-        <p style="text-align:center;color:#64748b">
-            Computer Engineering
-        </p>
+<p style="text-align:center;color:#64748b">
+Computer Engineering
+</p>
 
-        <p style="text-align:center;color:#64748b;margin-bottom:25px">
-            Secure Login
-        </p>
+<p style="text-align:center;color:#64748b">
+Secure Login
+</p>
 
-        <form method="POST" action="{{ url_for('login') }}">
+<form method="POST" action="{{ url_for('login') }}">
 
-            <b>Username</b>
+<b>Username</b>
 
-            <input
-                name="username"
-                required
-                placeholder="Enter username"
-                autocomplete="username"
-            >
+<input
+name="username"
+required
+placeholder="Enter username">
 
-            <b>Password</b>
+<b>Password</b>
 
-            <input
-                type="password"
-                name="password"
-                required
-                placeholder="Enter password"
-                autocomplete="current-password"
-            >
+<input
+type="password"
+name="password"
+required
+placeholder="Enter password">
 
-            <button type="submit">
-                🔓 Login
-            </button>
+<button type="submit">
+🔓 Login
+</button>
 
-        </form>
+</form>
 
-        {% if login_error %}
-        <div class="err">
-            {{ login_error }}
-        </div>
-        {% endif %}
+{% if login_error %}
+<div class="err">
+{{ login_error }}
+</div>
+{% endif %}
 
-        <p style="text-align:center;color:#64748b;font-size:13px;margin-top:20px">
-            Authorized users only.
-        </p>
-
-    </div>
+</div>
 
 </div>
 
 {% else %}
 
-<!-- ================= SIDEBAR ================= -->
+<!-- SIDEBAR -->
 
 <aside class="side">
 
-    <h2>🎓 Student Analytics</h2>
+<h2>🎓 Student Analytics</h2>
 
-    <p>Computer Engineering</p>
+<p>Computer Engineering</p>
 
-    <hr style="border-color:#ffffff33">
+<hr style="border-color:#ffffff33">
 
-    <button onclick="goTop()">
-        🏠 Dashboard
-    </button>
+<button onclick="goTop()">
+🏠 Dashboard
+</button>
 
-    <button onclick="go('searchBox')">
-        🔍 Search Student
-    </button>
+<button onclick="go('searchBox')">
+🔍 Search Student
+</button>
 
-    <button onclick="openAdd()">
-        ➕ Add Student
-    </button>
+<button onclick="openAdd()">
+➕ Add Student
+</button>
 
-    <button onclick="go('students')">
-        👨‍🎓 All Students
-    </button>
+<button onclick="go('students')">
+👨‍🎓 All Students
+</button>
 
-    <button onclick="go('charts')">
-        📊 Analytics
-    </button>
+<button onclick="go('charts')">
+📊 Analytics
+</button>
 
-    <hr style="border-color:#ffffff33;margin:18px 0 10px">
+<hr style="border-color:#ffffff33">
 
-    <div style="font-weight:bold;margin:8px 0">
-        📚 Semesters
-    </div>
+<div style="font-weight:bold">
+📚 Semesters
+</div>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 1"
-        onclick="selectSemester('Semester 1')">
-        1️⃣ Semester 1
-    </button>
+<button class="side-sem"
+data-sem="Semester 1"
+onclick="selectSemester('Semester 1')">
+1️⃣ Semester 1
+</button>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 2"
-        onclick="selectSemester('Semester 2')">
-        2️⃣ Semester 2
-    </button>
+<button class="side-sem"
+data-sem="Semester 2"
+onclick="selectSemester('Semester 2')">
+2️⃣ Semester 2
+</button>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 3"
-        onclick="selectSemester('Semester 3')">
-        3️⃣ Semester 3
-    </button>
+<button class="side-sem"
+data-sem="Semester 3"
+onclick="selectSemester('Semester 3')">
+3️⃣ Semester 3
+</button>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 4"
-        onclick="selectSemester('Semester 4')">
-        4️⃣ Semester 4
-    </button>
+<button class="side-sem"
+data-sem="Semester 4"
+onclick="selectSemester('Semester 4')">
+4️⃣ Semester 4
+</button>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 5"
-        onclick="selectSemester('Semester 5')">
-        5️⃣ Semester 5
-    </button>
+<button class="side-sem"
+data-sem="Semester 5"
+onclick="selectSemester('Semester 5')">
+5️⃣ Semester 5
+</button>
 
-    <button
-        class="side-sem"
-        data-sem="Semester 6"
-        onclick="selectSemester('Semester 6')">
-        6️⃣ Semester 6
-    </button>
+<button class="side-sem"
+data-sem="Semester 6"
+onclick="selectSemester('Semester 6')">
+6️⃣ Semester 6
+</button>
 
-    <button
-        class="logout-btn"
-        onclick="logoutUser()">
-        🚪 Logout
-    </button>
+<button class="logout-btn"
+onclick="logoutUser()">
+🚪 Logout
+</button>
 
 </aside>
 
 
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 
 <main class="main">
 
-    <!-- HEADER -->
-
-    <div class="box">
-
-        <button
-            class="top-logout"
-            onclick="logoutUser()">
-            🚪 Logout
-        </button>
-
-        <h1>
-            Student Performance Analysis System
-        </h1>
-
-        <b style="color:#6d28d9">
-            COMPUTER ENGINEERING
-        </b>
-
-        <span>
-            | MSBTE K-Scheme
-        </span>
-
-        <p class="muted">
-            Student performance, attendance and semester-wise analytics dashboard.
-        </p>
-
-    </div>
-
-
-    <!-- ================= YEAR + SEMESTER ================= -->
-
-    <div class="box">
-
-        <h2>
-            🎓 Academic Year & Semester
-        </h2>
-
-        <p class="muted">
-            Select any Semester 1 to Semester 6 below.
-        </p>
-
-        <b>Select Year</b>
+<div class="box">
+
+<button class="top-logout"
+onclick="logoutUser()">
+🚪 Logout
+</button>
+
+<h1>
+Student Performance Analysis System
+</h1>
+
+<b style="color:#6d28d9">
+COMPUTER ENGINEERING
+</b>
+
+<span>
+| MSBTE K-Scheme
+</span>
 
-        <div class="years">
+<p class="muted">
+Student performance, attendance and semester-wise analytics dashboard.
+</p>
 
-            <button
-                id="y1"
-                type="button"
-                onclick="setYear('1st Year')">
-                1st Year
-            </button>
+</div>
 
-            <button
-                id="y2"
-                type="button"
-                onclick="setYear('2nd Year')">
-                2nd Year
-            </button>
 
-            <button
-                id="y3"
-                type="button"
-                onclick="setYear('3rd Year')">
-                3rd Year
-            </button>
+<!-- YEAR / SEMESTER -->
 
-        </div>
+<div class="box">
 
-        <br>
+<h2>🎓 Academic Year & Semester</h2>
 
-        <b>Select Semester</b>
+<p class="muted">
+Select Year. त्या Year चे फक्त दोन Semesters दिसतील.
+</p>
 
-        <div class="semester-buttons">
+<b>Select Year</b>
 
-            <button
-                id="sem1"
-                type="button"
-                data-sem="Semester 1"
-                onclick="selectSemester('Semester 1')">
-                Semester 1
-            </button>
+<div class="years">
 
-            <button
-                id="sem2"
-                type="button"
-                data-sem="Semester 2"
-                onclick="selectSemester('Semester 2')">
-                Semester 2
-            </button>
+<button
+id="y1"
+type="button"
+onclick="setYear('1st Year')">
+1st Year
+</button>
 
-            <button
-                id="sem3"
-                type="button"
-                data-sem="Semester 3"
-                onclick="selectSemester('Semester 3')">
-                Semester 3
-            </button>
+<button
+id="y2"
+type="button"
+onclick="setYear('2nd Year')">
+2nd Year
+</button>
 
-            <button
-                id="sem4"
-                type="button"
-                data-sem="Semester 4"
-                onclick="selectSemester('Semester 4')">
-                Semester 4
-            </button>
+<button
+id="y3"
+type="button"
+onclick="setYear('3rd Year')">
+3rd Year
+</button>
 
-            <button
-                id="sem5"
-                type="button"
-                data-sem="Semester 5"
-                onclick="selectSemester('Semester 5')">
-                Semester 5
-            </button>
+</div>
 
-            <button
-                id="sem6"
-                type="button"
-                data-sem="Semester 6"
-                onclick="selectSemester('Semester 6')">
-                Semester 6
-            </button>
+<br>
 
-        </div>
+<b>Select Semester</b>
 
-        <div class="current-semester">
+<div class="semester-buttons">
 
-            📌 Current Semester:
+<button
+id="sem1"
+data-sem="Semester 1"
+onclick="selectSemester('Semester 1')">
+Semester 1
+</button>
 
-            <span id="currentSemesterText">
-                Semester 1
-            </span>
+<button
+id="sem2"
+data-sem="Semester 2"
+onclick="selectSemester('Semester 2')">
+Semester 2
+</button>
 
-        </div>
+<button
+id="sem3"
+data-sem="Semester 3"
+onclick="selectSemester('Semester 3')">
+Semester 3
+</button>
 
-        <p
-            id="selectionMessage"
-            class="success">
-        </p>
+<button
+id="sem4"
+data-sem="Semester 4"
+onclick="selectSemester('Semester 4')">
+Semester 4
+</button>
 
-    </div>
+<button
+id="sem5"
+data-sem="Semester 5"
+onclick="selectSemester('Semester 5')">
+Semester 5
+</button>
 
+<button
+id="sem6"
+data-sem="Semester 6"
+onclick="selectSemester('Semester 6')">
+Semester 6
+</button>
 
-    <!-- ================= SUBJECTS ================= -->
+</div>
 
-    <div class="box">
+<div class="current-semester">
 
-        <h2>
-            📚
-            <span id="subjectTitle">
-                Semester 1 Subjects
-            </span>
-        </h2>
+📌 Current Semester:
 
-        <div
-            id="subjects"
-            class="subjects">
-        </div>
+<span id="currentSemesterText">
+Semester 1
+</span>
 
-    </div>
+</div>
 
+<p id="selectionMessage" class="success"></p>
 
-    <!-- ================= CARDS ================= -->
+</div>
 
-    <div class="cards">
 
-        <div class="card">
+<!-- SUBJECTS -->
 
-            👨‍🎓
+<div class="box">
 
-            <h3>
-                Total Students
-            </h3>
+<h2>
+📚 <span id="subjectTitle">
+Semester 1 Subjects
+</span>
+</h2>
 
-            <div
-                id="total"
-                class="value">
-                0
-            </div>
+<div id="subjects" class="subjects"></div>
 
-        </div>
+</div>
 
 
-        <div class="card">
+<!-- CARDS -->
 
-            📈
+<div class="cards">
 
-            <h3>
-                Average Percentage
-            </h3>
+<div class="card">
+👨‍🎓
+<h3>Total Students</h3>
+<div id="total" class="value">0</div>
+</div>
 
-            <div
-                id="average"
-                class="value">
-                0%
-            </div>
+<div class="card">
+📈
+<h3>Average Percentage</h3>
+<div id="average" class="value">0%</div>
+</div>
 
-        </div>
+<div class="card">
+🏆
+<h3>Top Performer</h3>
+<div id="top" class="value">-</div>
+</div>
 
+<div class="card">
+📅
+<h3>Average Attendance</h3>
+<div id="attendance" class="value">0%</div>
+</div>
 
-        <div class="card">
+</div>
 
-            🏆
 
-            <h3>
-                Top Performer
-            </h3>
+<!-- SEARCH -->
 
-            <div
-                id="top"
-                class="value">
-                -
-            </div>
+<div class="box" id="searchBox">
 
-        </div>
+<h2>🔍 Search Student</h2>
 
+<input
+id="search"
+placeholder="Enter Student Name or Student ID..."
+oninput="searchStudent()">
 
-        <div class="card">
+<br>
 
-            📅
+<button class="btn green"
+onclick="openAdd()">
+➕ Add Student
+</button>
 
-            <h3>
-                Average Attendance
-            </h3>
+</div>
 
-            <div
-                id="attendance"
-                class="value">
-                0%
-            </div>
 
-        </div>
+<!-- UPLOAD -->
 
-    </div>
+<div class="box">
 
+<h2>📥 Upload Student Excel</h2>
 
-    <!-- ================= SEARCH ================= -->
+<p class="muted">
+Selected semester च्या Excel मध्ये data save होईल.
+</p>
 
-    <div
-        class="box"
-        id="searchBox">
+<p>
+<b>Current Semester:</b>
+<span id="uploadSemester">
+Semester 1
+</span>
+</p>
 
-        <h2>
-            🔍 Search Student
-        </h2>
+<input
+type="file"
+id="excel"
+accept=".xlsx,.xls">
 
-        <input
-            id="search"
-            placeholder="Enter Student Name or Student ID..."
-            oninput="searchStudent()"
-        >
+<button
+class="btn green"
+onclick="uploadExcel()">
+⬆ Upload Excel
+</button>
 
-        <br>
+<span id="uploadMessage"></span>
 
-        <button
-            class="btn green"
-            onclick="openAdd()">
-            ➕ Add Student
-        </button>
+</div>
 
-    </div>
 
+<!-- CHARTS -->
 
-    <!-- ================= UPLOAD ================= -->
+<div id="charts">
 
-    <div class="box">
+<div class="bar-chart-box">
 
-        <h2>
-            📥 Upload Student Excel
-        </h2>
+<h2>
+📊 Year-wise Combined Subject Performance
+</h2>
 
-        <p class="muted">
-            Selected semester च्या Excel मध्ये data save होईल.
-        </p>
+<p
+class="muted"
+id="barTitle">
+Semester 1 + Semester 2 Combined
+</p>
 
-        <p>
-            <b>Current Semester:</b>
+<div class="bar-chart-wrapper">
 
-            <span id="uploadSemester">
-                Semester 1
-            </span>
-        </p>
+<canvas id="subjectChart"></canvas>
 
-        <input
-            type="file"
-            id="excel"
-            accept=".xlsx,.xls"
-        >
+</div>
 
-        <button
-            class="btn green"
-            onclick="uploadExcel()">
-            ⬆ Upload Excel
-        </button>
+</div>
 
-        <span id="uploadMessage"></span>
 
-    </div>
+<div class="pie-container">
 
+<div class="pie-box">
 
-    <!-- =====================================================
-         ANALYTICS
-         1 YEAR = 2 SEMESTERS
-         1 BAR + 2 PIE
-         ===================================================== -->
+<h2>
+🥧
+<span id="pieTitle1">
+Semester 1
+</span>
+Grade Distribution
+</h2>
 
-    <div id="charts">
+<div class="pie-wrapper">
 
-        <!-- ================= COMBINED BAR ================= -->
+<canvas id="pieChart1"></canvas>
 
-        <div class="bar-chart-box">
+</div>
 
-            <h2 class="chart-section-title">
-                📊 Year-wise Combined Subject Performance
-            </h2>
+</div>
 
-            <p
-                class="muted"
-                id="barTitle">
-                Semester 1 + Semester 2 Combined
-            </p>
 
-            <div class="bar-chart-wrapper">
+<div class="pie-box">
 
-                <canvas id="subjectChart"></canvas>
+<h2>
+🥧
+<span id="pieTitle2">
+Semester 2
+</span>
+Grade Distribution
+</h2>
 
-            </div>
+<div class="pie-wrapper">
 
-        </div>
+<canvas id="pieChart2"></canvas>
 
+</div>
 
-        <!-- ================= TWO PIE CHARTS ================= -->
+</div>
 
-        <div class="pie-container">
+</div>
 
-            <!-- PIE 1 -->
+</div>
 
-            <div class="pie-box">
 
-                <h2>
-                    🥧
-                    <span id="pieTitle1">
-                        Semester 1
-                    </span>
-                    Grade Distribution
-                </h2>
+<!-- STUDENTS -->
 
-                <div class="pie-wrapper">
+<div class="box" id="students">
 
-                    <canvas id="pieChart1"></canvas>
+<h2>👨‍🎓 All Students</h2>
 
-                </div>
+<div class="table">
 
-            </div>
+<table>
 
+<thead id="head"></thead>
 
-            <!-- PIE 2 -->
+<tbody id="body"></tbody>
 
-            <div class="pie-box">
+</table>
 
-                <h2>
-                    🥧
-                    <span id="pieTitle2">
-                        Semester 2
-                    </span>
-                    Grade Distribution
-                </h2>
+</div>
 
-                <div class="pie-wrapper">
-
-                    <canvas id="pieChart2"></canvas>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ================= STUDENTS ================= -->
-
-    <div
-        class="box"
-        id="students">
-
-        <h2>
-            👨‍🎓 All Students
-        </h2>
-
-        <div class="table">
-
-            <table>
-
-                <thead id="head"></thead>
-
-                <tbody id="body"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
+</div>
 
 </main>
 
 
-<!-- ================= ADD / EDIT MODAL ================= -->
+<!-- MODAL -->
 
-<div
-    class="modal"
-    id="modal">
+<div class="modal" id="modal">
 
-    <div class="modalbox">
+<div class="modalbox">
 
-        <button
-            class="close"
-            onclick="closeModal()">
-            ✕
-        </button>
+<button
+class="close"
+onclick="closeModal()">
+✕
+</button>
 
-        <h2 id="modalTitle">
-            ➕ Add Student
-        </h2>
+<h2 id="modalTitle">
+➕ Add Student
+</h2>
 
-        <p class="muted">
+<p class="muted">
 
-            Current Semester:
+Current Semester:
 
-            <b id="modalSemester">
-                Semester 1
-            </b>
+<b id="modalSemester">
+Semester 1
+</b>
 
-        </p>
+</p>
 
+<div class="grid">
 
-        <div class="grid">
+<div>
+<b>Student ID</b>
+<input id="sid" placeholder="Student ID">
+</div>
 
-            <div>
+<div>
+<b>Name</b>
+<input id="sname" placeholder="Student Name">
+</div>
 
-                <b>Student ID</b>
+<div>
+<b>Gender</b>
+<input id="gender" placeholder="Male / Female">
+</div>
 
-                <input
-                    id="sid"
-                    placeholder="Student ID">
+<div>
+<b>Class</b>
+<input id="sclass" placeholder="Class">
+</div>
 
-            </div>
+<div>
+<b>Attendance %</b>
+<input
+id="att"
+type="number"
+min="0"
+max="100"
+placeholder="Attendance">
+</div>
 
+</div>
 
-            <div>
+<h3>📚 Subject Marks</h3>
 
-                <b>Name</b>
+<div id="markInputs" class="grid"></div>
 
-                <input
-                    id="sname"
-                    placeholder="Student Name">
+<br>
 
-            </div>
+<button
+class="btn green"
+onclick="saveStudent()">
+💾 Save Student
+</button>
 
+<button
+class="btn"
+onclick="closeModal()">
+Cancel
+</button>
 
-            <div>
+<p id="formMessage"></p>
 
-                <b>Gender</b>
-
-                <input
-                    id="gender"
-                    placeholder="Male / Female">
-
-            </div>
-
-
-            <div>
-
-                <b>Class</b>
-
-                <input
-                    id="sclass"
-                    placeholder="Class">
-
-            </div>
-
-
-            <div>
-
-                <b>Attendance %</b>
-
-                <input
-                    id="att"
-                    type="number"
-                    min="0"
-                    max="100"
-                    placeholder="Attendance">
-
-            </div>
-
-        </div>
-
-
-        <h3>
-            📚 Subject Marks
-        </h3>
-
-        <div
-            id="markInputs"
-            class="grid">
-        </div>
-
-        <br>
-
-
-        <button
-            class="btn green"
-            onclick="saveStudent()">
-            💾 Save Student
-        </button>
-
-        <button
-            class="btn"
-            onclick="closeModal()">
-            Cancel
-        </button>
-
-        <p id="formMessage"></p>
-
-    </div>
+</div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   GLOBAL VARIABLES
-   ========================================================= */
+/* ================= GLOBAL ================= */
 
-let semester = 'Semester 1';
+let semester = "Semester 1";
 
 let students = [];
 
@@ -1198,60 +983,49 @@ let subjects = [];
 let editMode = false;
 
 let chart1 = null;
-
 let pie1 = null;
-
 let pie2 = null;
 
 
-/* =========================================================
-   YEAR MAPPING
-   ========================================================= */
+/* ================= YEAR MAPPING ================= */
 
 const years = {
 
-    'Semester 1':'1st Year',
+    "Semester 1":"1st Year",
+    "Semester 2":"1st Year",
 
-    'Semester 2':'1st Year',
+    "Semester 3":"2nd Year",
+    "Semester 4":"2nd Year",
 
-    'Semester 3':'2nd Year',
-
-    'Semester 4':'2nd Year',
-
-    'Semester 5':'3rd Year',
-
-    'Semester 6':'3rd Year'
+    "Semester 5":"3rd Year",
+    "Semester 6":"3rd Year"
 
 };
 
 
-/* =========================================================
-   YEAR → TWO SEMESTERS
-   ========================================================= */
+/* ================= YEAR SEMESTERS ================= */
 
 const yearSemesters = {
 
-    '1st Year':[
-        'Semester 1',
-        'Semester 2'
+    "1st Year":[
+        "Semester 1",
+        "Semester 2"
     ],
 
-    '2nd Year':[
-        'Semester 3',
-        'Semester 4'
+    "2nd Year":[
+        "Semester 3",
+        "Semester 4"
     ],
 
-    '3rd Year':[
-        'Semester 5',
-        'Semester 6'
+    "3rd Year":[
+        "Semester 5",
+        "Semester 6"
     ]
 
 };
 
 
-/* =========================================================
-   SHORT $ FUNCTION
-   ========================================================= */
+/* ================= SHORT FUNCTION ================= */
 
 function $(id){
 
@@ -1260,43 +1034,39 @@ function $(id){
 }
 
 
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
+/* ================= ESCAPE ================= */
 
 function escapeHTML(value){
 
-    return String(value ?? '')
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
+    return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================================================
-   API
-   ========================================================= */
+/* ================= API ================= */
 
 async function api(url,options={}){
 
     try{
 
         const response =
-            await fetch(url,options);
+        await fetch(url,options);
 
         if(response.status === 401){
 
-            window.location.href='/login';
+            window.location.href="/login";
 
             return null;
 
         }
 
         const text =
-            await response.text();
+        await response.text();
 
         if(!text){
 
@@ -1308,13 +1078,11 @@ async function api(url,options={}){
 
             return JSON.parse(text);
 
-        }catch(error){
+        }catch(e){
 
             console.error(text);
 
-            alert(
-                'Server returned invalid response.'
-            );
+            alert("Server returned invalid response.");
 
             return null;
 
@@ -1324,9 +1092,7 @@ async function api(url,options={}){
 
         console.error(error);
 
-        alert(
-            'Server connection problem.'
-        );
+        alert("Server connection problem.");
 
         return null;
 
@@ -1336,130 +1102,113 @@ async function api(url,options={}){
 
 
 /* =========================================================
-   LOAD CURRENT SEMESTER
+   IMPORTANT YEAR BUTTON LOGIC
    ========================================================= */
 
-async function load(){
+function setYear(year){
 
-    $('modalSemester').innerText =
-        semester;
-
-    $('uploadSemester').innerText =
-        semester;
-
-    $('currentSemesterText').innerText =
-        semester;
-
-    $('selectionMessage').innerText =
-        'Loading '+semester+'...';
-
-
-    /* SUBJECTS */
-
-    const subjectData =
-        await api(
-            '/api/subjects?semester='+
-            encodeURIComponent(semester)
-        );
-
-    if(!subjectData){
+    if(!yearSemesters[year]){
 
         return;
 
     }
 
+    /* active year */
 
-    subjects =
-        Array.isArray(subjectData.subjects)
-        ? subjectData.subjects.map(
-            x => x.code
-        )
-        : [];
+    document
+    .querySelectorAll(".years button")
+    .forEach(button=>{
 
+        button.classList.remove("active");
 
-    $('subjectTitle').innerText =
-        semester+' Subjects';
+    });
 
 
-    $('subjects').innerHTML =
-        subjects.length
+    if(year==="1st Year"){
 
-        ?
+        $("y1").classList.add("active");
 
-        subjects.map(
-            x =>
-            '<div class="subject">'+
-            '<b>'+
-            escapeHTML(x)+
-            '</b>'+
-            '</div>'
-        ).join('')
+    }
 
-        :
+    if(year==="2nd Year"){
 
-        '<p>No subjects found.</p>';
+        $("y2").classList.add("active");
 
+    }
 
-    renderHead();
+    if(year==="3rd Year"){
 
-    renderMarks();
-
-
-    /* STUDENTS */
-
-    const studentData =
-        await api(
-            '/api/students?semester='+
-            encodeURIComponent(semester)
-        );
-
-
-    students =
-        Array.isArray(studentData)
-        ? studentData
-        : [];
-
-
-    render(students);
-
-
-    /* ANALYTICS */
-
-    const analytics =
-        await api(
-            '/api/analytics?semester='+
-            encodeURIComponent(semester)
-        );
-
-
-    if(analytics){
-
-        $('total').innerText =
-            analytics.total_students ?? 0;
-
-        $('average').innerText =
-            (analytics.average_percentage ?? 0)
-            +'%';
-
-        $('top').innerText =
-            analytics.top_performer ?? '-';
-
-        $('attendance').innerText =
-            (analytics.average_attendance ?? 0)
-            +'%';
+        $("y3").classList.add("active");
 
     }
 
 
-    /* YEAR CHARTS */
+    /* SHOW ONLY YEAR SEMESTERS */
 
-    await loadYearCharts(
-        years[semester]
+    showOnlyYearSemesters(year);
+
+
+    /* SELECT FIRST SEMESTER */
+
+    selectSemester(
+        yearSemesters[year][0]
     );
 
+}
 
-    $('selectionMessage').innerText =
-        semester+' loaded successfully.';
+
+/* =========================================================
+   SHOW / HIDE SEMESTERS
+   ========================================================= */
+
+function showOnlyYearSemesters(year){
+
+    const allowed =
+    yearSemesters[year] || [];
+
+
+    /* MAIN BUTTONS */
+
+    document
+    .querySelectorAll(".semester-buttons button")
+    .forEach(button=>{
+
+        const sem =
+        button.getAttribute("data-sem");
+
+        if(allowed.includes(sem)){
+
+            button.style.display="block";
+
+        }else{
+
+            button.style.display="none";
+
+        }
+
+    });
+
+
+    /* SIDEBAR BUTTONS */
+
+    document
+    .querySelectorAll(".side-sem")
+    .forEach(button=>{
+
+        const sem =
+        button.getAttribute("data-sem");
+
+        if(allowed.includes(sem)){
+
+            button.style.display="block";
+
+        }else{
+
+            button.style.display="none";
+
+        }
+
+    });
 
 }
 
@@ -1470,7 +1219,7 @@ async function load(){
 
 function selectSemester(selectedSemester){
 
-    if(!selectedSemester){
+    if(!years[selectedSemester]){
 
         return;
 
@@ -1478,37 +1227,44 @@ function selectSemester(selectedSemester){
 
 
     semester =
-        selectedSemester;
+    selectedSemester;
 
-
-    /* CURRENT SEMESTER */
-
-    $('currentSemesterText').innerText =
-        selectedSemester;
-
-    $('uploadSemester').innerText =
-        selectedSemester;
-
-    $('modalSemester').innerText =
-        selectedSemester;
-
-
-    /* SELECT YEAR */
 
     const selectedYear =
-        years[selectedSemester];
+    years[selectedSemester];
 
 
-    updateYearButton(
-        selectedYear
-    );
+    /* YEAR ACTIVE */
+
+    document
+    .querySelectorAll(".years button")
+    .forEach(button=>{
+
+        button.classList.remove("active");
+
+    });
 
 
-    /*
-       IMPORTANT:
-       Do NOT hide all semesters here.
-       First show the selected year's two semesters.
-    */
+    if(selectedYear==="1st Year"){
+
+        $("y1").classList.add("active");
+
+    }
+
+    else if(selectedYear==="2nd Year"){
+
+        $("y2").classList.add("active");
+
+    }
+
+    else if(selectedYear==="3rd Year"){
+
+        $("y3").classList.add("active");
+
+    }
+
+
+    /* SHOW TWO SEMESTERS */
 
     showOnlyYearSemesters(
         selectedYear
@@ -1517,12 +1273,68 @@ function selectSemester(selectedSemester){
 
     /* ACTIVE SEMESTER */
 
-    updateSemesterButton(
-        selectedSemester
-    );
+    document
+    .querySelectorAll(".semester-buttons button")
+    .forEach(button=>{
+
+        button.classList.remove("active");
+
+    });
 
 
-    /* LOAD DATA */
+    document
+    .querySelectorAll(".side-sem")
+    .forEach(button=>{
+
+        button.classList.remove("sem-active");
+
+    });
+
+
+    const number =
+    selectedSemester
+    .replace("Semester ","");
+
+
+    const mainButton =
+    $("sem"+number);
+
+
+    if(mainButton){
+
+        mainButton.classList.add("active");
+
+    }
+
+
+    document
+    .querySelectorAll(".side-sem")
+    .forEach(button=>{
+
+        if(
+            button.getAttribute("data-sem")
+            ===
+            selectedSemester
+        ){
+
+            button.classList.add("sem-active");
+
+        }
+
+    });
+
+
+    /* TEXT */
+
+    $("currentSemesterText").innerText =
+    selectedSemester;
+
+    $("uploadSemester").innerText =
+    selectedSemester;
+
+    $("modalSemester").innerText =
+    selectedSemester;
+
 
     load();
 
@@ -1530,270 +1342,166 @@ function selectSemester(selectedSemester){
 
 
 /* =========================================================
-   SET YEAR
+   LOAD DATA
    ========================================================= */
 
-function setYear(year){
+async function load(){
 
-    if(!year){
+    $("currentSemesterText").innerText =
+    semester;
+
+    $("uploadSemester").innerText =
+    semester;
+
+    $("modalSemester").innerText =
+    semester;
+
+    $("selectionMessage").innerText =
+    "Loading "+semester+"...";
+
+
+    /* SUBJECTS */
+
+    const subjectData =
+    await api(
+        "/api/subjects?semester="+
+        encodeURIComponent(semester)
+    );
+
+
+    if(!subjectData){
 
         return;
 
     }
 
 
-    /* SELECT YEAR BUTTON */
-
-    updateYearButton(year);
-
-
-    /* SHOW ONLY TWO SEMESTERS */
-
-    showOnlyYearSemesters(year);
-
-
-    /*
-       Automatically select first semester
-       of that year.
-    */
-
-    const pair =
-        yearSemesters[year];
+    subjects =
+    Array.isArray(subjectData.subjects)
+    ?
+    subjectData.subjects.map(
+        x=>x.code
+    )
+    :
+    [];
 
 
-    if(
-        pair &&
-        pair.length >= 2
-    ){
+    $("subjectTitle").innerText =
+    semester+" Subjects";
 
-        selectSemester(
-            pair[0]
-        );
+
+    $("subjects").innerHTML =
+    subjects.length
+
+    ?
+
+    subjects.map(
+        subject=>
+        `
+        <div class="subject">
+            <b>${escapeHTML(subject)}</b>
+        </div>
+        `
+    ).join("")
+
+    :
+
+    "<p>No subjects found.</p>";
+
+
+    renderHead();
+
+    renderMarks();
+
+
+    /* STUDENTS */
+
+    const studentData =
+    await api(
+        "/api/students?semester="+
+        encodeURIComponent(semester)
+    );
+
+
+    students =
+    Array.isArray(studentData)
+    ?
+    studentData
+    :
+    [];
+
+
+    render(students);
+
+
+    /* ANALYTICS */
+
+    const analytics =
+    await api(
+        "/api/analytics?semester="+
+        encodeURIComponent(semester)
+    );
+
+
+    if(analytics){
+
+        $("total").innerText =
+        analytics.total_students ?? 0;
+
+        $("average").innerText =
+        (analytics.average_percentage ?? 0)+"%";
+
+        $("top").innerText =
+        analytics.top_performer ?? "-";
+
+        $("attendance").innerText =
+        (analytics.average_attendance ?? 0)+"%";
 
     }
+
+
+    await loadYearCharts(
+        years[semester]
+    );
+
+
+    $("selectionMessage").innerText =
+    semester+" loaded successfully.";
 
 }
 
 
 /* =========================================================
-   SHOW ONLY TWO SEMESTERS
-   ========================================================= */
-
-function showOnlyYearSemesters(year){
-
-    const allowed =
-        yearSemesters[year] || [];
-
-
-    /* MAIN SEMESTER BUTTONS */
-
-    document
-        .querySelectorAll(
-            '.semester-buttons button'
-        )
-        .forEach(button => {
-
-            const sem =
-                button.dataset.sem;
-
-            if(
-                allowed.includes(sem)
-            ){
-
-                button.style.display =
-                    'block';
-
-            }else{
-
-                button.style.display =
-                    'none';
-
-            }
-
-        });
-
-
-    /* SIDEBAR SEMESTERS */
-
-    document
-        .querySelectorAll(
-            '.side-sem'
-        )
-        .forEach(button => {
-
-            const sem =
-                button.dataset.sem;
-
-            if(
-                allowed.includes(sem)
-            ){
-
-                button.style.display =
-                    'block';
-
-            }else{
-
-                button.style.display =
-                    'none';
-
-            }
-
-        });
-
-}
-
-
-/* =========================================================
-   UPDATE YEAR BUTTON
-   ========================================================= */
-
-function updateYearButton(year){
-
-    document
-        .querySelectorAll(
-            '.years button'
-        )
-        .forEach(
-            button =>
-            button.classList.remove(
-                'active'
-            )
-        );
-
-
-    if(year === '1st Year'){
-
-        $('y1').classList.add('active');
-
-    }
-
-    else if(year === '2nd Year'){
-
-        $('y2').classList.add('active');
-
-    }
-
-    else if(year === '3rd Year'){
-
-        $('y3').classList.add('active');
-
-    }
-
-}
-
-
-/* =========================================================
-   UPDATE SEMESTER BUTTON
-   ========================================================= */
-
-function updateSemesterButton(
-    selectedSemester
-){
-
-    /* Remove active from main buttons */
-
-    document
-        .querySelectorAll(
-            '.semester-buttons button'
-        )
-        .forEach(
-            button =>
-            button.classList.remove(
-                'active'
-            )
-        );
-
-
-    /* Remove active from sidebar */
-
-    document
-        .querySelectorAll(
-            '.side-sem'
-        )
-        .forEach(
-            button =>
-            button.classList.remove(
-                'sem-active'
-            )
-        );
-
-
-    /* Main selected */
-
-    const number =
-        selectedSemester
-            .replace(
-                'Semester ',
-                ''
-            );
-
-
-    const mainButton =
-        $('sem'+number);
-
-
-    if(mainButton){
-
-        mainButton.classList.add(
-            'active'
-        );
-
-    }
-
-
-    /* Sidebar selected */
-
-    document
-        .querySelectorAll(
-            '.side-sem'
-        )
-        .forEach(button => {
-
-            if(
-                button.dataset.sem ===
-                selectedSemester
-            ){
-
-                button.classList.add(
-                    'sem-active'
-                );
-
-            }
-
-        });
-
-}
-
-
-/* =========================================================
-   RENDER TABLE HEADER
+   TABLE HEADER
    ========================================================= */
 
 function renderHead(){
 
-    $('head').innerHTML =
-        '<tr>'+
-        '<th>Student ID</th>'+
-        '<th>Name</th>'+
-        '<th>Gender</th>'+
-        '<th>Class</th>'+
+    $("head").innerHTML =
+    `
+    <tr>
 
-        subjects
-            .map(
-                x =>
-                '<th>'+
-                escapeHTML(x)+
-                '</th>'
-            )
-            .join('')+
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Class</th>
 
-        '<th>Total</th>'+
-        '<th>Percentage</th>'+
-        '<th>Attendance</th>'+
-        '<th>Status</th>'+
-        '<th>Grade</th>'+
-        '<th>Action</th>'+
-        '</tr>';
+        ${
+            subjects.map(
+                subject=>
+                `<th>${escapeHTML(subject)}</th>`
+            ).join("")
+        }
+
+        <th>Total</th>
+        <th>Percentage</th>
+        <th>Attendance</th>
+        <th>Status</th>
+        <th>Grade</th>
+        <th>Action</th>
+
+    </tr>
+    `;
 
 }
 
@@ -1804,139 +1512,114 @@ function renderHead(){
 
 function render(data){
 
-    if(
-        !data ||
-        !data.length
-    ){
+    if(!data || !data.length){
 
-        $('body').innerHTML =
-            '<tr>'+
-            '<td colspan="30">'+
-            'No students available for '+
-            '<b>'+
-            escapeHTML(semester)+
-            '</b>.'+
-            ' Upload Excel or Add Student.'+
-            '</td>'+
-            '</tr>';
+        $("body").innerHTML =
+        `
+        <tr>
+            <td colspan="30">
+                No students available for
+                <b>${escapeHTML(semester)}</b>.
+                Upload Excel or Add Student.
+            </td>
+        </tr>
+        `;
 
         return;
 
     }
 
 
-    $('body').innerHTML =
-        data.map(student => {
+    $("body").innerHTML =
+    data.map(student=>{
 
-            const safe =
-                JSON.stringify(student)
-                .replace(/'/g,'&#39;');
+        const safe =
+        JSON.stringify(student)
+        .replace(/'/g,"&#39;");
 
 
-            return (
+        return `
+        <tr>
 
-                '<tr>'+
+            <td>
+                ${escapeHTML(student.Student_ID)}
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Student_ID
-                )+
-                '</td>'+
+            <td>
+                <b>${escapeHTML(student.Name)}</b>
+            </td>
 
-                '<td><b>'+
-                escapeHTML(
-                    student.Name
-                )+
-                '</b></td>'+
+            <td>
+                ${escapeHTML(student.Gender)}
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Gender
-                )+
-                '</td>'+
+            <td>
+                ${escapeHTML(student.Class)}
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Class
-                )+
-                '</td>'+
+            ${
+                subjects.map(
+                    subject=>
+                    `
+                    <td>
+                        ${escapeHTML(student[subject])}
+                    </td>
+                    `
+                ).join("")
+            }
 
-                subjects
-                    .map(
-                        x =>
-                        '<td>'+
-                        escapeHTML(
-                            student[x]
-                        )+
-                        '</td>'
-                    )
-                    .join('')+
+            <td>
+                ${escapeHTML(student.Total)}
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Total
-                )+
-                '</td>'+
+            <td>
+                ${escapeHTML(student.Percentage)}%
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Percentage
-                )+
-                '%</td>'+
+            <td>
+                ${escapeHTML(student.Attendance)}%
+            </td>
 
-                '<td>'+
-                escapeHTML(
-                    student.Attendance
-                )+
-                '%</td>'+
+            <td class="${
+                student["Attendance Status"]==="Good"
+                ?
+                "good"
+                :
+                "bad"
+            }">
 
-                '<td class="'+
-                (
-                    student[
-                        'Attendance Status'
-                    ] === 'Good'
-                    ? 'good'
-                    : 'bad'
-                )+
-                '">'+
-                escapeHTML(
-                    student[
-                        'Attendance Status'
-                    ]
-                )+
-                '</td>'+
+                ${escapeHTML(
+                    student["Attendance Status"]
+                )}
 
-                '<td>'+
-                escapeHTML(
-                    student.Grade
-                )+
-                '</td>'+
+            </td>
 
-                '<td>'+
+            <td>
+                ${escapeHTML(student.Grade)}
+            </td>
 
-                '<button '+
-                'class="btn" '+
-                'onclick=\'editStudent('+
-                safe+
-                ')\'>Edit</button>'+
+            <td>
 
-                '<button '+
-                'class="btn red" '+
-                'onclick=\'deleteStudent('+
-                JSON.stringify(
-                    String(
-                        student.Student_ID ?? ''
-                    )
-                )+
-                ')\'>Delete</button>'+
+                <button
+                class="btn"
+                onclick='editStudent(${safe})'>
+                Edit
+                </button>
 
-                '</td>'+
+                <button
+                class="btn red"
+                onclick='deleteStudent(${JSON.stringify(
+                    String(student.Student_ID ?? "")
+                )})'>
+                Delete
+                </button>
 
-                '</tr>'
+            </td>
 
-            );
+        </tr>
+        `;
 
-        }).join('');
+    }).join("");
 
 }
 
@@ -1948,10 +1631,10 @@ function render(data){
 function searchStudent(){
 
     const query =
-        $('search')
-        .value
-        .toLowerCase()
-        .trim();
+    $("search")
+    .value
+    .toLowerCase()
+    .trim();
 
 
     if(!query){
@@ -1964,23 +1647,19 @@ function searchStudent(){
 
 
     const filtered =
-        students.filter(
-            student =>
+    students.filter(student=>
 
-            String(
-                student.Name ?? ''
-            )
-            .toLowerCase()
-            .includes(query)
+        String(student.Name ?? "")
+        .toLowerCase()
+        .includes(query)
 
-            ||
+        ||
 
-            String(
-                student.Student_ID ?? ''
-            )
-            .toLowerCase()
-            .includes(query)
-        );
+        String(student.Student_ID ?? "")
+        .toLowerCase()
+        .includes(query)
+
+    );
 
 
     render(filtered);
@@ -1994,87 +1673,72 @@ function searchStudent(){
 
 function renderMarks(values={}){
 
-    $('markInputs').innerHTML =
-        subjects.map(subject => {
+    $("markInputs").innerHTML =
+    subjects.map(subject=>{
 
-            const id =
-                'm_'+
-                subject
-                    .replace(
-                        /[^a-zA-Z0-9]/g,
-                        '_'
-                    );
+        const id =
+        "m_"+
+        subject.replace(
+            /[^a-zA-Z0-9]/g,
+            "_"
+        );
 
 
-            return (
+        return `
+        <div>
 
-                '<div>'+
+            <b>${escapeHTML(subject)}</b>
 
-                '<b>'+
-                escapeHTML(subject)+
-                '</b>'+
+            <input
+            id="${id}"
+            type="number"
+            min="0"
+            max="100"
+            value="${values[subject] ?? 0}">
 
-                '<input '+
-                'id="'+id+'" '+
-                'type="number" '+
-                'min="0" '+
-                'max="100" '+
-                'value="'+
-                (values[subject] ?? 0)+
-                '">' +
+        </div>
+        `;
 
-                '</div>'
-
-            );
-
-        }).join('');
+    }).join("");
 
 }
 
 
 /* =========================================================
-   OPEN ADD
+   ADD
    ========================================================= */
 
 function openAdd(){
 
-    editMode = false;
+    editMode=false;
 
-
-    $('modalTitle').innerText =
-        '➕ Add Student';
+    $("modalTitle").innerText =
+    "➕ Add Student";
 
 
     [
-        'sid',
-        'sname',
-        'gender',
-        'sclass',
-        'att'
-    ]
-    .forEach(
-        id =>
-        $(id).value=''
-    );
+        "sid",
+        "sname",
+        "gender",
+        "sclass",
+        "att"
+    ].forEach(id=>{
+
+        $(id).value="";
+
+    });
 
 
-    $('sid').disabled =
-        false;
+    $("sid").disabled=false;
 
+    $("formMessage").innerText="";
 
-    $('formMessage').innerText =
-        '';
-
-
-    $('modalSemester').innerText =
-        semester;
-
+    $("modalSemester").innerText=
+    semester;
 
     renderMarks();
 
-
-    $('modal').style.display =
-        'grid';
+    $("modal").style.display="grid";
 
 }
 
@@ -2085,50 +1749,39 @@ function openAdd(){
 
 function editStudent(student){
 
-    editMode = true;
+    editMode=true;
+
+    $("modalTitle").innerText=
+    "✏️ Edit Student";
 
 
-    $('modalTitle').innerText =
-        '✏️ Edit Student';
+    $("sid").value=
+    student.Student_ID ?? "";
+
+    $("sid").disabled=true;
 
 
-    $('sid').value =
-        student.Student_ID ?? '';
+    $("sname").value=
+    student.Name ?? "";
+
+    $("gender").value=
+    student.Gender ?? "";
+
+    $("sclass").value=
+    student.Class ?? "";
+
+    $("att").value=
+    student.Attendance ?? "";
 
 
-    $('sid').disabled =
-        true;
+    $("formMessage").innerText="";
 
-
-    $('sname').value =
-        student.Name ?? '';
-
-
-    $('gender').value =
-        student.Gender ?? '';
-
-
-    $('sclass').value =
-        student.Class ?? '';
-
-
-    $('att').value =
-        student.Attendance ?? '';
-
-
-    $('formMessage').innerText =
-        '';
-
-
-    $('modalSemester').innerText =
-        semester;
-
+    $("modalSemester").innerText=
+    semester;
 
     renderMarks(student);
 
-
-    $('modal').style.display =
-        'grid';
+    $("modal").style.display="grid";
 
 }
 
@@ -2139,40 +1792,37 @@ function editStudent(student){
 
 function closeModal(){
 
-    $('modal').style.display =
-        'none';
+    $("modal").style.display="none";
 
-    $('sid').disabled =
-        false;
+    $("sid").disabled=false;
 
 }
 
 
 /* =========================================================
-   SAVE STUDENT
+   SAVE
    ========================================================= */
 
 async function saveStudent(){
 
-    const id =
-        $('sid').value.trim();
+    const id=
+    $("sid").value.trim();
 
-
-    const name =
-        $('sname').value.trim();
+    const name=
+    $("sname").value.trim();
 
 
     if(!id || !name){
 
-        $('formMessage').innerText =
-            'Student ID आणि Name required आहेत.';
+        $("formMessage").innerText=
+        "Student ID आणि Name required आहेत.";
 
         return;
 
     }
 
 
-    const data = {
+    const data={
 
         semester:semester,
 
@@ -2181,60 +1831,67 @@ async function saveStudent(){
         Name:name,
 
         Gender:
-            $('gender').value.trim(),
+        $("gender").value.trim(),
 
         Class:
-            $('sclass').value.trim(),
+        $("sclass").value.trim(),
 
         Attendance:
-            $('att').value
+        $("att").value
 
     };
 
 
-    subjects.forEach(subject => {
+    subjects.forEach(subject=>{
 
-        const input =
-            document.getElementById(
-                'm_'+
-                subject.replace(
-                    /[^a-zA-Z0-9]/g,
-                    '_'
-                )
-            );
+        const input=
+        document.getElementById(
+            "m_"+
+            subject.replace(
+                /[^a-zA-Z0-9]/g,
+                "_"
+            )
+        );
 
 
-        data[subject] =
-            input
-            ? input.value
-            : 0;
+        data[subject]=
+        input
+        ?
+        input.value
+        :
+        0;
 
     });
 
 
-    const result =
-        await api(
-            editMode
-            ? '/api/edit_student'
-            : '/api/add_student',
-            {
-                method:'POST',
+    const result=
+    await api(
+        editMode
+        ?
+        "/api/edit_student"
+        :
+        "/api/add_student",
 
-                headers:{
-                    'Content-Type':
-                    'application/json'
-                },
+        {
 
-                body:
-                    JSON.stringify(data)
-            }
-        );
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+            body:
+            JSON.stringify(data)
+
+        }
+    );
 
 
     if(result){
 
-        $('formMessage').innerText =
-            result.message ?? '';
+        $("formMessage").innerText=
+        result.message ?? "";
 
 
         if(result.success){
@@ -2254,14 +1911,14 @@ async function saveStudent(){
 
 
 /* =========================================================
-   DELETE STUDENT
+   DELETE
    ========================================================= */
 
 async function deleteStudent(id){
 
     if(
         !confirm(
-            'Delete this student?\n\nExcel मधूनही delete होईल.'
+            "Delete this student?\n\nExcel मधूनही delete होईल."
         )
     ){
 
@@ -2270,37 +1927,43 @@ async function deleteStudent(id){
     }
 
 
-    const result =
-        await api(
-            '/api/delete_student',
-            {
-                method:'POST',
+    const result=
+    await api(
+        "/api/delete_student",
 
-                headers:{
-                    'Content-Type':
-                    'application/json'
-                },
+        {
 
-                body:
-                    JSON.stringify({
-                        semester:semester,
-                        Student_ID:id
-                    })
-            }
-        );
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+            body:
+            JSON.stringify({
+
+                semester:semester,
+
+                Student_ID:id
+
+            })
+
+        }
+    );
 
 
     if(result){
 
         alert(
             result.message ??
-            'Operation completed.'
+            "Operation completed."
         );
 
 
         if(result.success){
 
-            load();
+            await load();
 
         }
 
@@ -2315,79 +1978,75 @@ async function deleteStudent(id){
 
 async function uploadExcel(){
 
-    const file =
-        $('excel').files[0];
+    const file=
+    $("excel").files[0];
 
 
     if(!file){
 
-        alert(
-            'Excel file select करा.'
-        );
+        alert("Excel file select करा.");
 
         return;
 
     }
 
 
-    const filename =
-        file.name.toLowerCase();
+    const filename=
+    file.name.toLowerCase();
 
 
     if(
-        !filename.endsWith('.xlsx') &&
-        !filename.endsWith('.xls')
+        !filename.endsWith(".xlsx") &&
+        !filename.endsWith(".xls")
     ){
 
-        alert(
-            'Excel file select करा.'
-        );
+        alert("Excel file select करा.");
 
         return;
 
     }
 
 
-    const formData =
-        new FormData();
+    const formData=
+    new FormData();
 
 
     formData.append(
-        'file',
+        "file",
         file
     );
 
 
     formData.append(
-        'semester',
+        "semester",
         semester
     );
 
 
-    $('uploadMessage').innerText =
-        'Uploading '+semester+'...';
+    $("uploadMessage").innerText=
+    "Uploading "+semester+"...";
 
 
-    const result =
-        await api(
-            '/api/upload_excel',
-            {
-                method:'POST',
-                body:formData
-            }
-        );
+    const result=
+    await api(
+        "/api/upload_excel",
+
+        {
+            method:"POST",
+            body:formData
+        }
+    );
 
 
     if(result){
 
-        $('uploadMessage').innerText =
-            result.message ?? '';
+        $("uploadMessage").innerText=
+        result.message ?? "";
 
 
         if(result.success){
 
-            $('excel').value =
-                '';
+            $("excel").value="";
 
             await load();
 
@@ -2399,34 +2058,18 @@ async function uploadExcel(){
 
 
 /* =========================================================
-   YEAR ANALYTICS
-   =========================================================
-
-   1st Year
-   ├── Semester 1
-   └── Semester 2
-
-   2nd Year
-   ├── Semester 3
-   └── Semester 4
-
-   3rd Year
-   ├── Semester 5
-   └── Semester 6
-
-   ONE BAR GRAPH
-   TWO PIE CHARTS
+   YEAR CHARTS
    ========================================================= */
 
 async function loadYearCharts(year){
 
-    const pair =
-        yearSemesters[year];
+    const pair=
+    yearSemesters[year];
 
 
     if(
         !pair ||
-        pair.length !== 2
+        pair.length!==2
     ){
 
         return;
@@ -2434,64 +2077,53 @@ async function loadYearCharts(year){
     }
 
 
-    /* TITLES */
-
-    $('barTitle').innerText =
-        pair[0] +
-        ' + ' +
-        pair[1] +
-        ' Combined';
+    $("barTitle").innerText=
+    pair[0]+" + "+pair[1]+" Combined";
 
 
-    $('pieTitle1').innerText =
-        pair[0];
+    $("pieTitle1").innerText=
+    pair[0];
+
+    $("pieTitle2").innerText=
+    pair[1];
 
 
-    $('pieTitle2').innerText =
-        pair[1];
+    const results=
+    await Promise.all(
 
+        pair.map(
+            currentSemester=>
 
-    /* GET BOTH SEMESTERS */
-
-    const results =
-        await Promise.all(
-
-            pair.map(
-                currentSemester =>
-
-                api(
-                    '/api/analytics?semester='+
-                    encodeURIComponent(
-                        currentSemester
-                    )
+            api(
+                "/api/analytics?semester="+
+                encodeURIComponent(
+                    currentSemester
                 )
             )
+        )
 
-        );
-
-
-    const analytics1 =
-        results[0] ||
-        {
-            subjects:{},
-            grades:{}
-        };
+    );
 
 
-    const analytics2 =
-        results[1] ||
-        {
-            subjects:{},
-            grades:{}
-        };
+    const analytics1=
+    results[0] ||
+    {
+        subjects:{},
+        grades:{}
+    };
 
 
-    /* =====================================================
-       COMBINED SUBJECT LABELS
-       ===================================================== */
+    const analytics2=
+    results[1] ||
+    {
+        subjects:{},
+        grades:{}
+    };
 
-    const labels = [
+
+    const labels=[
         ...new Set([
+
             ...Object.keys(
                 analytics1.subjects || {}
             ),
@@ -2499,200 +2131,141 @@ async function loadYearCharts(year){
             ...Object.keys(
                 analytics2.subjects || {}
             )
+
         ])
     ];
 
 
-    /*
-       If subject exists in one semester,
-       use that semester's average.
+    const values=
+    labels.map(subject=>{
 
-       If same subject exists in both,
-       average both.
-    */
-
-    const values =
-        labels.map(subject => {
-
-            const valuesArray = [];
+        const arr=[];
 
 
-            if(
-                analytics1.subjects &&
-                Object.prototype.hasOwnProperty.call(
-                    analytics1.subjects,
-                    subject
+        if(
+            analytics1.subjects &&
+            Object.prototype.hasOwnProperty.call(
+                analytics1.subjects,
+                subject
+            )
+        ){
+
+            arr.push(
+                Number(
+                    analytics1.subjects[subject] || 0
                 )
-            ){
+            );
 
-                valuesArray.push(
-                    Number(
-                        analytics1.subjects[
-                            subject
-                        ] || 0
-                    )
-                );
-
-            }
+        }
 
 
-            if(
-                analytics2.subjects &&
-                Object.prototype.hasOwnProperty.call(
-                    analytics2.subjects,
-                    subject
+        if(
+            analytics2.subjects &&
+            Object.prototype.hasOwnProperty.call(
+                analytics2.subjects,
+                subject
+            )
+        ){
+
+            arr.push(
+                Number(
+                    analytics2.subjects[subject] || 0
                 )
-            ){
+            );
 
-                valuesArray.push(
-                    Number(
-                        analytics2.subjects[
-                            subject
-                        ] || 0
-                    )
-                );
-
-            }
+        }
 
 
-            if(!valuesArray.length){
+        if(!arr.length){
 
-                return 0;
+            return 0;
 
-            }
+        }
 
 
-            const average =
-                valuesArray.reduce(
-                    (a,b) => a+b,
+        return Number(
+            (
+                arr.reduce(
+                    (a,b)=>a+b,
                     0
                 )
                 /
-                valuesArray.length;
+                arr.length
+            ).toFixed(2)
+        );
+
+    });
 
 
-            return Number(
-                average.toFixed(2)
-            );
-
-        });
-
-
-    /* =====================================================
-       BAR GRAPH
-       ===================================================== */
+    /* BAR */
 
     if(chart1){
 
         chart1.destroy();
 
-        chart1 = null;
+        chart1=null;
 
     }
 
 
-    chart1 =
-        new Chart(
-            $('subjectChart'),
-            {
+    chart1=
+    new Chart(
+        $("subjectChart"),
+        {
 
-                type:'bar',
+            type:"bar",
 
-                data:{
+            data:{
 
-                    labels:labels,
+                labels:labels,
 
-                    datasets:[
+                datasets:[{
 
-                        {
+                    label:
+                    year+
+                    " Combined Subject Average",
 
-                            label:
-                                year+
-                                ' Combined Subject Average',
+                    data:values,
 
-                            data:values,
+                    borderWidth:1
 
-                            borderWidth:1
+                }]
 
-                        }
+            },
 
-                    ]
+            options:{
 
-                },
+                responsive:true,
 
+                maintainAspectRatio:false,
 
-                options:{
+                scales:{
 
-                    responsive:true,
+                    y:{
 
-                    maintainAspectRatio:false,
+                        beginAtZero:true,
 
-                    scales:{
-
-                        y:{
-
-                            beginAtZero:true,
-
-                            max:100,
-
-                            ticks:{
-
-                                stepSize:20
-
-                            }
-
-                        },
-
-                        x:{
-
-                            ticks:{
-
-                                maxRotation:45,
-
-                                minRotation:0
-
-                            }
-
-                        }
-
-                    },
-
-
-                    plugins:{
-
-                        legend:{
-
-                            display:true,
-
-                            position:'top'
-
-                        }
+                        max:100
 
                     }
 
                 }
 
             }
-        );
 
+        }
+    );
 
-    /* =====================================================
-       PIE CHART 1
-       ===================================================== */
 
     drawPie(
-        'pieChart1',
+        "pieChart1",
         analytics1.grades || {},
         pair[0]
     );
 
 
-    /* =====================================================
-       PIE CHART 2
-       ===================================================== */
-
     drawPie(
-        'pieChart2',
+        "pieChart2",
         analytics2.grades || {},
         pair[1]
     );
@@ -2701,23 +2274,20 @@ async function loadYearCharts(year){
 
 
 /* =========================================================
-   PIE CHART
+   PIE
    ========================================================= */
 
-function drawPie(
-    id,
-    grades,
-    title
-){
+function drawPie(id,grades,title){
 
-    const canvas =
-        $(id);
+    const canvas=$(id);
 
 
-    const oldChart =
-        id === 'pieChart1'
-        ? pie1
-        : pie2;
+    const oldChart=
+    id==="pieChart1"
+    ?
+    pie1
+    :
+    pie2;
 
 
     if(oldChart){
@@ -2727,81 +2297,65 @@ function drawPie(
     }
 
 
-    const labels =
-        Object.keys(
-            grades || {}
-        );
+    const labels=
+    Object.keys(grades || {});
 
 
-    const data =
-        Object.values(
-            grades || {}
-        );
+    const data=
+    Object.values(grades || {});
 
 
-    const newChart =
-        new Chart(
-            canvas,
-            {
+    const newChart=
+    new Chart(
+        canvas,
+        {
 
-                type:'pie',
+            type:"pie",
 
-                data:{
+            data:{
 
-                    labels:labels,
+                labels:labels,
 
-                    datasets:[
+                datasets:[{
 
-                        {
+                    label:
+                    title+" Grades",
 
-                            label:
-                                title+
-                                ' Grades',
+                    data:data,
 
-                            data:data,
+                    borderWidth:1
 
-                            borderWidth:1
+                }]
 
-                        }
+            },
 
-                    ]
+            options:{
 
-                },
+                responsive:true,
 
+                maintainAspectRatio:false,
 
-                options:{
+                plugins:{
 
-                    responsive:true,
-
-                    maintainAspectRatio:false,
-
-                    plugins:{
-
-                        legend:{
-
-                            position:'bottom'
-
-                        }
-
+                    legend:{
+                        position:"bottom"
                     }
 
                 }
 
             }
-        );
+
+        }
+    );
 
 
-    if(
-        id === 'pieChart1'
-    ){
+    if(id==="pieChart1"){
 
-        pie1 =
-            newChart;
+        pie1=newChart;
 
     }else{
 
-        pie2 =
-            newChart;
+        pie2=newChart;
 
     }
 
@@ -2814,14 +2368,12 @@ function drawPie(
 
 function go(id){
 
-    const element =
-        $(id);
-
+    const element=$(id);
 
     if(element){
 
         element.scrollIntoView({
-            behavior:'smooth'
+            behavior:"smooth"
         });
 
     }
@@ -2832,8 +2384,11 @@ function go(id){
 function goTop(){
 
     window.scrollTo({
+
         top:0,
-        behavior:'smooth'
+
+        behavior:"smooth"
+
     });
 
 }
@@ -2847,12 +2402,11 @@ function logoutUser(){
 
     if(
         confirm(
-            'Logout करायचे आहे का?'
+            "Logout करायचे आहे का?"
         )
     ){
 
-        window.location.href =
-            '/logout';
+        window.location.href="/logout";
 
     }
 
@@ -2864,30 +2418,16 @@ function logoutUser(){
    ========================================================= */
 
 window.addEventListener(
-    'load',
+    "load",
     function(){
 
         /*
-           Default:
-           1st Year
-           Semester 1 + Semester 2 visible
-           Semester 1 selected
+        Default:
+        1st Year
+        फक्त Semester 1 + 2
         */
 
-        updateYearButton(
-            '1st Year'
-        );
-
-
-        showOnlyYearSemesters(
-            '1st Year'
-        );
-
-
-        updateSemesterButton(
-            'Semester 1'
-        );
-
+        updateInitialYear();
 
         load();
 
@@ -2896,16 +2436,50 @@ window.addEventListener(
 
 
 /* =========================================================
-   CLOSE MODAL WHEN CLICK OUTSIDE
+   INITIAL YEAR
+   ========================================================= */
+
+function updateInitialYear(){
+
+    $("y1").classList.add("active");
+
+    showOnlyYearSemesters(
+        "1st Year"
+    );
+
+    $("sem1").classList.add("active");
+
+    document
+    .querySelectorAll(".side-sem")
+    .forEach(button=>{
+
+        if(
+            button.dataset.sem===
+            "Semester 1"
+        ){
+
+            button.classList.add(
+                "sem-active"
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE MODAL
    ========================================================= */
 
 window.addEventListener(
-    'click',
+    "click",
     function(event){
 
         if(
-            event.target ===
-            $('modal')
+            event.target===
+            $("modal")
         ){
 
             closeModal();
