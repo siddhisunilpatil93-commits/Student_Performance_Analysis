@@ -16,7 +16,7 @@ body{margin:0;background:#eef2ff;color:#172554}
 .side{position:fixed;left:0;top:0;width:240px;height:100vh;background:linear-gradient(#312e81,#7c3aed);color:#fff;padding:25px;overflow-y:auto}
 .side h2{margin-top:0}.side button{width:100%;padding:13px;margin:5px 0;background:transparent;border:0;color:#fff;text-align:left;cursor:pointer;border-radius:8px;font-size:14px}.side button:hover{background:#ffffff22}.side .sem-active{background:#ffffff33;font-weight:bold}
 .logout-btn{background:#dc2626!important;margin-top:20px!important}
-.main{margin-left:240px;padding:25px}.box,.chart{background:#fff;padding:20px;border-radius:16px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
+.main{margin-left:240px;padding:25px}.box,.chart{background:#fff;padding:16px;border-radius:16px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
 .years{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.years button{padding:11px 18px;border:0;border-radius:8px;cursor:pointer;background:#e0e7ff;color:#172554;font-weight:bold}.years button.active{background:#4f46e5;color:#fff}
 .semester-buttons{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:12px}
 .semester-buttons button{padding:14px 8px;border:2px solid #c7d2fe;border-radius:9px;background:#eef2ff;color:#172554;font-weight:bold;cursor:pointer;font-size:14px}
@@ -27,7 +27,7 @@ select,input{padding:12px;border:2px solid #dbeafe;border-radius:9px;outline:non
 .subjects{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.subject{padding:13px;background:#eef2ff;border-left:4px solid #4f46e5;border-radius:8px}
 .btn{background:#4f46e5;color:#fff;border:0;padding:11px 16px;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}.green{background:#059669}.red{background:#dc2626}
 #search{width:100%;margin-bottom:10px}.charts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.yearCharts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.yearCharts .chart{min-height:390px}
+.yearCharts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.yearCharts .chart{min-height:300px;padding:14px}.yearCharts canvas{max-height:250px!important}
 .table{overflow:auto;max-height:500px}table{width:100%;border-collapse:collapse;min-width:1200px}th{background:#4338ca;color:#fff;padding:10px;position:sticky;top:0;z-index:2}td{padding:9px;text-align:center;border-bottom:1px solid #ddd}.good{color:green;font-weight:bold}.bad{color:red;font-weight:bold}
 .modal{display:none;position:fixed;inset:0;background:#0008;place-items:center;z-index:100}.modalbox{background:#fff;padding:25px;border-radius:16px;width:850px;max-width:95%;max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid input{width:100%;margin-top:5px}.success{color:#047857;font-weight:bold}.muted{color:#64748b}.close{float:right;background:#dc2626;color:#fff;border:0;border-radius:6px;padding:7px 10px;cursor:pointer}
 .top-logout{float:right;background:#dc2626;color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:bold;cursor:pointer}
@@ -243,7 +243,24 @@ if(b.textContent.includes(selectedSemester))b.classList.add('sem-active')
 
 function setYear(year){
 updateYearButton(year);
+showOnlyYearSemesters(year);
 selectSemester(yearSemesters[year][0]);
+}
+
+function showOnlyYearSemesters(year){
+const allowed=yearSemesters[year]||[];
+document.querySelectorAll('.semester-buttons button').forEach(b=>{
+const n=b.id.replace('sem','');
+const sem='Semester '+n;
+b.style.display=allowed.includes(sem)?'block':'none';
+});
+document.querySelectorAll('.side button').forEach(b=>{
+const text=b.textContent||'';
+const match=text.match(/Semester\s+[1-6]/);
+if(match){
+b.style.display=allowed.includes(match[0])?'block':'none';
+}
+});
 }
 
 function updateYearButton(year){
@@ -406,6 +423,7 @@ function logoutUser(){if(confirm('Logout करायचे आहे का?'))
 
 window.addEventListener('load',()=>{
 updateYearButton('1st Year');
+showOnlyYearSemesters('1st Year');
 updateSemesterButton('Semester 1');
 load()
 });
