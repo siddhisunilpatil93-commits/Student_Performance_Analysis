@@ -15,12 +15,12 @@ SEMESTER_YEAR = {
 SEMESTER_FILES = {f'Semester {i}': f'semester_{i}.xlsx' for i in range(1,7)}
 
 SUBJECTS = {
-'Semester 1':['Basic Mathematics','Communication Skills','Engineering Physics','Engineering Chemistry','Basic Science'],
-'Semester 2':['Applied Mathematics','Engineering Graphics','Basic Electrical Engineering','Programming in C','Web Page Design'],
-'Semester 3':['Object Oriented Programming','Data Structure','Database Management System','Computer Networks','Operating System'],
-'Semester 4':['Java Programming','Data Communication and Network','Microprocessor','Software Engineering','Python Programming'],
-'Semester 5':['Advanced Java','Web Based Application Development','Software Testing','Computer Security','Project Management'],
-'Semester 6':['Mobile Application Development','Cloud Computing','Artificial Intelligence','Internet of Things','Major Project']
+'Semester 1':['Basic Mathematics','Communication Skills','Basic Science'],
+'Semester 2':['Applied Mathematics','Basic Electrical and Engineering','Programming in C'],
+'Semester 3':['Object Oriented Programming','Data Structure','Digital Techniques','Database Management System'],
+'Semester 4':['Java Programming','Data Communication and Network','Microprocessor Programming','Environmental Education And  Sustanability'],
+'Semester 5':['Software Engineering','Opreting System','Data Analytics'],
+'Semester 6':['Mobile Application Development','Machine Learning','Software Testing','Mangement']
 }
 
 LOGIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'silicon')
