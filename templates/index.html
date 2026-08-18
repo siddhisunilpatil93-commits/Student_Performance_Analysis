@@ -4,160 +4,2963 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Performance Analysis</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#eef2ff;color:#172554}
-.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed)}
-.loginbox{background:#fff;padding:35px;border-radius:20px;width:420px;max-width:92%;box-shadow:0 20px 60px #0004}
-.loginbox input{width:100%;padding:13px;margin:7px 0 15px;border:2px solid #dbeafe;border-radius:9px}
-.loginbox button{width:100%;padding:13px;border:0;border-radius:9px;background:#4f46e5;color:#fff;font-weight:bold;cursor:pointer}
-.err{background:#fee2e2;color:#b91c1c;padding:10px;text-align:center;border-radius:8px;margin-top:12px}
-.side{position:fixed;left:0;top:0;width:240px;height:100vh;background:linear-gradient(#312e81,#7c3aed);color:#fff;padding:25px;overflow-y:auto}
-.side h2{margin-top:0}.side button{width:100%;padding:13px;margin:5px 0;background:transparent;border:0;color:#fff;text-align:left;cursor:pointer;border-radius:8px;font-size:14px}.side button:hover{background:#ffffff22}.side .sem-active{background:#ffffff33;font-weight:bold}
-.logout-btn{background:#dc2626!important;margin-top:20px!important}
-.main{margin-left:240px;padding:25px}.box,.chart{background:#fff;padding:20px;border-radius:16px;margin-bottom:18px;box-shadow:0 4px 18px #0001}
-.years{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.years button{padding:11px 18px;border:0;border-radius:8px;cursor:pointer;background:#e0e7ff;color:#172554;font-weight:bold}.years button.active{background:#4f46e5;color:#fff}
-.semester-buttons{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:12px}
-.semester-buttons button{padding:14px 8px;border:2px solid #c7d2fe;border-radius:9px;background:#eef2ff;color:#172554;font-weight:bold;cursor:pointer;font-size:14px}
-.semester-buttons button:hover{background:#c7d2fe}.semester-buttons button.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
-.current-semester{margin-top:15px;padding:12px;background:#ede9fe;border-radius:9px;color:#4c1d95;font-weight:bold}
-select,input{padding:12px;border:2px solid #dbeafe;border-radius:9px;outline:none}select{width:100%;margin-top:8px;background:#fff}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:18px}.card{color:#fff;min-height:130px;padding:20px;border-radius:16px;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 4px 18px #0002}.value{font-size:25px;font-weight:bold}
-.subjects{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.subject{padding:13px;background:#eef2ff;border-left:4px solid #4f46e5;border-radius:8px}
-.btn{background:#4f46e5;color:#fff;border:0;padding:11px 16px;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}.green{background:#059669}.red{background:#dc2626}
-#search{width:100%;margin-bottom:10px}.charts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.table{overflow:auto;max-height:500px}table{width:100%;border-collapse:collapse;min-width:1200px}th{background:#4338ca;color:#fff;padding:10px;position:sticky;top:0;z-index:2}td{padding:9px;text-align:center;border-bottom:1px solid #ddd}.good{color:green;font-weight:bold}.bad{color:red;font-weight:bold}
-.modal{display:none;position:fixed;inset:0;background:#0008;place-items:center;z-index:100}.modalbox{background:#fff;padding:25px;border-radius:16px;width:850px;max-width:95%;max-height:90vh;overflow:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid input{width:100%;margin-top:5px}.success{color:#047857;font-weight:bold}.muted{color:#64748b}.close{float:right;background:#dc2626;color:#fff;border:0;border-radius:6px;padding:7px 10px;cursor:pointer}
-.top-logout{float:right;background:#dc2626;color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:bold;cursor:pointer}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.subjects{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}.semester-buttons{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.side{position:relative;width:100%;height:auto}.main{margin-left:0}.cards,.subjects,.grid{grid-template-columns:1fr}.semester-buttons{grid-template-columns:repeat(2,1fr)}}
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif
+}
+
+body{
+    margin:0;
+    background:#eef2ff;
+    color:#172554
+}
+
+.login{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,#312e81,#4f46e5,#7c3aed)
+}
+
+.loginbox{
+    background:#fff;
+    padding:35px;
+    border-radius:20px;
+    width:420px;
+    max-width:92%;
+    box-shadow:0 20px 60px #0004
+}
+
+.loginbox input{
+    width:100%;
+    padding:13px;
+    margin:7px 0 15px;
+    border:2px solid #dbeafe;
+    border-radius:9px
+}
+
+.loginbox button{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:9px;
+    background:#4f46e5;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer
+}
+
+.err{
+    background:#fee2e2;
+    color:#b91c1c;
+    padding:10px;
+    text-align:center;
+    border-radius:8px;
+    margin-top:12px
+}
+
+.side{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:linear-gradient(#312e81,#7c3aed);
+    color:#fff;
+    padding:25px;
+    overflow-y:auto
+}
+
+.side h2{
+    margin-top:0
+}
+
+.side button{
+    width:100%;
+    padding:13px;
+    margin:5px 0;
+    background:transparent;
+    border:0;
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+    border-radius:8px;
+    font-size:14px
+}
+
+.side button:hover{
+    background:#ffffff22
+}
+
+.side .sem-active{
+    background:#ffffff33;
+    font-weight:bold
+}
+
+.sidebar-sem{
+    display:block
+}
+
+.logout-btn{
+    background:#dc2626!important;
+    margin-top:20px!important
+}
+
+.main{
+    margin-left:240px;
+    padding:25px
+}
+
+.box,.chart{
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:18px;
+    box-shadow:0 4px 18px #0001
+}
+
+.years{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px
+}
+
+.years button{
+    padding:11px 18px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    background:#e0e7ff;
+    color:#172554;
+    font-weight:bold
+}
+
+.years button.active{
+    background:#4f46e5;
+    color:#fff;
+    box-shadow:0 5px 15px #4f46e555
+}
+
+.semester-buttons{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:10px;
+    margin-top:12px
+}
+
+.semester-buttons button{
+    padding:14px 8px;
+    border:2px solid #c7d2fe;
+    border-radius:9px;
+    background:#eef2ff;
+    color:#172554;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:14px
+}
+
+.semester-buttons button:hover{
+    background:#c7d2fe
+}
+
+.semester-buttons button.active{
+    background:#4f46e5;
+    color:#fff;
+    border-color:#4f46e5
+}
+
+.sem-hidden{
+    display:none!important
+}
+
+.current-semester{
+    margin-top:15px;
+    padding:12px;
+    background:#ede9fe;
+    border-radius:9px;
+    color:#4c1d95;
+    font-weight:bold
+}
+
+.year-mode{
+    background:linear-gradient(135deg,#ede9fe,#dbeafe);
+    border:2px solid #c4b5fd;
+    color:#4c1d95;
+    padding:14px;
+    border-radius:10px;
+    margin-top:12px;
+    font-weight:bold
+}
+
+select,input{
+    padding:12px;
+    border:2px solid #dbeafe;
+    border-radius:9px;
+    outline:none
+}
+
+select{
+    width:100%;
+    margin-top:8px;
+    background:#fff
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:18px
+}
+
+.card{
+    color:#fff;
+    min-height:130px;
+    padding:20px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    box-shadow:0 4px 18px #0002
+}
+
+.value{
+    font-size:25px;
+    font-weight:bold
+}
+
+.subjects{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px
+}
+
+.subject{
+    padding:13px;
+    background:#eef2ff;
+    border-left:4px solid #4f46e5;
+    border-radius:8px
+}
+
+.btn{
+    background:#4f46e5;
+    color:#fff;
+    border:0;
+    padding:11px 16px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    margin:3px
+}
+
+.green{
+    background:#059669
+}
+
+.red{
+    background:#dc2626
+}
+
+#search{
+    width:100%;
+    margin-bottom:10px
+}
+
+.charts{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px
+}
+
+.chart{
+    min-height:420px;
+    position:relative
+}
+
+.chart canvas{
+    max-height:340px
+}
+
+.chart-3d{
+    padding:20px;
+    border-radius:16px;
+    background:linear-gradient(145deg,#ffffff,#eef2ff);
+    box-shadow:
+        0 12px 20px #0002,
+        inset 0 2px 4px #ffffff
+}
+
+.table{
+    overflow:auto;
+    max-height:500px
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1200px
+}
+
+th{
+    background:#4338ca;
+    color:#fff;
+    padding:10px;
+    position:sticky;
+    top:0;
+    z-index:2
+}
+
+td{
+    padding:9px;
+    text-align:center;
+    border-bottom:1px solid #ddd
+}
+
+.good{
+    color:green;
+    font-weight:bold
+}
+
+.bad{
+    color:red;
+    font-weight:bold
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    place-items:center;
+    z-index:100
+}
+
+.modalbox{
+    background:#fff;
+    padding:25px;
+    border-radius:16px;
+    width:850px;
+    max-width:95%;
+    max-height:90vh;
+    overflow:auto
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px
+}
+
+.grid input{
+    width:100%;
+    margin-top:5px
+}
+
+.success{
+    color:#047857;
+    font-weight:bold
+}
+
+.muted{
+    color:#64748b
+}
+
+.close{
+    float:right;
+    background:#dc2626;
+    color:#fff;
+    border:0;
+    border-radius:6px;
+    padding:7px 10px;
+    cursor:pointer
+}
+
+.top-logout{
+    float:right;
+    background:#dc2626;
+    color:white;
+    border:0;
+    border-radius:8px;
+    padding:10px 16px;
+    font-weight:bold;
+    cursor:pointer
+}
+
+.combined-title{
+    margin-top:0;
+    color:#4c1d95
+}
+
+@media(max-width:1000px){
+
+    .cards{
+        grid-template-columns:repeat(2,1fr)
+    }
+
+    .subjects{
+        grid-template-columns:repeat(2,1fr)
+    }
+
+    .charts{
+        grid-template-columns:1fr
+    }
+
+    .semester-buttons{
+        grid-template-columns:repeat(3,1fr)
+    }
+}
+
+@media(max-width:700px){
+
+    .side{
+        position:relative;
+        width:100%;
+        height:auto
+    }
+
+    .main{
+        margin-left:0
+    }
+
+    .cards,
+    .subjects,
+    .grid{
+        grid-template-columns:1fr
+    }
+
+    .semester-buttons{
+        grid-template-columns:repeat(2,1fr)
+    }
+}
 </style>
 </head>
+
 <body>
+
 {% if login_page %}
+
 <div class="login">
+
 <div class="loginbox">
+
 <div style="text-align:center;font-size:55px">🔐</div>
-<h1 style="text-align:center">Student Analytics</h1>
-<p style="text-align:center;color:#64748b">Computer Engineering</p>
-<p style="text-align:center;color:#64748b;margin-bottom:25px">Secure Login</p>
+
+<h1 style="text-align:center">
+Student Analytics
+</h1>
+
+<p style="text-align:center;color:#64748b">
+Computer Engineering
+</p>
+
+<p style="text-align:center;color:#64748b;margin-bottom:25px">
+Secure Login
+</p>
+
 <form method="POST" action="{{ url_for('login') }}">
+
 <b>Username</b>
-<input name="username" required placeholder="Enter username" autocomplete="username">
+
+<input
+name="username"
+required
+placeholder="Enter username"
+autocomplete="username"
+>
+
 <b>Password</b>
-<input type="password" name="password" required placeholder="Enter password" autocomplete="current-password">
-<button type="submit">🔓 Login</button>
+
+<input
+type="password"
+name="password"
+required
+placeholder="Enter password"
+autocomplete="current-password"
+>
+
+<button type="submit">
+🔓 Login
+</button>
+
 </form>
-{% if login_error %}<div class="err">{{ login_error }}</div>{% endif %}
-<p style="text-align:center;color:#64748b;font-size:13px;margin-top:20px">Authorized users only.</p>
+
+{% if login_error %}
+<div class="err">
+{{ login_error }}
+</div>
+{% endif %}
+
+<p style="text-align:center;color:#64748b;font-size:13px;margin-top:20px">
+Authorized users only.
+</p>
+
 </div>
 </div>
+
 {% else %}
+
+<!-- ===================================================== -->
+<!-- SIDEBAR -->
+<!-- ===================================================== -->
+
 <aside class="side">
-<h2>🎓 Student Analytics</h2><p>Computer Engineering</p><hr style="border-color:#ffffff33">
-<button onclick="goTop()">🏠 Dashboard</button>
-<button onclick="go('searchBox')">🔍 Search Student</button>
-<button onclick="openAdd()">➕ Add Student</button>
-<button onclick="go('students')">👨‍🎓 All Students</button>
-<button onclick="go('charts')">📊 Analytics</button>
+
+<h2>🎓 Student Analytics</h2>
+
+<p>Computer Engineering</p>
+
+<hr style="border-color:#ffffff33">
+
+<button onclick="goTop()">
+🏠 Dashboard
+</button>
+
+<button onclick="go('searchBox')">
+🔍 Search Student
+</button>
+
+<button onclick="openAdd()">
+➕ Add Student
+</button>
+
+<button onclick="go('students')">
+👨‍🎓 All Students
+</button>
+
+<button onclick="go('charts')">
+📊 Analytics
+</button>
+
 <hr style="border-color:#ffffff33;margin:18px 0 10px">
-<div style="font-weight:bold;margin:8px 0">📚 Semesters</div>
-<button onclick="selectSemester('Semester 1')">1️⃣ Semester 1</button>
-<button onclick="selectSemester('Semester 2')">2️⃣ Semester 2</button>
-<button onclick="selectSemester('Semester 3')">3️⃣ Semester 3</button>
-<button onclick="selectSemester('Semester 4')">4️⃣ Semester 4</button>
-<button onclick="selectSemester('Semester 5')">5️⃣ Semester 5</button>
-<button onclick="selectSemester('Semester 6')">6️⃣ Semester 6</button>
-<button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+
+<div style="font-weight:bold;margin:8px 0">
+📚 Semesters
+</div>
+
+<button id="sideSem1" class="sidebar-sem"
+onclick="selectSemester('Semester 1')">
+1️⃣ Semester 1
+</button>
+
+<button id="sideSem2" class="sidebar-sem"
+onclick="selectSemester('Semester 2')">
+2️⃣ Semester 2
+</button>
+
+<button id="sideSem3" class="sidebar-sem"
+onclick="selectSemester('Semester 3')">
+3️⃣ Semester 3
+</button>
+
+<button id="sideSem4" class="sidebar-sem"
+onclick="selectSemester('Semester 4')">
+4️⃣ Semester 4
+</button>
+
+<button id="sideSem5" class="sidebar-sem"
+onclick="selectSemester('Semester 5')">
+5️⃣ Semester 5
+</button>
+
+<button id="sideSem6" class="sidebar-sem"
+onclick="selectSemester('Semester 6')">
+6️⃣ Semester 6
+</button>
+
+<button class="logout-btn"
+onclick="logoutUser()">
+🚪 Logout
+</button>
+
 </aside>
+
+
+<!-- ===================================================== -->
+<!-- MAIN -->
+<!-- ===================================================== -->
+
 <main class="main">
-<div class="box">
-<button class="top-logout" onclick="logoutUser()">🚪 Logout</button>
-<h1>Student Performance Analysis System</h1>
-<b style="color:#6d28d9">COMPUTER ENGINEERING</b><span> | MSBTE K-Scheme</span>
-<p class="muted">Student performance, attendance and semester-wise analytics dashboard.</p>
-</div>
 
 <div class="box">
-<h2>🎓 Academic Year & Semester</h2><p class="muted">Select any Semester 1 to Semester 6 below.</p>
+
+<button class="top-logout"
+onclick="logoutUser()">
+🚪 Logout
+</button>
+
+<h1>
+Student Performance Analysis System
+</h1>
+
+<b style="color:#6d28d9">
+COMPUTER ENGINEERING
+</b>
+
+<span>
+| MSBTE K-Scheme
+</span>
+
+<p class="muted">
+Student performance, attendance and semester-wise analytics dashboard.
+</p>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- YEAR / SEMESTER -->
+<!-- ===================================================== -->
+
+<div class="box">
+
+<h2>
+🎓 Academic Year & Semester
+</h2>
+
+<p class="muted">
+Select Year to view both semesters together.
+</p>
+
 <b>Select Year</b>
+
 <div class="years">
-<button id="y1" onclick="setYear('1st Year')">1st Year</button>
-<button id="y2" onclick="setYear('2nd Year')">2nd Year</button>
-<button id="y3" onclick="setYear('3rd Year')">3rd Year</button>
+
+<button id="y1"
+onclick="setYear('1st Year')">
+1st Year
+</button>
+
+<button id="y2"
+onclick="setYear('2nd Year')">
+2nd Year
+</button>
+
+<button id="y3"
+onclick="setYear('3rd Year')">
+3rd Year
+</button>
+
 </div>
+
 <br>
+
 <b>Select Semester</b>
+
 <div class="semester-buttons">
-<button id="sem1" onclick="selectSemester('Semester 1')">Semester 1</button>
-<button id="sem2" onclick="selectSemester('Semester 2')">Semester 2</button>
-<button id="sem3" onclick="selectSemester('Semester 3')">Semester 3</button>
-<button id="sem4" onclick="selectSemester('Semester 4')">Semester 4</button>
-<button id="sem5" onclick="selectSemester('Semester 5')">Semester 5</button>
-<button id="sem6" onclick="selectSemester('Semester 6')">Semester 6</button>
+
+<button id="sem1"
+onclick="selectSemester('Semester 1')">
+Semester 1
+</button>
+
+<button id="sem2"
+onclick="selectSemester('Semester 2')">
+Semester 2
+</button>
+
+<button id="sem3"
+onclick="selectSemester('Semester 3')">
+Semester 3
+</button>
+
+<button id="sem4"
+onclick="selectSemester('Semester 4')">
+Semester 4
+</button>
+
+<button id="sem5"
+onclick="selectSemester('Semester 5')">
+Semester 5
+</button>
+
+<button id="sem6"
+onclick="selectSemester('Semester 6')">
+Semester 6
+</button>
+
 </div>
-<div class="current-semester">📌 Current Semester: <span id="currentSemesterText">Semester 1</span></div>
+
+<div id="yearModeBox" class="year-mode">
+📊 Combined Year Dashboard
+</div>
+
+<div class="current-semester">
+
+📌 Current Selection:
+
+<span id="currentSemesterText">
+1st Year
+</span>
+
+</div>
+
 <p id="selectionMessage" class="success"></p>
+
 </div>
 
-<div class="box"><h2>📚 <span id="subjectTitle">Semester 1 Subjects</span></h2><div id="subjects" class="subjects"></div></div>
+
+<!-- ===================================================== -->
+<!-- SUBJECTS -->
+<!-- ===================================================== -->
+
+<div class="box">
+
+<h2>
+📚 <span id="subjectTitle">
+1st Year Subjects
+</span>
+</h2>
+
+<div id="subjects" class="subjects"></div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CARDS -->
+<!-- ===================================================== -->
+
 <div class="cards">
-<div class="card">👨‍🎓<h3>Total Students</h3><div id="total" class="value">0</div></div>
-<div class="card">📈<h3>Average Percentage</h3><div id="average" class="value">0%</div></div>
-<div class="card">🏆<h3>Top Performer</h3><div id="top" class="value">-</div></div>
-<div class="card">📅<h3>Average Attendance</h3><div id="attendance" class="value">0%</div></div>
+
+<div class="card">
+
+👨‍🎓
+
+<h3>
+Total Students
+</h3>
+
+<div id="total" class="value">
+0
 </div>
 
-<div class="box" id="searchBox"><h2>🔍 Search Student</h2><input id="search" placeholder="Enter Student Name or Student ID..." oninput="searchStudent()"><br><button class="btn green" onclick="openAdd()">➕ Add Student</button></div>
-<div class="box"><h2>📥 Upload Student Excel</h2><p class="muted">Selected semester च्या Excel मध्ये data save होईल.</p><p><b>Current Semester:</b> <span id="uploadSemester">Semester 1</span></p><input type="file" id="excel" accept=".xlsx,.xls"><button class="btn green" onclick="uploadExcel()">⬆ Upload Excel</button> <span id="uploadMessage"></span></div>
+</div>
 
-<div class="charts" id="charts"><div class="chart"><h2>📊 Subject-wise Performance</h2><canvas id="subjectChart"></canvas></div><div class="chart"><h2>🏅 Grade Distribution</h2><canvas id="gradeChart"></canvas></div></div>
-<div class="box" id="students"><h2>👨‍🎓 All Students</h2><div class="table"><table><thead id="head"></thead><tbody id="body"></tbody></table></div></div>
+
+<div class="card">
+
+📈
+
+<h3>
+Average Percentage
+</h3>
+
+<div id="average" class="value">
+0%
+</div>
+
+</div>
+
+
+<div class="card">
+
+🏆
+
+<h3>
+Top Performer
+</h3>
+
+<div id="top" class="value">
+-
+</div>
+
+</div>
+
+
+<div class="card">
+
+📅
+
+<h3>
+Average Attendance
+</h3>
+
+<div id="attendance" class="value">
+0%
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- SEARCH -->
+<!-- ===================================================== -->
+
+<div class="box" id="searchBox">
+
+<h2>
+🔍 Search Student
+</h2>
+
+<input
+id="search"
+placeholder="Enter Student Name or Student ID..."
+oninput="searchStudent()"
+>
+
+<br>
+
+<button class="btn green"
+onclick="openAdd()">
+➕ Add Student
+</button>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- UPLOAD -->
+<!-- ===================================================== -->
+
+<div class="box">
+
+<h2>
+📥 Upload Student Excel
+</h2>
+
+<p class="muted">
+Selected semester च्या Excel मध्ये data save होईल.
+</p>
+
+<p>
+<b>Current Selection:</b>
+<span id="uploadSemester">
+1st Year
+</span>
+</p>
+
+<input
+type="file"
+id="excel"
+accept=".xlsx,.xls"
+>
+
+<button
+class="btn green"
+onclick="uploadExcel()">
+⬆ Upload Excel
+</button>
+
+<span id="uploadMessage"></span>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- CHARTS -->
+<!-- ===================================================== -->
+
+<div class="charts" id="charts">
+
+<div class="chart">
+
+<h2>
+📊 Subject-wise Performance
+</h2>
+
+<p id="barChartSubtitle" class="muted">
+Year-wise combined subject performance
+</p>
+
+<canvas id="subjectChart"></canvas>
+
+</div>
+
+
+<div class="chart chart-3d">
+
+<h2>
+🏅 3D Grade Distribution
+</h2>
+
+<p id="pieChartSubtitle" class="muted">
+Combined Year Grade Distribution
+</p>
+
+<canvas id="gradeChart"></canvas>
+
+</div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- STUDENTS -->
+<!-- ===================================================== -->
+
+<div class="box" id="students">
+
+<h2>
+👨‍🎓 All Students
+</h2>
+
+<div class="table">
+
+<table>
+
+<thead id="head"></thead>
+
+<tbody id="body"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 </main>
 
-<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">✕</button><h2 id="modalTitle">➕ Add Student</h2><p class="muted">Current Semester: <b id="modalSemester">Semester 1</b></p><div class="grid"><div><b>Student ID</b><input id="sid" placeholder="Student ID"></div><div><b>Name</b><input id="sname" placeholder="Student Name"></div><div><b>Gender</b><input id="gender" placeholder="Male / Female"></div><div><b>Class</b><input id="sclass" placeholder="Class"></div><div><b>Attendance %</b><input id="att" type="number" min="0" max="100" placeholder="Attendance"></div></div><h3>📚 Subject Marks</h3><div id="markInputs" class="grid"></div><br><button class="btn green" onclick="saveStudent()">💾 Save Student</button><button class="btn" onclick="closeModal()">Cancel</button><p id="formMessage"></p></div></div>
+
+<!-- ===================================================== -->
+<!-- MODAL -->
+<!-- ===================================================== -->
+
+<div class="modal" id="modal">
+
+<div class="modalbox">
+
+<button
+class="close"
+onclick="closeModal()">
+✕
+</button>
+
+<h2 id="modalTitle">
+➕ Add Student
+</h2>
+
+<p class="muted">
+
+Current Semester:
+
+<b id="modalSemester">
+Semester 1
+</b>
+
+</p>
+
+<div class="grid">
+
+<div>
+
+<b>Student ID</b>
+
+<input
+id="sid"
+placeholder="Student ID"
+>
+
+</div>
+
+
+<div>
+
+<b>Name</b>
+
+<input
+id="sname"
+placeholder="Student Name"
+>
+
+</div>
+
+
+<div>
+
+<b>Gender</b>
+
+<input
+id="gender"
+placeholder="Male / Female"
+>
+
+</div>
+
+
+<div>
+
+<b>Class</b>
+
+<input
+id="sclass"
+placeholder="Class"
+>
+
+</div>
+
+
+<div>
+
+<b>Attendance %</b>
+
+<input
+id="att"
+type="number"
+min="0"
+max="100"
+placeholder="Attendance"
+>
+
+</div>
+
+</div>
+
+
+<h3>
+📚 Subject Marks
+</h3>
+
+<div
+id="markInputs"
+class="grid">
+</div>
+
+<br>
+
+<button
+class="btn green"
+onclick="saveStudent()">
+💾 Save Student
+</button>
+
+<button
+class="btn"
+onclick="closeModal()">
+Cancel
+</button>
+
+<p id="formMessage"></p>
+
+</div>
+
+</div>
+
 
 <script>
-let semester='Semester 1',students=[],subjects=[],editMode=false,chart1=null,chart2=null;
-const years={'Semester 1':'1st Year','Semester 2':'1st Year','Semester 3':'2nd Year','Semester 4':'2nd Year','Semester 5':'3rd Year','Semester 6':'3rd Year'};
-function $(id){return document.getElementById(id)}
-async function api(url,options={}){try{const r=await fetch(url,options);if(r.status===401){window.location.href='/login';return null}const t=await r.text();if(!t)return null;try{return JSON.parse(t)}catch(e){console.error(t);alert('Server returned invalid response.');return null}}catch(e){console.error(e);alert('Server connection problem.');return null}}
-async function load(){
-$('modalSemester').innerText=semester;$('uploadSemester').innerText=semester;$('currentSemesterText').innerText=semester;$('selectionMessage').innerText='Loading '+semester+'...';
-const sd=await api('/api/subjects?semester='+encodeURIComponent(semester));if(!sd)return;
-subjects=Array.isArray(sd.subjects)?sd.subjects.map(x=>x.code):[];$('subjectTitle').innerText=semester+' Subjects';$('subjects').innerHTML=subjects.length?subjects.map(x=>'<div class="subject"><b>'+escapeHTML(x)+'</b></div>').join(''):'<p>No subjects found.</p>';
-renderHead();renderMarks();
-const st=await api('/api/students?semester='+encodeURIComponent(semester));students=Array.isArray(st)?st:[];render(students);
-const a=await api('/api/analytics?semester='+encodeURIComponent(semester));if(a){$('total').innerText=a.total_students??0;$('average').innerText=(a.average_percentage??0)+'%';$('top').innerText=a.top_performer??'-';$('attendance').innerText=(a.average_attendance??0)+'%';drawCharts(a)}
-$('selectionMessage').innerText=semester+' loaded successfully.';
+
+let semester = 'Semester 1';
+
+let selectedYear = '1st Year';
+
+let yearMode = true;
+
+let students = [];
+
+let subjects = [];
+
+let chart1 = null;
+
+let chart2 = null;
+
+let editMode = false;
+
+
+const yearSemesters = {
+
+    '1st Year': [
+        'Semester 1',
+        'Semester 2'
+    ],
+
+    '2nd Year': [
+        'Semester 3',
+        'Semester 4'
+    ],
+
+    '3rd Year': [
+        'Semester 5',
+        'Semester 6'
+    ]
+
+};
+
+
+const years = {
+
+    'Semester 1':'1st Year',
+
+    'Semester 2':'1st Year',
+
+    'Semester 3':'2nd Year',
+
+    'Semester 4':'2nd Year',
+
+    'Semester 5':'3rd Year',
+
+    'Semester 6':'3rd Year'
+
+};
+
+
+function $(id){
+
+    return document.getElementById(id);
+
 }
+
+
+/* ========================================================
+   API
+======================================================== */
+
+async function api(url,options={}){
+
+    try{
+
+        const r = await fetch(url,options);
+
+        if(r.status === 401){
+
+            window.location.href='/login';
+
+            return null;
+        }
+
+        const t = await r.text();
+
+        if(!t){
+
+            return null;
+        }
+
+        try{
+
+            return JSON.parse(t);
+
+        }catch(e){
+
+            console.error(t);
+
+            alert('Server returned invalid response.');
+
+            return null;
+        }
+
+    }catch(e){
+
+        console.error(e);
+
+        alert('Server connection problem.');
+
+        return null;
+    }
+
+}
+
+
+/* ========================================================
+   SET YEAR
+======================================================== */
+
+function setYear(year){
+
+    selectedYear = year;
+
+    yearMode = true;
+
+    updateYearButton(year);
+
+    showYearSemesters(year);
+
+    $('currentSemesterText').innerText = year;
+
+    $('uploadSemester').innerText = year;
+
+    $('modalSemester').innerText = year;
+
+    $('yearModeBox').innerText =
+        '📊 '+year+
+        ' Combined Dashboard — '+
+        yearSemesters[year].join(' + ');
+
+    $('selectionMessage').innerText =
+        'Loading combined '+year+' analytics...';
+
+    loadYear(year);
+
+}
+
+
+/* ========================================================
+   SHOW ONLY YEAR SEMESTERS
+======================================================== */
+
+function showYearSemesters(year){
+
+    const allowed = yearSemesters[year] || [];
+
+    document.querySelectorAll(
+        '.semester-buttons button'
+    ).forEach(btn=>{
+
+        const number =
+            btn.id.replace('sem','');
+
+        const sem =
+            'Semester '+number;
+
+        if(allowed.includes(sem)){
+
+            btn.classList.remove('sem-hidden');
+
+        }else{
+
+            btn.classList.add('sem-hidden');
+
+        }
+
+    });
+
+
+    document.querySelectorAll(
+        '.sidebar-sem'
+    ).forEach(btn=>{
+
+        const id = btn.id;
+
+        const number =
+            id.replace('sideSem','');
+
+        const sem =
+            'Semester '+number;
+
+        if(allowed.includes(sem)){
+
+            btn.style.display='block';
+
+        }else{
+
+            btn.style.display='none';
+
+        }
+
+    });
+
+}
+
+
+/* ========================================================
+   SELECT SEMESTER
+======================================================== */
+
 function selectSemester(selectedSemester){
-if(!selectedSemester)return;semester=selectedSemester;$('currentSemesterText').innerText=selectedSemester;$('uploadSemester').innerText=selectedSemester;$('modalSemester').innerText=selectedSemester;updateSemesterButton(selectedSemester);updateYearButton(years[selectedSemester]);load();
+
+    if(!selectedSemester){
+
+        return;
+    }
+
+    semester =
+        selectedSemester;
+
+    selectedYear =
+        years[selectedSemester];
+
+    yearMode = false;
+
+    updateYearButton(selectedYear);
+
+    showYearSemesters(selectedYear);
+
+    updateSemesterButton(
+        selectedSemester
+    );
+
+    $('currentSemesterText').innerText =
+        selectedSemester;
+
+    $('uploadSemester').innerText =
+        selectedSemester;
+
+    $('modalSemester').innerText =
+        selectedSemester;
+
+    $('yearModeBox').innerText =
+        '📘 Viewing '+selectedSemester+
+        ' only';
+
+    loadSemester();
+
 }
-function updateSemesterButton(selectedSemester){
-document.querySelectorAll('.semester-buttons button').forEach(b=>b.classList.remove('active'));
-document.querySelectorAll('.side button').forEach(b=>b.classList.remove('sem-active'));
-const n=selectedSemester.replace('Semester ','');
-const b=$('sem'+n);if(b)b.classList.add('active');
-document.querySelectorAll('.side button').forEach(b=>{if(b.textContent.includes(selectedSemester))b.classList.add('sem-active')});
+
+
+/* ========================================================
+   UPDATE YEAR BUTTON
+======================================================== */
+
+function updateYearButton(year){
+
+    document.querySelectorAll(
+        '.years button'
+    ).forEach(b=>{
+
+        b.classList.remove('active');
+
+    });
+
+    if(year==='1st Year'){
+
+        $('y1').classList.add('active');
+
+    }
+
+    else if(year==='2nd Year'){
+
+        $('y2').classList.add('active');
+
+    }
+
+    else if(year==='3rd Year'){
+
+        $('y3').classList.add('active');
+
+    }
+
 }
-function setYear(year){updateYearButton(year);if(year==='1st Year')selectSemester('Semester 1');else if(year==='2nd Year')selectSemester('Semester 3');else selectSemester('Semester 5')}
-function updateYearButton(year){document.querySelectorAll('.years button').forEach(b=>b.classList.remove('active'));if(year==='1st Year')$('y1').classList.add('active');else if(year==='2nd Year')$('y2').classList.add('active');else if(year==='3rd Year')$('y3').classList.add('active')}
-function escapeHTML(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
-function renderHead(){$('head').innerHTML='<tr><th>Student ID</th><th>Name</th><th>Gender</th><th>Class</th>'+subjects.map(x=>'<th>'+escapeHTML(x)+'</th>').join('')+'<th>Total</th><th>Percentage</th><th>Attendance</th><th>Status</th><th>Grade</th><th>Action</th></tr>'}
-function render(data){if(!data||!data.length){$('body').innerHTML='<tr><td colspan="30">No students available for <b>'+escapeHTML(semester)+'</b>. Upload Excel or Add Student.</td></tr>';return}$('body').innerHTML=data.map(s=>{const safe=JSON.stringify(s).replace(/'/g,'&#39;');return '<tr><td>'+escapeHTML(s.Student_ID)+'</td><td><b>'+escapeHTML(s.Name)+'</b></td><td>'+escapeHTML(s.Gender)+'</td><td>'+escapeHTML(s.Class)+'</td>'+subjects.map(x=>'<td>'+escapeHTML(s[x])+'</td>').join('')+'<td>'+escapeHTML(s.Total)+'</td><td>'+escapeHTML(s.Percentage)+'%</td><td>'+escapeHTML(s.Attendance)+'%</td><td class="'+(s['Attendance Status']==='Good'?'good':'bad')+'">'+escapeHTML(s['Attendance Status'])+'</td><td>'+escapeHTML(s.Grade)+'</td><td><button class="btn" onclick=\'editStudent('+safe+')\'>Edit</button><button class="btn red" onclick=\'deleteStudent('+JSON.stringify(String(s.Student_ID??''))+')\'>Delete</button></td></tr>'}).join('')}
-function searchStudent(){const q=$('search').value.toLowerCase().trim();render(q?students.filter(s=>String(s.Name??'').toLowerCase().includes(q)||String(s.Student_ID??'').toLowerCase().includes(q)):students)}
-function renderMarks(v={}){$('markInputs').innerHTML=subjects.map(x=>{const id='m_'+x.replaceAll(' ','_').replaceAll('/','_');return '<div><b>'+escapeHTML(x)+'</b><input id="'+id+'" type="number" min="0" max="100" value="'+(v[x]??0)+'"></div>'}).join('')}
-function openAdd(){editMode=false;$('modalTitle').innerText='➕ Add Student';['sid','sname','gender','sclass','att'].forEach(x=>$(x).value='');$('sid').disabled=false;$('formMessage').innerText='';$('modalSemester').innerText=semester;renderMarks();$('modal').style.display='grid'}
-function editStudent(s){editMode=true;$('modalTitle').innerText='✏️ Edit Student';$('sid').value=s.Student_ID??'';$('sid').disabled=true;$('sname').value=s.Name??'';$('gender').value=s.Gender??'';$('sclass').value=s.Class??'';$('att').value=s.Attendance??'';$('formMessage').innerText='';$('modalSemester').innerText=semester;renderMarks(s);$('modal').style.display='grid'}
-function closeModal(){$('modal').style.display='none';$('sid').disabled=false}
-async function saveStudent(){const id=$('sid').value.trim(),name=$('sname').value.trim();if(!id||!name){$('formMessage').innerText='Student ID आणि Name required आहेत.';return}const d={semester,Student_ID:id,Name:name,Gender:$('gender').value.trim(),Class:$('sclass').value.trim(),Attendance:$('att').value};subjects.forEach(x=>{const i=$('m_'+x.replaceAll(' ','_').replaceAll('/','_'));d[x]=i?i.value:0});const r=await api(editMode?'/api/edit_student':'/api/add_student',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(r){$('formMessage').innerText=r.message??'';if(r.success){await load();setTimeout(closeModal,500)}}}
-async function deleteStudent(id){if(!confirm('Delete this student?\n\nExcel मधूनही delete होईल.'))return;const r=await api('/api/delete_student',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({semester,Student_ID:id})});if(r){alert(r.message??'Operation completed.');if(r.success)load()}}
-async function uploadExcel(){const f=$('excel').files[0];if(!f){alert('Excel file select करा.');return}if(!f.name.toLowerCase().endsWith('.xlsx')&&!f.name.toLowerCase().endsWith('.xls')){alert('Excel file select करा.');return}const fd=new FormData();fd.append('file',f);fd.append('semester',semester);$('uploadMessage').innerText='Uploading '+semester+'...';const r=await api('/api/upload_excel',{method:'POST',body:fd});if(r){$('uploadMessage').innerText=r.message??'';if(r.success){$('excel').value='';load()}}}
-function drawCharts(d){if(chart1)chart1.destroy();if(chart2)chart2.destroy();chart1=new Chart($('subjectChart'),{type:'bar',data:{labels:Object.keys(d.subjects||{}),datasets:[{label:'Average Marks',data:Object.values(d.subjects||{})}]},options:{responsive:true,scales:{y:{beginAtZero:true,max:100}}}});chart2=new Chart($('gradeChart'),{type:'doughnut',data:{labels:Object.keys(d.grades||{}),datasets:[{data:Object.values(d.grades||{})}]},options:{responsive:true}})}
-function go(id){const e=$(id);if(e)e.scrollIntoView({behavior:'smooth'})}function goTop(){window.scrollTo({top:0,behavior:'smooth'})}function logoutUser(){if(confirm('Logout करायचे आहे का?'))window.location.href='/logout'}
-window.addEventListener('load',()=>{updateYearButton('1st Year');updateSemesterButton('Semester 1');load()});window.addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+
+
+/* ========================================================
+   UPDATE SEMESTER BUTTON
+======================================================== */
+
+function updateSemesterButton(
+    selectedSemester
+){
+
+    document.querySelectorAll(
+        '.semester-buttons button'
+    ).forEach(b=>{
+
+        b.classList.remove('active');
+
+    });
+
+
+    document.querySelectorAll(
+        '.sidebar-sem'
+    ).forEach(b=>{
+
+        b.classList.remove('sem-active');
+
+    });
+
+
+    const n =
+        selectedSemester
+        .replace('Semester ','');
+
+    const b =
+        $('sem'+n);
+
+    if(b){
+
+        b.classList.add('active');
+
+    }
+
+
+    document.querySelectorAll(
+        '.sidebar-sem'
+    ).forEach(b=>{
+
+        if(
+            b.textContent.includes(
+                selectedSemester
+            )
+        ){
+
+            b.classList.add(
+                'sem-active'
+            );
+
+        }
+
+    });
+
+}
+
+
+/* ========================================================
+   SEMESTER LOAD
+======================================================== */
+
+async function loadSemester(){
+
+    $('selectionMessage').innerText =
+        'Loading '+semester+'...';
+
+
+    const sd =
+        await api(
+            '/api/subjects?semester='+
+            encodeURIComponent(semester)
+        );
+
+
+    if(!sd){
+
+        return;
+    }
+
+
+    subjects =
+        Array.isArray(sd.subjects)
+        ?
+        sd.subjects.map(x=>x.code)
+        :
+        [];
+
+
+    $('subjectTitle').innerText =
+        semester+' Subjects';
+
+
+    $('subjects').innerHTML =
+        subjects.length
+        ?
+        subjects.map(x=>
+            '<div class="subject">'+
+            '<b>'+
+            escapeHTML(x)+
+            '</b>'+
+            '</div>'
+        ).join('')
+        :
+        '<p>No subjects found.</p>';
+
+
+    renderHead();
+
+    renderMarks();
+
+
+    const st =
+        await api(
+            '/api/students?semester='+
+            encodeURIComponent(semester)
+        );
+
+
+    students =
+        Array.isArray(st)
+        ?
+        st
+        :
+        [];
+
+
+    render(students);
+
+
+    const a =
+        await api(
+            '/api/analytics?semester='+
+            encodeURIComponent(semester)
+        );
+
+
+    if(a){
+
+        $('total').innerText =
+            a.total_students ?? 0;
+
+        $('average').innerText =
+            (a.average_percentage ?? 0)+'%';
+
+        $('top').innerText =
+            a.top_performer ?? '-';
+
+        $('attendance').innerText =
+            (a.average_attendance ?? 0)+'%';
+
+
+        drawCharts(
+            a,
+            semester+' Subject Performance',
+            semester+' Grade Distribution'
+        );
+
+    }
+
+
+    $('selectionMessage').innerText =
+        semester+' loaded successfully.';
+
+}
+
+
+/* ========================================================
+   YEAR COMBINED LOAD
+======================================================== */
+
+async function loadYear(year){
+
+    const sems =
+        yearSemesters[year];
+
+    if(!sems || sems.length!==2){
+
+        return;
+    }
+
+
+    let allStudents = [];
+
+    let combinedSubjects = {};
+
+    let combinedGrades = {};
+
+    let totalStudents = 0;
+
+    let percentageValues = [];
+
+    let attendanceValues = [];
+
+    let topStudent = '-';
+
+    let topPercentage = -1;
+
+
+    for(const sem of sems){
+
+        const data =
+            await api(
+                '/api/students?semester='+
+                encodeURIComponent(sem)
+            );
+
+
+        if(Array.isArray(data)){
+
+            data.forEach(s=>{
+
+                allStudents.push({
+
+                    ...s,
+
+                    _semester:sem
+
+                });
+
+            });
+
+        }
+
+
+        const analytics =
+            await api(
+                '/api/analytics?semester='+
+                encodeURIComponent(sem)
+            );
+
+
+        if(!analytics){
+
+            continue;
+
+        }
+
+
+        totalStudents +=
+            Number(
+                analytics.total_students || 0
+            );
+
+
+        if(
+            analytics.average_percentage !== undefined
+        ){
+
+            percentageValues.push({
+
+                value:Number(
+                    analytics.average_percentage
+                ),
+
+                count:Number(
+                    analytics.total_students || 0
+                )
+
+            });
+
+        }
+
+
+        if(
+            analytics.average_attendance !== undefined
+        ){
+
+            attendanceValues.push({
+
+                value:Number(
+                    analytics.average_attendance
+                ),
+
+                count:Number(
+                    analytics.total_students || 0
+                )
+
+            });
+
+        }
+
+
+        Object.entries(
+            analytics.subjects || {}
+        ).forEach(([subject,value])=>{
+
+            const key =
+                sem.replace('Semester ','S')+
+                ' - '+
+                subject;
+
+            combinedSubjects[key] =
+                Number(value || 0);
+
+        });
+
+
+        Object.entries(
+            analytics.grades || {}
+        ).forEach(([grade,count])=>{
+
+            combinedGrades[grade] =
+                (
+                    combinedGrades[grade] || 0
+                )
+                +
+                Number(count || 0);
+
+        });
+
+
+        const semStudents =
+            Array.isArray(data)
+            ?
+            data
+            :
+            [];
+
+
+        semStudents.forEach(s=>{
+
+            const p =
+                Number(
+                    s.Percentage || 0
+                );
+
+
+            if(p > topPercentage){
+
+                topPercentage = p;
+
+                topStudent =
+                    s.Name || '-';
+
+            }
+
+        });
+
+    }
+
+
+    let avgPercentage = 0;
+
+    let percentageTotal = 0;
+
+    let percentageCount = 0;
+
+
+    percentageValues.forEach(x=>{
+
+        percentageTotal +=
+            x.value * x.count;
+
+        percentageCount +=
+            x.count;
+
+    });
+
+
+    if(percentageCount){
+
+        avgPercentage =
+            percentageTotal /
+            percentageCount;
+
+    }
+
+
+    let avgAttendance = 0;
+
+    let attendanceTotal = 0;
+
+    let attendanceCount = 0;
+
+
+    attendanceValues.forEach(x=>{
+
+        attendanceTotal +=
+            x.value * x.count;
+
+        attendanceCount +=
+            x.count;
+
+    });
+
+
+    if(attendanceCount){
+
+        avgAttendance =
+            attendanceTotal /
+            attendanceCount;
+
+    }
+
+
+    $('total').innerText =
+        totalStudents;
+
+    $('average').innerText =
+        avgPercentage.toFixed(2)+'%';
+
+    $('top').innerText =
+        topStudent;
+
+    $('attendance').innerText =
+        avgAttendance.toFixed(2)+'%';
+
+
+    $('subjectTitle').innerText =
+        year+' Combined Subjects';
+
+
+    const subjectNames =
+        Object.keys(combinedSubjects);
+
+
+    $('subjects').innerHTML =
+        subjectNames.length
+        ?
+        subjectNames.map(x=>
+            '<div class="subject">'+
+            '<b>'+
+            escapeHTML(x)+
+            '</b>'+
+            '<br>'+
+            '<span class="muted">'+
+            Number(
+                combinedSubjects[x]
+            ).toFixed(2)+
+            '% Average'+
+            '</span>'+
+            '</div>'
+        ).join('')
+        :
+        '<p>No subject data available.</p>';
+
+
+    $('barChartSubtitle').innerText =
+        year+
+        ' — Semester '+
+        sems[0].replace('Semester ','')+
+        ' + Semester '+
+        sems[1].replace('Semester ','')+
+        ' Subject Performance';
+
+
+    $('pieChartSubtitle').innerText =
+        year+
+        ' — Combined Grade Distribution';
+
+
+    drawCombinedCharts(
+        combinedSubjects,
+        combinedGrades
+    );
+
+
+    students =
+        allStudents;
+
+    renderCombinedStudents(
+        allStudents
+    );
+
+
+    $('selectionMessage').innerText =
+        year+
+        ' combined analytics loaded successfully.';
+
+}
+
+
+/* ========================================================
+   COMBINED STUDENT TABLE
+======================================================== */
+
+function renderCombinedStudents(data){
+
+    if(
+        !data ||
+        !data.length
+    ){
+
+        $('head').innerHTML =
+            '<tr><th>Students</th></tr>';
+
+        $('body').innerHTML =
+            '<tr><td>No students available for '+ 
+            escapeHTML(selectedYear)+
+            '.</td></tr>';
+
+        return;
+
+    }
+
+
+    $('head').innerHTML =
+        '<tr>'+
+        '<th>Semester</th>'+
+        '<th>Student ID</th>'+
+        '<th>Name</th>'+
+        '<th>Gender</th>'+
+        '<th>Class</th>'+
+        '<th>Percentage</th>'+
+        '<th>Attendance</th>'+
+        '<th>Status</th>'+
+        '<th>Grade</th>'+
+        '</tr>';
+
+
+    $('body').innerHTML =
+        data.map(s=>{
+
+            return (
+                '<tr>'+
+                '<td><b>'+
+                escapeHTML(
+                    s._semester || ''
+                )+
+                '</b></td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Student_ID
+                )+
+                '</td>'+
+                '<td><b>'+
+                escapeHTML(
+                    s.Name
+                )+
+                '</b></td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Gender
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Class
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Percentage
+                )+
+                '%</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Attendance
+                )+
+                '%</td>'+
+                '<td class="'+
+                (
+                    s['Attendance Status']==='Good'
+                    ?
+                    'good'
+                    :
+                    'bad'
+                )+
+                '">'+
+                escapeHTML(
+                    s['Attendance Status']
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Grade
+                )+
+                '</td>'+
+                '</tr>'
+            );
+
+        }).join('');
+
+}
+
+
+/* ========================================================
+   COMBINED CHARTS
+======================================================== */
+
+function drawCombinedCharts(
+    subjectsData,
+    gradesData
+){
+
+    if(chart1){
+
+        chart1.destroy();
+
+    }
+
+    if(chart2){
+
+        chart2.destroy();
+
+    }
+
+
+    const labels =
+        Object.keys(
+            subjectsData || {}
+        );
+
+    const values =
+        Object.values(
+            subjectsData || {}
+        );
+
+
+    chart1 =
+        new Chart(
+            $('subjectChart'),
+            {
+
+                type:'bar',
+
+                data:{
+
+                    labels:labels,
+
+                    datasets:[{
+
+                        label:
+                        'Average Subject Marks %',
+
+                        data:values,
+
+                        borderWidth:1,
+
+                        borderRadius:7
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    scales:{
+
+                        y:{
+
+                            beginAtZero:true,
+
+                            max:100,
+
+                            title:{
+
+                                display:true,
+
+                                text:'Average %'
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins:{
+
+                        legend:{
+
+                            display:true
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    const gradeLabels =
+        Object.keys(
+            gradesData || {}
+        );
+
+    const gradeValues =
+        Object.values(
+            gradesData || {}
+        );
+
+
+    chart2 =
+        new Chart(
+            $('gradeChart'),
+            {
+
+                type:'pie',
+
+                data:{
+
+                    labels:gradeLabels,
+
+                    datasets:[{
+
+                        data:gradeValues,
+
+                        borderWidth:3,
+
+                        offset:5
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    animation:{
+
+                        animateRotate:true,
+
+                        animateScale:true
+
+                    },
+
+                    plugins:{
+
+                        legend:{
+
+                            position:'bottom'
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+/* ========================================================
+   NORMAL CHARTS
+======================================================== */
+
+function drawCharts(
+    d,
+    barTitle,
+    pieTitle
+){
+
+    if(chart1){
+
+        chart1.destroy();
+
+    }
+
+    if(chart2){
+
+        chart2.destroy();
+
+    }
+
+
+    $('barChartSubtitle').innerText =
+        barTitle;
+
+
+    $('pieChartSubtitle').innerText =
+        pieTitle;
+
+
+    chart1 =
+        new Chart(
+            $('subjectChart'),
+            {
+
+                type:'bar',
+
+                data:{
+
+                    labels:
+                    Object.keys(
+                        d.subjects || {}
+                    ),
+
+                    datasets:[{
+
+                        label:
+                        'Average Marks',
+
+                        data:
+                        Object.values(
+                            d.subjects || {}
+                        ),
+
+                        borderWidth:1,
+
+                        borderRadius:7
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    scales:{
+
+                        y:{
+
+                            beginAtZero:true,
+
+                            max:100
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    chart2 =
+        new Chart(
+            $('gradeChart'),
+            {
+
+                type:'pie',
+
+                data:{
+
+                    labels:
+                    Object.keys(
+                        d.grades || {}
+                    ),
+
+                    datasets:[{
+
+                        data:
+                        Object.values(
+                            d.grades || {}
+                        ),
+
+                        borderWidth:3,
+
+                        offset:5
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    animation:{
+
+                        animateRotate:true,
+
+                        animateScale:true
+
+                    },
+
+                    plugins:{
+
+                        legend:{
+
+                            position:'bottom'
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+/* ========================================================
+   RENDER TABLE HEAD
+======================================================== */
+
+function renderHead(){
+
+    $('head').innerHTML =
+        '<tr>'+
+        '<th>Student ID</th>'+
+        '<th>Name</th>'+
+        '<th>Gender</th>'+
+        '<th>Class</th>'+
+        subjects.map(x=>
+            '<th>'+
+            escapeHTML(x)+
+            '</th>'
+        ).join('')+
+        '<th>Total</th>'+
+        '<th>Percentage</th>'+
+        '<th>Attendance</th>'+
+        '<th>Status</th>'+
+        '<th>Grade</th>'+
+        '<th>Action</th>'+
+        '</tr>';
+
+}
+
+
+/* ========================================================
+   RENDER STUDENTS
+======================================================== */
+
+function render(data){
+
+    if(
+        !data ||
+        !data.length
+    ){
+
+        $('body').innerHTML =
+            '<tr>'+
+            '<td colspan="30">'+
+            'No students available for '+
+            '<b>'+
+            escapeHTML(semester)+
+            '</b>.'+
+            '</td>'+
+            '</tr>';
+
+        return;
+
+    }
+
+
+    $('body').innerHTML =
+        data.map(s=>{
+
+            const safe =
+                JSON.stringify(s)
+                .replace(/'/g,'&#39;');
+
+
+            return (
+                '<tr>'+
+                '<td>'+
+                escapeHTML(
+                    s.Student_ID
+                )+
+                '</td>'+
+                '<td><b>'+
+                escapeHTML(
+                    s.Name
+                )+
+                '</b></td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Gender
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Class
+                )+
+                '</td>'+
+                subjects.map(x=>
+                    '<td>'+
+                    escapeHTML(
+                        s[x]
+                    )+
+                    '</td>'
+                ).join('')+
+                '<td>'+
+                escapeHTML(
+                    s.Total
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Percentage
+                )+
+                '%</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Attendance
+                )+
+                '%</td>'+
+                '<td class="'+
+                (
+                    s['Attendance Status']==='Good'
+                    ?
+                    'good'
+                    :
+                    'bad'
+                )+
+                '">'+
+                escapeHTML(
+                    s['Attendance Status']
+                )+
+                '</td>'+
+                '<td>'+
+                escapeHTML(
+                    s.Grade
+                )+
+                '</td>'+
+                '<td>'+
+                '<button class="btn" '+
+                'onclick=\'editStudent('+
+                safe+
+                ')\'>Edit</button>'+
+                '<button class="btn red" '+
+                'onclick=\'deleteStudent('+
+                JSON.stringify(
+                    String(
+                        s.Student_ID ?? ''
+                    )
+                )+
+                ')\'>Delete</button>'+
+                '</td>'+
+                '</tr>'
+            );
+
+        }).join('');
+
+}
+
+
+/* ========================================================
+   SEARCH
+======================================================== */
+
+function searchStudent(){
+
+    const q =
+        $('search')
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    if(yearMode){
+
+        renderCombinedStudents(
+
+            q
+            ?
+            students.filter(s=>
+                String(
+                    s.Name ?? ''
+                )
+                .toLowerCase()
+                .includes(q)
+
+                ||
+
+                String(
+                    s.Student_ID ?? ''
+                )
+                .toLowerCase()
+                .includes(q)
+            )
+            :
+            students
+
+        );
+
+        return;
+
+    }
+
+
+    render(
+
+        q
+        ?
+        students.filter(s=>
+            String(
+                s.Name ?? ''
+            )
+            .toLowerCase()
+            .includes(q)
+
+            ||
+
+            String(
+                s.Student_ID ?? ''
+            )
+            .toLowerCase()
+            .includes(q)
+        )
+        :
+        students
+
+    );
+
+}
+
+
+/* ========================================================
+   MARK INPUTS
+======================================================== */
+
+function renderMarks(v={}){
+
+    $('markInputs').innerHTML =
+        subjects.map(x=>{
+
+            const id =
+                'm_'+
+                x
+                .replaceAll(' ','_')
+                .replaceAll('/','_');
+
+
+            return (
+                '<div>'+
+                '<b>'+
+                escapeHTML(x)+
+                '</b>'+
+                '<input '+
+                'id="'+id+'" '+
+                'type="number" '+
+                'min="0" '+
+                'max="100" '+
+                'value="'+
+                (v[x]??0)+
+                '">' +
+                '</div>'
+            );
+
+        }).join('');
+
+}
+
+
+/* ========================================================
+   ADD
+======================================================== */
+
+function openAdd(){
+
+    if(yearMode){
+
+        alert(
+            'First select a Semester to add a student.'
+        );
+
+        return;
+
+    }
+
+
+    editMode=false;
+
+    $('modalTitle').innerText =
+        '➕ Add Student';
+
+    [
+        'sid',
+        'sname',
+        'gender',
+        'sclass',
+        'att'
+    ].forEach(x=>
+        $(x).value=''
+    );
+
+    $('sid').disabled=false;
+
+    $('formMessage').innerText='';
+
+    $('modalSemester').innerText =
+        semester;
+
+    renderMarks();
+
+    $('modal').style.display='grid';
+
+}
+
+
+/* ========================================================
+   EDIT
+======================================================== */
+
+function editStudent(s){
+
+    editMode=true;
+
+    $('modalTitle').innerText =
+        '✏️ Edit Student';
+
+    $('sid').value =
+        s.Student_ID??'';
+
+    $('sid').disabled=true;
+
+    $('sname').value =
+        s.Name??'';
+
+    $('gender').value =
+        s.Gender??'';
+
+    $('sclass').value =
+        s.Class??'';
+
+    $('att').value =
+        s.Attendance??'';
+
+    $('formMessage').innerText='';
+
+    $('modalSemester').innerText =
+        semester;
+
+    renderMarks(s);
+
+    $('modal').style.display='grid';
+
+}
+
+
+/* ========================================================
+   CLOSE MODAL
+======================================================== */
+
+function closeModal(){
+
+    $('modal').style.display='none';
+
+    $('sid').disabled=false;
+
+}
+
+
+/* ========================================================
+   SAVE STUDENT
+======================================================== */
+
+async function saveStudent(){
+
+    const id =
+        $('sid').value.trim();
+
+    const name =
+        $('sname').value.trim();
+
+
+    if(!id || !name){
+
+        $('formMessage').innerText =
+            'Student ID आणि Name required आहेत.';
+
+        return;
+
+    }
+
+
+    const d = {
+
+        semester,
+
+        Student_ID:id,
+
+        Name:name,
+
+        Gender:
+            $('gender').value.trim(),
+
+        Class:
+            $('sclass').value.trim(),
+
+        Attendance:
+            $('att').value
+
+    };
+
+
+    subjects.forEach(x=>{
+
+        const i =
+            $('m_'+
+            x
+            .replaceAll(' ','_')
+            .replaceAll('/','_'));
+
+
+        d[x] =
+            i
+            ?
+            i.value
+            :
+            0;
+
+    });
+
+
+    const r =
+        await api(
+
+            editMode
+            ?
+            '/api/edit_student'
+            :
+            '/api/add_student',
+
+            {
+
+                method:'POST',
+
+                headers:{
+                    'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                JSON.stringify(d)
+
+            }
+
+        );
+
+
+    if(r){
+
+        $('formMessage').innerText =
+            r.message??'';
+
+
+        if(r.success){
+
+            await loadSemester();
+
+            setTimeout(
+                closeModal,
+                500
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ========================================================
+   DELETE
+======================================================== */
+
+async function deleteStudent(id){
+
+    if(
+        !confirm(
+            'Delete this student?\n\nExcel मधूनही delete होईल.'
+        )
+    ){
+
+        return;
+
+    }
+
+
+    const r =
+        await api(
+            '/api/delete_student',
+            {
+
+                method:'POST',
+
+                headers:{
+                    'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                JSON.stringify({
+
+                    semester,
+
+                    Student_ID:id
+
+                })
+
+            }
+        );
+
+
+    if(r){
+
+        alert(
+            r.message ??
+            'Operation completed.'
+        );
+
+
+        if(r.success){
+
+            loadSemester();
+
+        }
+
+    }
+
+}
+
+
+/* ========================================================
+   UPLOAD
+======================================================== */
+
+async function uploadExcel(){
+
+    if(yearMode){
+
+        alert(
+            'First select a Semester to upload Excel.'
+        );
+
+        return;
+
+    }
+
+
+    const f =
+        $('excel').files[0];
+
+
+    if(!f){
+
+        alert(
+            'Excel file select करा.'
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !f.name
+        .toLowerCase()
+        .endsWith('.xlsx')
+
+        &&
+
+        !f.name
+        .toLowerCase()
+        .endsWith('.xls')
+    ){
+
+        alert(
+            'Excel file select करा.'
+        );
+
+        return;
+
+    }
+
+
+    const fd =
+        new FormData();
+
+
+    fd.append(
+        'file',
+        f
+    );
+
+    fd.append(
+        'semester',
+        semester
+    );
+
+
+    $('uploadMessage').innerText =
+        'Uploading '+semester+'...';
+
+
+    const r =
+        await api(
+            '/api/upload_excel',
+            {
+
+                method:'POST',
+
+                body:fd
+
+            }
+        );
+
+
+    if(r){
+
+        $('uploadMessage').innerText =
+            r.message??'';
+
+
+        if(r.success){
+
+            $('excel').value='';
+
+            loadSemester();
+
+        }
+
+    }
+
+}
+
+
+/* ========================================================
+   ESCAPE HTML
+======================================================== */
+
+function escapeHTML(v){
+
+    return String(v??'')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll(
+        "'",
+        '&#039;'
+    );
+
+}
+
+
+/* ========================================================
+   NAVIGATION
+======================================================== */
+
+function go(id){
+
+    const e=$(id);
+
+    if(e){
+
+        e.scrollIntoView({
+            behavior:'smooth'
+        });
+
+    }
+
+}
+
+
+function goTop(){
+
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    });
+
+}
+
+
+function logoutUser(){
+
+    if(
+        confirm(
+            'Logout करायचे आहे का?'
+        )
+    ){
+
+        window.location.href='/logout';
+
+    }
+
+}
+
+
+/* ========================================================
+   INITIAL LOAD
+======================================================== */
+
+window.addEventListener(
+    'load',
+    ()=>{
+
+        selectedYear='1st Year';
+
+        yearMode=true;
+
+        updateYearButton(
+            '1st Year'
+        );
+
+        showYearSemesters(
+            '1st Year'
+        );
+
+        loadYear(
+            '1st Year'
+        );
+
+    }
+);
+
+
+/* ========================================================
+   CLOSE MODAL
+======================================================== */
+
+window.addEventListener(
+    'click',
+    e=>{
+
+        if(
+            e.target === $('modal')
+        ){
+
+            closeModal();
+
+        }
+
+    }
+);
+
 </script>
+
 {% endif %}
+
 </body>
 </html>
