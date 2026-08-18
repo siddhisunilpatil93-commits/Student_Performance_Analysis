@@ -118,8 +118,10 @@ def logged_in():
 
 
 def page_login_check():
+
     if not logged_in():
         return redirect(url_for('login'))
+
     return None
 
 
@@ -143,21 +145,28 @@ def calculate_grade(p):
 
     try:
         p = float(p)
+
     except Exception:
         return 'F'
 
     if p >= 90:
         return 'A+'
+
     elif p >= 80:
         return 'A'
+
     elif p >= 70:
         return 'B+'
+
     elif p >= 60:
         return 'B'
+
     elif p >= 50:
         return 'C'
+
     elif p >= 40:
         return 'D'
+
     else:
         return 'F'
 
@@ -224,8 +233,6 @@ def process_data(df, s):
 
             if c == 'Attendance':
 
-                # IMPORTANT FIX:
-                # Create a Series instead of integer 0
                 df[c] = pd.Series(
                     0,
                     index=df.index,
@@ -275,12 +282,66 @@ def process_data(df, s):
     # -----------------------------------------------------
     # ATTENDANCE
     # -----------------------------------------------------
+    # FIX:
+    # Excel may contain:
+    #
+    # 89      -> 89%
+    # 96      -> 96%
+    #
+    # or Excel percentage values:
+    #
+    # 0.89    -> 89%
+    # 0.96    -> 96%
+    #
+    # This automatically handles both formats.
+    # -----------------------------------------------------
+
+    raw_attendance = (
+        df['Attendance']
+        .astype(str)
+        .str.strip()
+    )
+
+    # Check if original value contains %
+    percent_mask = raw_attendance.str.endswith('%')
+
+    # Remove % sign
+    clean_attendance = (
+        raw_attendance
+        .str.replace(
+            '%',
+            '',
+            regex=False
+        )
+    )
 
     df['Attendance'] = pd.to_numeric(
-        df['Attendance'],
+        clean_attendance,
         errors='coerce'
     )
 
+    # Excel percentage format:
+    # 0.89 -> 89
+    # 0.96 -> 96
+    fraction_mask = (
+        df['Attendance'].notna()
+        &
+        df['Attendance'].between(0, 1)
+        &
+        ~percent_mask
+    )
+
+    df.loc[
+        fraction_mask,
+        'Attendance'
+    ] = (
+        df.loc[
+            fraction_mask,
+            'Attendance'
+        ] * 100
+    )
+
+    # Keep attendance between 0 and 100
     df['Attendance'] = (
         df['Attendance']
         .fillna(0)
@@ -313,10 +374,6 @@ def process_data(df, s):
 
         else:
 
-            # IMPORTANT FIX
-            # Never use integer 0 here.
-            # Create proper pandas Series.
-
             df[c] = pd.Series(
                 0,
                 index=df.index,
@@ -345,6 +402,7 @@ def process_data(df, s):
     else:
 
         df['Total'] = 0.0
+
         df['Percentage'] = 0.0
 
 
@@ -371,7 +429,6 @@ def process_data(df, s):
         .apply(calculate_grade)
     )
 
-
     return df
 
 
@@ -381,7 +438,10 @@ def process_data(df, s):
 
 def save_excel(df, s):
 
-    processed = process_data(df, s)
+    processed = process_data(
+        df,
+        s
+    )
 
     cols = (
         [
@@ -416,7 +476,6 @@ def save_excel(df, s):
                     dtype=str
                 )
 
-
     processed[cols].to_excel(
         excel_path(s),
         index=False
@@ -427,7 +486,10 @@ def save_excel(df, s):
 # LOGIN
 # =========================================================
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route(
+    '/login',
+    methods=['GET', 'POST']
+)
 def login():
 
     if logged_in():
@@ -666,7 +728,6 @@ def api_analytics():
 
         top = '-'
 
-
     return jsonify({
 
         'total_students':
@@ -735,7 +796,6 @@ def upload_excel():
             'file'
         )
 
-
         # -------------------------------------------------
         # VALIDATE SEMESTER
         # -------------------------------------------------
@@ -747,7 +807,6 @@ def upload_excel():
                 'message':
                     'Invalid semester selected.'
             }), 400
-
 
         # -------------------------------------------------
         # VALIDATE FILE
@@ -761,7 +820,6 @@ def upload_excel():
                     'Please select Excel file.'
             }), 400
 
-
         if not f.filename.lower().endswith(
             ('.xlsx', '.xls')
         ):
@@ -771,7 +829,6 @@ def upload_excel():
                 'message':
                     'Only Excel files are allowed.'
             }), 400
-
 
         # -------------------------------------------------
         # READ UPLOADED EXCEL
@@ -787,13 +844,11 @@ def upload_excel():
                     'Uploaded Excel is empty.'
             }), 400
 
-
         df.columns = (
             df.columns
             .astype(str)
             .str.strip()
         )
-
 
         # -------------------------------------------------
         # REQUIRED COLUMNS
@@ -812,7 +867,6 @@ def upload_excel():
                         f'{c} column is required.'
                 }), 400
 
-
         # -------------------------------------------------
         # PROCESS AND SAVE
         # -------------------------------------------------
@@ -822,7 +876,6 @@ def upload_excel():
             s
         )
 
-
         return jsonify({
 
             'success': True,
@@ -830,7 +883,6 @@ def upload_excel():
             'message':
                 f'{s} Excel uploaded successfully.'
         })
-
 
     except Exception as e:
 
@@ -888,7 +940,6 @@ def add_student():
             )
         ).strip()
 
-
         if not valid_semester(s):
 
             return jsonify({
@@ -896,7 +947,6 @@ def add_student():
                 'message':
                     'Invalid semester.'
             }), 400
-
 
         if not sid or not name:
 
@@ -906,9 +956,7 @@ def add_student():
                     'Student ID and Name are required.'
             })
 
-
         df = read_excel(s)
-
 
         # -------------------------------------------------
         # DUPLICATE ID CHECK
@@ -938,7 +986,6 @@ def add_student():
                     'message':
                         'Student ID already exists.'
                 })
-
 
         # -------------------------------------------------
         # CREATE ROW
@@ -971,7 +1018,6 @@ def add_student():
                 )
         }
 
-
         row.update({
 
             x:
@@ -983,7 +1029,6 @@ def add_student():
             for x in SUBJECTS[s]
         })
 
-
         df = pd.concat(
             [
                 df,
@@ -992,12 +1037,10 @@ def add_student():
             ignore_index=True
         )
 
-
         save_excel(
             df,
             s
         )
-
 
         return jsonify({
 
@@ -1006,7 +1049,6 @@ def add_student():
             'message':
                 'Student added successfully.'
         })
-
 
     except Exception as e:
 
@@ -1052,7 +1094,6 @@ def edit_student():
             )
         ).strip()
 
-
         if not valid_semester(s):
 
             return jsonify({
@@ -1061,9 +1102,7 @@ def edit_student():
                     'Invalid semester.'
             }), 400
 
-
         df = read_excel(s)
-
 
         if (
             df.empty
@@ -1075,7 +1114,6 @@ def edit_student():
                 'message':
                     'Student not found.'
             })
-
 
         df['Student_ID'] = (
             df['Student_ID']
@@ -1089,11 +1127,9 @@ def edit_student():
             .str.strip()
         )
 
-
         matches = df.index[
             df['Student_ID'] == sid
         ].tolist()
-
 
         if not matches:
 
@@ -1103,9 +1139,7 @@ def edit_student():
                     'Student not found.'
             })
 
-
         i = matches[0]
-
 
         for c in (
             [
@@ -1124,12 +1158,10 @@ def edit_student():
                     c
                 ] = d[c]
 
-
         save_excel(
             df,
             s
         )
-
 
         return jsonify({
 
@@ -1138,7 +1170,6 @@ def edit_student():
             'message':
                 'Student updated successfully.'
         })
-
 
     except Exception as e:
 
@@ -1184,7 +1215,6 @@ def delete_student():
             )
         ).strip()
 
-
         if not valid_semester(s):
 
             return jsonify({
@@ -1193,9 +1223,7 @@ def delete_student():
                     'Invalid semester.'
             }), 400
 
-
         df = read_excel(s)
-
 
         if df.empty:
 
@@ -1204,7 +1232,6 @@ def delete_student():
                 'message':
                     'Student not found.'
             })
-
 
         df['Student_ID'] = (
             df['Student_ID']
@@ -1218,11 +1245,9 @@ def delete_student():
             .str.strip()
         )
 
-
         new_df = df[
             df['Student_ID'] != sid
         ].copy()
-
 
         if len(new_df) == len(df):
 
@@ -1232,12 +1257,10 @@ def delete_student():
                     'Student not found.'
             })
 
-
         save_excel(
             new_df,
             s
         )
-
 
         return jsonify({
 
@@ -1246,7 +1269,6 @@ def delete_student():
             'message':
                 'Student deleted successfully.'
         })
-
 
     except Exception as e:
 
