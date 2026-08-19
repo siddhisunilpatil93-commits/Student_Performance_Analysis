@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     font-family:Arial,sans-serif;
@@ -90,6 +91,7 @@ body{
     font-size:13px;
 }
 
+
 /* ================= SIDEBAR ================= */
 
 .sidebar{
@@ -162,6 +164,7 @@ body{
     font-weight:bold;
 }
 
+
 /* ================= MAIN ================= */
 
 .main{
@@ -208,6 +211,7 @@ body{
     padding:25px;
 }
 
+
 /* ================= WELCOME ================= */
 
 .welcome{
@@ -226,6 +230,7 @@ body{
     margin:0;
     color:#dbeafe;
 }
+
 
 /* ================= CARDS ================= */
 
@@ -260,6 +265,7 @@ body{
     color:#94a3b8;
 }
 
+
 /* ================= PANELS ================= */
 
 .panel,
@@ -276,6 +282,7 @@ body{
 .chart-box h3{
     margin:0 0 15px;
 }
+
 
 /* ================= CONTROLS ================= */
 
@@ -337,32 +344,51 @@ body{
     font-size:12px;
 }
 
-/* ================= SMALL CHARTS ================= */
+
+/* =========================================================
+   CHARTS - SMALL + SIDE BY SIDE
+   ========================================================= */
 
 .charts{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:15px;
+    width:100%;
     align-items:start;
 }
 
 .chart-box{
+    background:white;
+    padding:12px;
+    border-radius:12px;
+    box-shadow:0 3px 12px #0001;
+
     height:220px;
     min-height:220px;
-    padding:12px;
+
+    position:relative;
+    overflow:hidden;
+
     margin-bottom:15px;
 }
 
 .chart-box h3{
+    margin:0 0 5px;
     font-size:14px;
-    margin:0 0 4px;
+    color:#172554;
 }
 
-.chart-box canvas{
-    width:100% !important;
-    height:160px !important;
-    max-height:160px !important;
+.chart-container{
+    position:relative;
+    width:100%;
+    height:175px;
 }
+
+.chart-container canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
 
 /* ================= TABLE ================= */
 
@@ -402,6 +428,7 @@ tr:hover{
     background:#f8fafc;
 }
 
+
 /* ================= BADGES ================= */
 
 .badge{
@@ -427,6 +454,7 @@ tr:hover{
     color:#1e40af;
 }
 
+
 /* ================= ACTION ================= */
 
 .action-btn{
@@ -448,6 +476,7 @@ tr:hover{
     background:#dc2626;
     color:white;
 }
+
 
 /* ================= MODAL ================= */
 
@@ -523,6 +552,7 @@ tr:hover{
     margin-top:20px;
 }
 
+
 /* ================= RESPONSIVE ================= */
 
 @media(max-width:1100px){
@@ -530,6 +560,7 @@ tr:hover{
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
 
 @media(max-width:800px){
@@ -556,14 +587,10 @@ tr:hover{
     }
 
     .chart-box{
-        height:200px;
-        min-height:200px;
+        height:220px;
+        min-height:220px;
     }
 
-    .chart-box canvas{
-        height:145px !important;
-        max-height:145px !important;
-    }
 }
 
 @media(max-width:550px){
@@ -585,617 +612,723 @@ tr:hover{
     }
 
     .chart-box{
-        height:190px;
-        min-height:190px;
+        height:210px;
+        min-height:210px;
     }
 
-    .chart-box canvas{
-        height:135px !important;
-        max-height:135px !important;
-    }
 }
+
+
+/* ================= LOADING ================= */
+
+.loading{
+    text-align:center;
+    padding:25px;
+    color:#64748b;
+}
+
 </style>
+
 </head>
 
 <body>
 
+
 {% if login_page %}
 
-<!-- ================= LOGIN PAGE ================= -->
+<!-- ======================================================
+     LOGIN PAGE
+     ====================================================== -->
 
 <div class="login-page">
 
-<div class="login-card">
+    <div class="login-card">
 
-<h1>Student Performance</h1>
+        <h1>
+            Student Performance
+        </h1>
 
-<p>
-Computer Engineering<br>
-MSBTE K-Scheme
-</p>
+        <p>
+            Computer Engineering<br>
+            MSBTE K-Scheme
+        </p>
 
-<form method="POST" action="/login">
+        <form method="POST" action="/login">
 
-<label>Username</label>
+            <label>
+                Username
+            </label>
 
-<input
-type="text"
-name="username"
-placeholder="Enter username"
-required
->
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                required
+            >
 
-<label>Password</label>
+            <label>
+                Password
+            </label>
 
-<input
-type="password"
-name="password"
-placeholder="Enter password"
-required
->
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
 
-<button
-type="submit"
-class="login-btn"
->
-Login
-</button>
+            <button
+                type="submit"
+                class="login-btn"
+            >
+                Login
+            </button>
 
-</form>
+        </form>
 
-{% if login_error %}
+        {% if login_error %}
 
-<div class="error">
-{{ login_error }}
+        <div class="error">
+            {{ login_error }}
+        </div>
+
+        {% endif %}
+
+    </div>
+
 </div>
 
-{% endif %}
-
-</div>
-
-</div>
 
 {% else %}
 
-<!-- ================= SIDEBAR ================= -->
+
+<!-- ======================================================
+     SIDEBAR
+     ====================================================== -->
 
 <div class="sidebar" id="sidebar">
 
-<div class="logo">
+    <div class="logo">
 
-<h2>Student Performance</h2>
+        <h2>
+            Student Performance
+        </h2>
 
-<p>Computer Engineering</p>
+        <p>
+            Computer Engineering
+        </p>
 
-<p>MSBTE K-Scheme</p>
+        <p>
+            MSBTE K-Scheme
+        </p>
+
+    </div>
+
+
+    <div class="menu-title">
+        Academic Year
+    </div>
+
+
+    <button
+        class="year-btn active"
+        onclick="selectYear('1st Year',this)"
+    >
+        1st Year
+    </button>
+
+
+    <button
+        class="year-btn"
+        onclick="selectYear('2nd Year',this)"
+    >
+        2nd Year
+    </button>
+
+
+    <button
+        class="year-btn"
+        onclick="selectYear('3rd Year',this)"
+    >
+        3rd Year
+    </button>
+
+
+    <div class="menu-title">
+        Semester
+    </div>
+
+
+    <button
+        class="sem-btn active"
+        onclick="selectSemester(1,this)"
+    >
+        Semester 1
+    </button>
+
+
+    <button
+        class="sem-btn"
+        onclick="selectSemester(2,this)"
+    >
+        Semester 2
+    </button>
+
+
+    <button
+        class="sem-btn"
+        onclick="selectSemester(3,this)"
+    >
+        Semester 3
+    </button>
+
+
+    <button
+        class="sem-btn"
+        onclick="selectSemester(4,this)"
+    >
+        Semester 4
+    </button>
+
+
+    <button
+        class="sem-btn"
+        onclick="selectSemester(5,this)"
+    >
+        Semester 5
+    </button>
+
+
+    <button
+        class="sem-btn"
+        onclick="selectSemester(6,this)"
+    >
+        Semester 6
+    </button>
+
+
+    <button
+        class="logout-btn"
+        onclick="location.href='/logout'"
+    >
+        Logout
+    </button>
 
 </div>
 
-<div class="menu-title">
-Academic Year
-</div>
 
-<button
-class="year-btn active"
-onclick="selectYear('1st Year',this)"
->
-1st Year
-</button>
-
-<button
-class="year-btn"
-onclick="selectYear('2nd Year',this)"
->
-2nd Year
-</button>
-
-<button
-class="year-btn"
-onclick="selectYear('3rd Year',this)"
->
-3rd Year
-</button>
-
-<div class="menu-title">
-Semester
-</div>
-
-<button
-class="sem-btn active"
-onclick="selectSemester(1,this)"
->
-Semester 1
-</button>
-
-<button
-class="sem-btn"
-onclick="selectSemester(2,this)"
->
-Semester 2
-</button>
-
-<button
-class="sem-btn"
-onclick="selectSemester(3,this)"
->
-Semester 3
-</button>
-
-<button
-class="sem-btn"
-onclick="selectSemester(4,this)"
->
-Semester 4
-</button>
-
-<button
-class="sem-btn"
-onclick="selectSemester(5,this)"
->
-Semester 5
-</button>
-
-<button
-class="sem-btn"
-onclick="selectSemester(6,this)"
->
-Semester 6
-</button>
-
-<button
-class="logout-btn"
-onclick="location.href='/logout'"
->
-Logout
-</button>
-
-</div>
-
-
-<!-- ================= MAIN ================= -->
+<!-- ======================================================
+     MAIN
+     ====================================================== -->
 
 <div class="main">
 
-<div class="topbar">
 
-<button
-class="mobile-menu"
-onclick="toggleSidebar()"
->
-☰
-</button>
+    <div class="topbar">
 
-<div>
+        <button
+            class="mobile-menu"
+            onclick="toggleSidebar()"
+        >
+            ☰
+        </button>
 
-<h1>
-Student Performance Analysis
-</h1>
 
-<p id="currentAcademic">
-1st Year • Semester 1
-</p>
+        <div>
+
+            <h1>
+                Student Performance Analysis
+            </h1>
+
+            <p id="currentAcademic">
+                1st Year • Semester 1
+            </p>
+
+        </div>
+
+
+        <strong>
+            Admin
+        </strong>
+
+    </div>
+
+
+    <div class="container">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h2>
+                Welcome to Student Performance Dashboard
+            </h2>
+
+            <p>
+                Analyze student marks, percentage,
+                attendance and grades.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             CARDS
+             ================================================= -->
+
+        <div class="cards">
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Total Students
+                </div>
+
+                <div
+                    class="card-value"
+                    id="totalStudents"
+                >
+                    0
+                </div>
+
+                <small>
+                    Selected semester
+                </small>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Average Percentage
+                </div>
+
+                <div
+                    class="card-value"
+                    id="averagePercentage"
+                >
+                    0%
+                </div>
+
+                <small>
+                    Class performance
+                </small>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Top Performer
+                </div>
+
+                <div
+                    class="card-value"
+                    id="topPerformer"
+                >
+                    -
+                </div>
+
+                <small>
+                    Highest percentage
+                </small>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Average Attendance
+                </div>
+
+                <div
+                    class="card-value"
+                    id="averageAttendance"
+                >
+                    0%
+                </div>
+
+                <small>
+                    Class attendance
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENT MANAGEMENT
+             ================================================= -->
+
+        <div class="panel">
+
+            <h3>
+                Student Management
+            </h3>
+
+
+            <div class="controls">
+
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search"
+                    placeholder="Search Student Name or Student ID..."
+                    oninput="searchStudents()"
+                >
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openAddModal()"
+                >
+                    + Add Student
+                </button>
+
+
+                <button
+                    class="btn btn-success"
+                    onclick="document.getElementById('excelFile').click()"
+                >
+                    Upload Excel
+                </button>
+
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="loadStudents()"
+                >
+                    ↻ Refresh
+                </button>
+
+
+                <input
+                    type="file"
+                    id="excelFile"
+                    accept=".xlsx,.xls"
+                    hidden
+                    onchange="uploadExcel()"
+                >
+
+
+            </div>
+
+
+            <div
+                class="upload-msg"
+                id="uploadMessage"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             SUBJECTS
+             ================================================= -->
+
+        <div class="panel">
+
+            <h3 id="semesterTitle">
+                Semester 1 Subjects
+            </h3>
+
+
+            <div
+                class="subject-list"
+                id="subjectList"
+            ></div>
+
+        </div>
+
+
+        <!-- =================================================
+             CHARTS
+             ================================================= -->
+
+        <div class="charts">
+
+
+            <!-- PIE -->
+
+            <div class="chart-box">
+
+                <h3>
+                    Grade Distribution
+                </h3>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="gradeChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- BAR -->
+
+            <div class="chart-box">
+
+                <h3>
+                    Subject Performance
+                </h3>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="subjectChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENT TABLE
+             ================================================= -->
+
+        <div class="table-box">
+
+
+            <div class="table-top">
+
+                <div>
+
+                    <h3>
+                        Student Records
+                    </h3>
+
+                    <p
+                        style="font-size:11px;color:#64748b"
+                    >
+                        Student performance details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="loading"
+                class="loading"
+            >
+                Loading students...
+            </div>
+
+
+            <div
+                id="tableContainer"
+                class="table-wrap"
+            ></div>
+
+
+        </div>
+
+
+    </div>
 
 </div>
 
-<strong>
-Admin
-</strong>
 
-</div>
-
-
-<div class="container">
-
-<!-- WELCOME -->
-
-<div class="welcome">
-
-<h2>
-Welcome to Student Performance Dashboard
-</h2>
-
-<p>
-Analyze student marks, percentage, attendance and grades.
-</p>
-
-</div>
-
-
-<!-- CARDS -->
-
-<div class="cards">
-
-<div class="card">
-
-<div class="card-title">
-Total Students
-</div>
+<!-- ======================================================
+     ADD / EDIT MODAL
+     ====================================================== -->
 
 <div
-class="card-value"
-id="totalStudents"
->
-0
-</div>
-
-<small>
-Selected semester
-</small>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Average Percentage
-</div>
-
-<div
-class="card-value"
-id="averagePercentage"
->
-0%
-</div>
-
-<small>
-Class performance
-</small>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Top Performer
-</div>
-
-<div
-class="card-value"
-id="topPerformer"
->
--
-</div>
-
-<small>
-Highest percentage
-</small>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Average Attendance
-</div>
-
-<div
-class="card-value"
-id="averageAttendance"
->
-0%
-</div>
-
-<small>
-Class attendance
-</small>
-
-</div>
-
-</div>
-
-
-<!-- MANAGEMENT -->
-
-<div class="panel">
-
-<h3>
-Student Management
-</h3>
-
-<div class="controls">
-
-<input
-type="text"
-id="searchInput"
-class="search"
-placeholder="Search Student Name or Student ID..."
-oninput="searchStudents()"
+    class="modal"
+    id="studentModal"
 >
 
-<button
-class="btn btn-primary"
-onclick="openAddModal()"
->
-+ Add Student
-</button>
 
-<button
-class="btn btn-success"
-onclick="document.getElementById('excelFile').click()"
->
-Upload Excel
-</button>
+    <div class="modal-content">
 
-<button
-class="btn btn-secondary"
-onclick="loadStudents()"
->
-↻ Refresh
-</button>
 
-<input
-type="file"
-id="excelFile"
-accept=".xlsx,.xls"
-hidden
-onchange="uploadExcel()"
->
+        <div class="modal-header">
 
-</div>
+            <h2 id="modalTitle">
+                Add Student
+            </h2>
 
-<div
-class="upload-msg"
-id="uploadMessage"
->
-</div>
 
-</div>
+            <span
+                class="close"
+                onclick="closeModal()"
+            >
+                ×
+            </span>
 
+        </div>
 
-<!-- SUBJECTS -->
 
-<div class="panel">
+        <form
+            id="studentForm"
+            onsubmit="saveStudent(event)"
+        >
 
-<h3 id="semesterTitle">
-Semester 1 Subjects
-</h3>
 
-<div
-class="subject-list"
-id="subjectList"
->
-</div>
+            <div class="form-grid">
 
-</div>
 
+                <div class="form-group">
 
-<!-- CHARTS -->
+                    <label>
+                        Student ID
+                    </label>
 
-<div class="charts">
+                    <input
+                        type="text"
+                        id="studentId"
+                        required
+                    >
 
-<div class="chart-box">
+                </div>
 
-<h3>
-Grade Distribution
-</h3>
 
-<canvas id="gradeChart"></canvas>
+                <div class="form-group">
 
-</div>
+                    <label>
+                        Student Name
+                    </label>
 
+                    <input
+                        type="text"
+                        id="studentName"
+                        required
+                    >
 
-<div class="chart-box">
+                </div>
 
-<h3>
-Subject Performance
-</h3>
 
-<canvas id="subjectChart"></canvas>
+                <div class="form-group">
 
-</div>
+                    <label>
+                        Gender
+                    </label>
 
-</div>
+                    <select id="gender">
 
+                        <option value="">
+                            Select Gender
+                        </option>
 
-<!-- TABLE -->
+                        <option value="Male">
+                            Male
+                        </option>
 
-<div class="table-box">
+                        <option value="Female">
+                            Female
+                        </option>
 
-<div class="table-top">
+                        <option value="Other">
+                            Other
+                        </option>
 
-<div>
+                    </select>
 
-<h3>
-Student Records
-</h3>
+                </div>
 
-<p
-style="font-size:11px;color:#64748b"
->
-Student performance details
-</p>
 
-</div>
+                <div class="form-group">
 
-</div>
+                    <label>
+                        Class
+                    </label>
 
-<div
-id="loading"
-style="text-align:center;padding:25px;color:#64748b"
->
-Loading students...
-</div>
+                    <input
+                        type="text"
+                        id="studentClass"
+                    >
 
-<div
-id="tableContainer"
-class="table-wrap"
->
-</div>
+                </div>
 
-</div>
 
-</div>
+                <div class="form-group">
 
-</div>
+                    <label>
+                        Attendance (%)
+                    </label>
 
+                    <input
+                        type="number"
+                        id="attendance"
+                        min="0"
+                        max="100"
+                        step=".01"
+                        value="75"
+                    >
 
-<!-- ================= MODAL ================= -->
+                </div>
 
-<div
-class="modal"
-id="studentModal"
->
 
-<div class="modal-content">
+            </div>
 
-<div class="modal-header">
 
-<h2 id="modalTitle">
-Add Student
-</h2>
+            <h3>
+                Subject Marks
+            </h3>
 
-<span
-class="close"
-onclick="closeModal()"
->
-×
-</span>
 
-</div>
+            <div
+                id="markInputs"
+                class="form-grid"
+            ></div>
 
 
-<form
-id="studentForm"
-onsubmit="saveStudent(event)"
->
+            <div class="modal-actions">
 
-<div class="form-grid">
 
-<div class="form-group">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
 
-<label>
-Student ID
-</label>
 
-<input
-type="text"
-id="studentId"
-required
->
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveBtn"
+                >
+                    Save Student
+                </button>
 
-</div>
 
+            </div>
 
-<div class="form-group">
 
-<label>
-Student Name
-</label>
+        </form>
 
-<input
-type="text"
-id="studentName"
-required
->
 
-</div>
-
-
-<div class="form-group">
-
-<label>
-Gender
-</label>
-
-<select id="gender">
-
-<option value="">
-Select Gender
-</option>
-
-<option>
-Male
-</option>
-
-<option>
-Female
-</option>
-
-<option>
-Other
-</option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-Class
-</label>
-
-<input
-type="text"
-id="studentClass"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-Attendance (%)
-</label>
-
-<input
-type="number"
-id="attendance"
-min="0"
-max="100"
-step=".01"
-value="75"
->
-
-</div>
-
-</div>
-
-
-<h3>
-Subject Marks
-</h3>
-
-<div
-id="markInputs"
-class="form-grid"
->
-</div>
-
-
-<div class="modal-actions">
-
-<button
-type="button"
-class="btn btn-secondary"
-onclick="closeModal()"
->
-Cancel
-</button>
-
-<button
-type="submit"
-class="btn btn-primary"
-id="saveBtn"
->
-Save Student
-</button>
-
-</div>
-
-</form>
-
-</div>
+    </div>
 
 </div>
 
 
 <script>
+
+
+/* ======================================================
+   VARIABLES
+   ====================================================== */
 
 let currentYear = "1st Year";
 
@@ -1210,1428 +1343,1808 @@ let gradeChart = null;
 let subjectChart = null;
 
 
+/* ======================================================
+   SUBJECTS
+   ====================================================== */
+
 const subjects = {
 
-1:[
-"Basic Mathematics",
-"Communication Skills",
-"Basic Science"
-],
 
-2:[
-"Applied Mathematics",
-"Basic Electrical and Engineering",
-"Programming in C"
-],
+    1:[
+        "Basic Mathematics",
+        "Communication Skills",
+        "Basic Science"
+    ],
 
-3:[
-"Object Oriented Programming",
-"Data Structure",
-"Digital Techniques",
-"Database Management System"
-],
 
-4:[
-"Java Programming",
-"Data Communication and Network",
-"Microprocessor Programming",
-"Environmental Education And Sustanability"
-],
+    2:[
+        "Applied Mathematics",
+        "Basic Electrical and Engineering",
+        "Programming in C"
+    ],
 
-5:[
-"Software Engineering",
-"Opreting System",
-"Data Analytics"
-],
 
-6:[
-"Mobile Application Development",
-"Machine Learning",
-"Software Testing",
-"Mangement"
-]
+    3:[
+        "Object Oriented Programming",
+        "Data Structure",
+        "Digital Techniques",
+        "Database Management System"
+    ],
+
+
+    4:[
+        "Java Programming",
+        "Data Communication and Network",
+        "Microprocessor Programming",
+        "Environmental Education And Sustanability"
+    ],
+
+
+    5:[
+        "Software Engineering",
+        "Opreting System",
+        "Data Analytics"
+    ],
+
+
+    6:[
+        "Mobile Application Development",
+        "Machine Learning",
+        "Software Testing",
+        "Mangement"
+    ]
 
 };
 
+
+/* ======================================================
+   YEAR
+   ====================================================== */
 
 const yearSemesters = {
 
-"1st Year":[1,2],
+    "1st Year":[1,2],
 
-"2nd Year":[3,4],
+    "2nd Year":[3,4],
 
-"3rd Year":[5,6]
+    "3rd Year":[5,6]
 
 };
 
 
+/* ======================================================
+   PAGE LOAD
+   ====================================================== */
+
 document.addEventListener(
-"DOMContentLoaded",
-()=>{
+    "DOMContentLoaded",
+    function(){
 
-updateSemesterButtons();
+        updateSemesterButtons();
 
-displaySubjects();
+        displaySubjects();
 
-loadStudents();
+        loadStudents();
 
-});
-
-
-/* ================= YEAR ================= */
-
-function selectYear(year,button){
-
-currentYear = year;
-
-document
-.querySelectorAll(".year-btn")
-.forEach(
-x=>x.classList.remove("active")
+    }
 );
 
-button.classList.add("active");
 
-currentSemester =
-yearSemesters[year][0];
+/* ======================================================
+   YEAR SELECT
+   ====================================================== */
 
-updateSemesterButtons();
+function selectYear(
+    year,
+    button
+){
 
-displaySubjects();
+    currentYear = year;
 
-loadStudents();
+    document
+        .querySelectorAll(".year-btn")
+        .forEach(
+            x => x.classList.remove("active")
+        );
+
+
+    button.classList.add("active");
+
+
+    currentSemester =
+        yearSemesters[year][0];
+
+
+    updateSemesterButtons();
+
+    displaySubjects();
+
+    loadStudents();
 
 }
 
 
-/* ================= SEMESTER ================= */
+/* ======================================================
+   SEMESTER SELECT
+   ====================================================== */
 
-function selectSemester(semester,button){
+function selectSemester(
+    semester,
+    button
+){
 
-if(
-!yearSemesters[currentYear]
-.includes(semester)
-)
-return;
+    if(
+        !yearSemesters[currentYear]
+            .includes(semester)
+    ){
+        return;
+    }
 
-currentSemester = semester;
 
-document
-.querySelectorAll(".sem-btn")
-.forEach(
-x=>x.classList.remove("active")
-);
+    currentSemester = semester;
 
-button.classList.add("active");
 
-displaySubjects();
+    document
+        .querySelectorAll(".sem-btn")
+        .forEach(
+            x => x.classList.remove("active")
+        );
 
-loadStudents();
+
+    button.classList.add("active");
+
+
+    displaySubjects();
+
+    loadStudents();
 
 }
 
+
+/* ======================================================
+   UPDATE SEMESTER BUTTONS
+   ====================================================== */
 
 function updateSemesterButtons(){
 
-document
-.querySelectorAll(".sem-btn")
-.forEach(
-(button,index)=>{
+    document
+        .querySelectorAll(".sem-btn")
+        .forEach(
+            function(button,index){
 
-let semester = index + 1;
+                let semester =
+                    index + 1;
 
-button.style.display =
-yearSemesters[currentYear]
-.includes(semester)
-?
-"block"
-:
-"none";
 
-button.classList.toggle(
-"active",
-semester === currentSemester
-);
+                button.style.display =
+                    yearSemesters[currentYear]
+                        .includes(semester)
+                    ?
+                    "block"
+                    :
+                    "none";
 
-});
+
+                button.classList.toggle(
+                    "active",
+                    semester === currentSemester
+                );
+
+            }
+        );
 
 }
 
 
-/* ================= SUBJECTS ================= */
+/* ======================================================
+   DISPLAY SUBJECTS
+   ====================================================== */
 
 function displaySubjects(){
 
-document
-.getElementById("semesterTitle")
-.innerText =
-`Semester ${currentSemester} Subjects`;
+    document
+        .getElementById("semesterTitle")
+        .innerText =
+            `Semester ${currentSemester} Subjects`;
 
-document
-.getElementById("currentAcademic")
-.innerText =
-`${currentYear} • Semester ${currentSemester}`;
 
-document
-.getElementById("subjectList")
-.innerHTML =
-subjects[currentSemester]
-.map(
-subject=>
-`<div class="subject">
-${escapeHtml(subject)}
-</div>`
-)
-.join("");
+    document
+        .getElementById("currentAcademic")
+        .innerText =
+            `${currentYear} • Semester ${currentSemester}`;
+
+
+    document
+        .getElementById("subjectList")
+        .innerHTML =
+            subjects[currentSemester]
+                .map(
+                    subject =>
+                        `
+                        <div class="subject">
+                            ${escapeHtml(subject)}
+                        </div>
+                        `
+                )
+                .join("");
 
 }
 
 
-/* ================= LOAD STUDENTS ================= */
+/* ======================================================
+   LOAD STUDENTS
+   ====================================================== */
 
 async function loadStudents(){
 
-document
-.getElementById("loading")
-.style.display="block";
+    document
+        .getElementById("loading")
+        .style.display = "block";
 
-try{
 
-let response =
-await fetch(
-`/api/students?semester=Semester%20${currentSemester}`
-);
+    try{
 
-if(response.status===401){
 
-location.href="/login";
+        let response =
+            await fetch(
+                `/api/students?semester=Semester%20${currentSemester}`
+            );
 
-return;
+
+        if(
+            response.status === 401
+        ){
+
+            location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                "Student data could not be loaded."
+            );
+
+        }
+
+
+        students =
+            await response.json();
+
+
+        displayStudents(
+            students
+        );
+
+
+        await loadAnalytics();
+
+
+    }
+    catch(error){
+
+
+        students = [];
+
+
+        displayStudents([]);
+
+
+        showMessage(
+            error.message,
+            true
+        );
+
+
+    }
+    finally{
+
+
+        document
+            .getElementById("loading")
+            .style.display = "none";
+
+    }
 
 }
 
-if(!response.ok){
 
-throw new Error(
-"Student data could not be loaded."
-);
-
-}
-
-students =
-await response.json();
-
-displayStudents(students);
-
-await loadAnalytics();
-
-}
-catch(error){
-
-students=[];
-
-displayStudents([]);
-
-showMessage(
-error.message,
-true
-);
-
-}
-finally{
-
-document
-.getElementById("loading")
-.style.display="none";
-
-}
-
-}
-
-
-/* ================= DISPLAY TABLE ================= */
+/* ======================================================
+   DISPLAY STUDENTS
+   ====================================================== */
 
 function displayStudents(data){
 
-if(!data.length){
+    if(
+        !data.length
+    ){
 
-document
-.getElementById("tableContainer")
-.innerHTML =
-`
-<div
-style="text-align:center;padding:30px;color:#64748b"
->
-No student records found.
-</div>
-`;
+        document
+            .getElementById("tableContainer")
+            .innerHTML =
+            `
+            <div
+                style="
+                text-align:center;
+                padding:30px;
+                color:#64748b;
+                "
+            >
+                No student records found.
+            </div>
+            `;
 
-return;
+        return;
+
+    }
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Student ID
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Gender
+                    </th>
+
+                    <th>
+                        Class
+                    </th>
+
+    `;
+
+
+    subjects[currentSemester]
+        .forEach(
+            subject => {
+
+                html +=
+                    `
+                    <th>
+                        ${escapeHtml(subject)}
+                    </th>
+                    `;
+
+            }
+        );
+
+
+    html += `
+
+                    <th>
+                        Total
+                    </th>
+
+                    <th>
+                        Percentage
+                    </th>
+
+                    <th>
+                        Attendance
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Grade
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    data.forEach(
+        function(student,index){
+
+            let percentage =
+                num(
+                    student.Percentage
+                );
+
+
+            let attendance =
+                num(
+                    student.Attendance
+                );
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            student.Student_ID
+                        )}
+                    </td>
+
+                    <td>
+                        <b>
+                            ${escapeHtml(
+                                student.Name
+                            )}
+                        </b>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            student.Gender
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            student.Class
+                        )}
+                    </td>
+
+            `;
+
+
+            subjects[currentSemester]
+                .forEach(
+                    subject => {
+
+                        html +=
+                            `
+                            <td>
+                                ${
+                                    student[subject] ??
+                                    0
+                                }
+                            </td>
+                            `;
+
+                    }
+                );
+
+
+            html += `
+
+                    <td>
+                        ${num(
+                            student.Total
+                        ).toFixed(2)}
+                    </td>
+
+                    <td>
+                        <b>
+                            ${percentage.toFixed(2)}%
+                        </b>
+                    </td>
+
+                    <td>
+                        ${attendance.toFixed(2)}%
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="
+                            badge
+                            ${
+                                attendance >= 75
+                                ?
+                                "good"
+                                :
+                                "low"
+                            }
+                            "
+                        >
+
+                            ${
+                                attendance >= 75
+                                ?
+                                "Good"
+                                :
+                                "Bad"
+                            }
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span
+                            class="badge grade"
+                        >
+                            ${escapeHtml(
+                                student.Grade
+                            )}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="
+                            action-btn
+                            edit-btn
+                            "
+                            onclick="
+                                editStudent(${index})
+                            "
+                        >
+                            ✏️ Edit
+                        </button>
+
+
+                        <button
+                            class="
+                            action-btn
+                            delete-btn
+                            "
+                            onclick="
+                                deleteStudent(${index})
+                            "
+                        >
+                            🗑 Delete
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    document
+        .getElementById("tableContainer")
+        .innerHTML = html;
 
 }
 
 
-let html =
-
-`
-<table>
-
-<thead>
-
-<tr>
-
-<th>Student ID</th>
-
-<th>Name</th>
-
-<th>Gender</th>
-
-<th>Class</th>
-`;
-
-
-subjects[currentSemester]
-.forEach(
-subject=>{
-
-html +=
-`
-<th>
-${escapeHtml(subject)}
-</th>
-`;
-
-});
-
-
-html +=
-
-`
-<th>Total</th>
-
-<th>Percentage</th>
-
-<th>Attendance</th>
-
-<th>Status</th>
-
-<th>Grade</th>
-
-<th>Actions</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-`;
-
-
-data.forEach(
-(student,index)=>{
-
-let percentage =
-num(student.Percentage);
-
-let attendance =
-num(student.Attendance);
-
-
-html +=
-
-`
-<tr>
-
-<td>
-${escapeHtml(student.Student_ID)}
-</td>
-
-<td>
-<b>
-${escapeHtml(student.Name)}
-</b>
-</td>
-
-<td>
-${escapeHtml(student.Gender)}
-</td>
-
-<td>
-${escapeHtml(student.Class)}
-</td>
-`;
-
-
-subjects[currentSemester]
-.forEach(
-subject=>{
-
-html +=
-`
-<td>
-${escapeHtml(student[subject]) || "0"}
-</td>
-`;
-
-});
-
-
-html +=
-
-`
-<td>
-${num(student.Total).toFixed(2)}
-</td>
-
-<td>
-<b>
-${percentage.toFixed(2)}%
-</b>
-</td>
-
-<td>
-${attendance.toFixed(2)}%
-</td>
-
-<td>
-
-<span
-class="badge ${attendance>=75?"good":"low"}"
->
-
-${attendance>=75?"Good":"Bad"}
-
-</span>
-
-</td>
-
-<td>
-
-<span class="badge grade">
-
-${escapeHtml(student.Grade)}
-
-</span>
-
-</td>
-
-<td>
-
-<button
-class="action-btn edit-btn"
-onclick="editStudent(${index})"
->
-✏️ Edit
-</button>
-
-<button
-class="action-btn delete-btn"
-onclick="deleteStudent(${index})"
->
-🗑 Delete
-</button>
-
-</td>
-
-</tr>
-`;
-
-});
-
-
-html +=
-`
-</tbody>
-</table>
-`;
-
-
-document
-.getElementById("tableContainer")
-.innerHTML = html;
-
-}
-
-
-/* ================= SEARCH ================= */
+/* ======================================================
+   SEARCH
+   ====================================================== */
 
 function searchStudents(){
 
-let query =
-document
-.getElementById("searchInput")
-.value
-.toLowerCase()
-.trim();
+    let query =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
 
 
-if(!query){
+    if(
+        !query
+    ){
 
-displayStudents(students);
+        displayStudents(
+            students
+        );
 
-return;
+        return;
+
+    }
+
+
+    let result =
+        students.filter(
+            student =>
+
+                String(
+                    student.Student_ID || ""
+                )
+                .toLowerCase()
+                .includes(query)
+
+                ||
+
+                String(
+                    student.Name || ""
+                )
+                .toLowerCase()
+                .includes(query)
+        );
+
+
+    displayStudents(
+        result
+    );
 
 }
 
 
-let result =
-students.filter(
-student=>
-
-String(
-student.Student_ID || ""
-)
-.toLowerCase()
-.includes(query)
-
-||
-
-String(
-student.Name || ""
-)
-.toLowerCase()
-.includes(query)
-
-);
-
-
-displayStudents(result);
-
-}
-
-
-/* ================= ADD ================= */
+/* ======================================================
+   ADD STUDENT
+   ====================================================== */
 
 function openAddModal(){
 
-editingStudent = null;
+    editingStudent = null;
 
-document
-.getElementById("modalTitle")
-.innerText =
-"Add Student";
 
-document
-.getElementById("saveBtn")
-.innerText =
-"Save Student";
+    document
+        .getElementById("modalTitle")
+        .innerText =
+            "Add Student";
 
-document
-.getElementById("studentForm")
-.reset();
 
-document
-.getElementById("studentId")
-.readOnly=false;
+    document
+        .getElementById("saveBtn")
+        .innerText =
+            "Save Student";
 
-document
-.getElementById("attendance")
-.value=75;
 
-createMarkInputs();
+    document
+        .getElementById("studentForm")
+        .reset();
 
-document
-.getElementById("studentModal")
-.style.display="flex";
+
+    document
+        .getElementById("studentId")
+        .readOnly = false;
+
+
+    document
+        .getElementById("attendance")
+        .value = 75;
+
+
+    createMarkInputs();
+
+
+    document
+        .getElementById("studentModal")
+        .style.display = "flex";
 
 }
 
 
-/* ================= EDIT ================= */
+/* ======================================================
+   EDIT STUDENT
+   ====================================================== */
 
 function editStudent(index){
 
-let student =
-students[index];
-
-if(!student)
-return;
+    let student =
+        students[index];
 
 
-editingStudent = student;
+    if(
+        !student
+    ){
+        return;
+    }
 
 
-document
-.getElementById("modalTitle")
-.innerText =
-"Edit Student";
+    editingStudent =
+        student;
 
 
-document
-.getElementById("saveBtn")
-.innerText =
-"Update Student";
+    document
+        .getElementById("modalTitle")
+        .innerText =
+            "Edit Student";
 
 
-document
-.getElementById("studentId")
-.value =
-student.Student_ID || "";
+    document
+        .getElementById("saveBtn")
+        .innerText =
+            "Update Student";
 
 
-document
-.getElementById("studentId")
-.readOnly=true;
+    document
+        .getElementById("studentId")
+        .value =
+            student.Student_ID || "";
 
 
-document
-.getElementById("studentName")
-.value =
-student.Name || "";
+    document
+        .getElementById("studentId")
+        .readOnly = true;
 
 
-document
-.getElementById("gender")
-.value =
-student.Gender || "";
+    document
+        .getElementById("studentName")
+        .value =
+            student.Name || "";
 
 
-document
-.getElementById("studentClass")
-.value =
-student.Class || "";
+    document
+        .getElementById("gender")
+        .value =
+            student.Gender || "";
 
 
-document
-.getElementById("attendance")
-.value =
-num(student.Attendance);
+    document
+        .getElementById("studentClass")
+        .value =
+            student.Class || "";
 
 
-createMarkInputs(student);
+    document
+        .getElementById("attendance")
+        .value =
+            num(
+                student.Attendance
+            );
 
 
-document
-.getElementById("studentModal")
-.style.display="flex";
-
-}
+    createMarkInputs(
+        student
+    );
 
 
-/* ================= MARK INPUTS ================= */
-
-function createMarkInputs(student={}){
-
-document
-.getElementById("markInputs")
-.innerHTML =
-
-subjects[currentSemester]
-.map(
-subject=>
-
-`
-<div class="form-group">
-
-<label>
-${escapeHtml(subject)}
-</label>
-
-<input
-type="number"
-class="subject-mark"
-data-subject="${escapeHtml(subject)}"
-min="0"
-max="100"
-step=".01"
-value="${escapeHtml(
-getSubjectValue(student,subject)
-)}"
->
-
-</div>
-`
-
-)
-.join("");
+    document
+        .getElementById("studentModal")
+        .style.display = "flex";
 
 }
 
 
-/* ================= SAVE ================= */
+/* ======================================================
+   MARK INPUTS
+   ====================================================== */
 
-async function saveStudent(event){
-
-event.preventDefault();
-
-
-let id =
-document
-.getElementById("studentId")
-.value
-.trim();
-
-
-let name =
-document
-.getElementById("studentName")
-.value
-.trim();
-
-
-if(!id || !name){
-
-alert(
-"Student ID and Name are required."
-);
-
-return;
-
-}
-
-
-let data = {
-
-semester:
-`Semester ${currentSemester}`,
-
-Student_ID:id,
-
-Name:name,
-
-Gender:
-document
-.getElementById("gender")
-.value,
-
-Class:
-document
-.getElementById("studentClass")
-.value
-.trim(),
-
-Attendance:
-num(
-document
-.getElementById("attendance")
-.value
-)
-
-};
-
-
-document
-.querySelectorAll(".subject-mark")
-.forEach(
-input=>{
-
-data[
-input.dataset.subject
-] =
-num(input.value);
-
-});
-
-
-let saveButton =
-document
-.getElementById("saveBtn");
-
-saveButton.disabled=true;
-
-
-try{
-
-let response =
-await fetch(
-
-editingStudent
-?
-"/api/edit_student"
-:
-"/api/add_student",
-
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":
-"application/json"
-},
-
-body:
-JSON.stringify(data)
-
-}
-
-);
-
-
-let result =
-await response.json();
-
-
-if(
-!response.ok ||
-result.success===false
+function createMarkInputs(
+    student={}
 ){
 
-throw new Error(
-result.message ||
-"Operation failed."
-);
+    document
+        .getElementById("markInputs")
+        .innerHTML =
+
+        subjects[currentSemester]
+            .map(
+                subject =>
+
+                    `
+                    <div
+                        class="form-group"
+                    >
+
+                        <label>
+                            ${escapeHtml(
+                                subject
+                            )}
+                        </label>
+
+                        <input
+                            type="number"
+                            class="subject-mark"
+                            data-subject="${escapeHtml(
+                                subject
+                            )}"
+                            min="0"
+                            max="100"
+                            step=".01"
+                            value="${escapeHtml(
+                                getSubjectValue(
+                                    student,
+                                    subject
+                                )
+                            )}"
+                        >
+
+                    </div>
+                    `
+            )
+            .join("");
 
 }
 
 
-alert(result.message);
+/* ======================================================
+   SAVE STUDENT
+   ====================================================== */
 
-closeModal();
-
-await loadStudents();
-
-}
-catch(error){
-
-alert(
-"Error: " +
-error.message
-);
-
-}
-finally{
-
-saveButton.disabled=false;
-
-saveButton.innerText =
-editingStudent
-?
-"Update Student"
-:
-"Save Student";
-
-}
-
-}
-
-
-/* ================= DELETE ================= */
-
-async function deleteStudent(index){
-
-let student =
-students[index];
-
-if(
-!student
-)
-return;
-
-
-if(
-!confirm(
-`Are you sure you want to delete ${student.Name}?`
-)
-)
-return;
-
-
-try{
-
-let response =
-await fetch(
-"/api/delete_student",
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":
-"application/json"
-},
-
-body:
-JSON.stringify({
-
-semester:
-`Semester ${currentSemester}`,
-
-Student_ID:
-student.Student_ID
-
-})
-
-});
-
-
-let result =
-await response.json();
-
-
-if(
-!response.ok ||
-result.success===false
+async function saveStudent(
+    event
 ){
 
-throw new Error(
-result.message ||
-"Delete failed."
-);
+    event.preventDefault();
+
+
+    let id =
+        document
+            .getElementById("studentId")
+            .value
+            .trim();
+
+
+    let name =
+        document
+            .getElementById("studentName")
+            .value
+            .trim();
+
+
+    if(
+        !id ||
+        !name
+    ){
+
+        alert(
+            "Student ID and Name are required."
+        );
+
+        return;
+
+    }
+
+
+    let data = {
+
+        semester:
+            `Semester ${currentSemester}`,
+
+        Student_ID:
+            id,
+
+        Name:
+            name,
+
+        Gender:
+            document
+                .getElementById("gender")
+                .value,
+
+        Class:
+            document
+                .getElementById("studentClass")
+                .value
+                .trim(),
+
+        Attendance:
+            num(
+                document
+                    .getElementById("attendance")
+                    .value
+            )
+
+    };
+
+
+    document
+        .querySelectorAll(".subject-mark")
+        .forEach(
+            input => {
+
+                data[
+                    input.dataset.subject
+                ] =
+                    num(
+                        input.value
+                    );
+
+            }
+        );
+
+
+    let saveButton =
+        document
+            .getElementById("saveBtn");
+
+
+    saveButton.disabled = true;
+
+
+    try{
+
+
+        let response =
+            await fetch(
+
+                editingStudent
+                ?
+                "/api/edit_student"
+                :
+                "/api/add_student",
+
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            data
+                        )
+
+                }
+
+            );
+
+
+        let result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            result.success === false
+        ){
+
+            throw new Error(
+                result.message ||
+                "Operation failed."
+            );
+
+        }
+
+
+        alert(
+            result.message
+        );
+
+
+        closeModal();
+
+
+        await loadStudents();
+
+
+    }
+    catch(error){
+
+        alert(
+            "Error: " +
+            error.message
+        );
+
+    }
+    finally{
+
+        saveButton.disabled = false;
+
+    }
 
 }
 
 
-alert(result.message);
+/* ======================================================
+   DELETE
+   ====================================================== */
 
-loadStudents();
+async function deleteStudent(
+    index
+){
+
+    let student =
+        students[index];
+
+
+    if(
+        !student
+    ){
+        return;
+    }
+
+
+    if(
+        !confirm(
+            `Are you sure you want to delete ${student.Name}?`
+        )
+    ){
+        return;
+    }
+
+
+    try{
+
+
+        let response =
+            await fetch(
+                "/api/delete_student",
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            semester:
+                                `Semester ${currentSemester}`,
+
+                            Student_ID:
+                                student.Student_ID
+
+                        })
+
+                }
+            );
+
+
+        let result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            result.success === false
+        ){
+
+            throw new Error(
+                result.message ||
+                "Delete failed."
+            );
+
+        }
+
+
+        alert(
+            result.message
+        );
+
+
+        loadStudents();
+
+
+    }
+    catch(error){
+
+        alert(
+            "Delete Error: " +
+            error.message
+        );
+
+    }
 
 }
-catch(error){
-
-alert(
-"Delete Error: " +
-error.message
-);
-
-}
-
-}
 
 
-/* ================= EXCEL UPLOAD ================= */
+/* ======================================================
+   EXCEL UPLOAD
+   ====================================================== */
 
 async function uploadExcel(){
 
-let input =
-document
-.getElementById("excelFile");
+    let input =
+        document
+            .getElementById("excelFile");
 
 
-let file =
-input.files[0];
+    let file =
+        input.files[0];
 
 
-if(!file)
-return;
+    if(
+        !file
+    ){
+        return;
+    }
 
 
-let extension =
-file.name
-.split(".")
-.pop()
-.toLowerCase();
+    let extension =
+        file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
 
 
-let message =
-document
-.getElementById("uploadMessage");
+    let message =
+        document
+            .getElementById("uploadMessage");
 
 
-if(
-extension!=="xlsx" &&
-extension!=="xls"
-){
+    if(
+        extension !== "xlsx" &&
+        extension !== "xls"
+    ){
 
-message.innerText =
-"Please select .xlsx or .xls file.";
+        message.innerText =
+            "Please select .xlsx or .xls file.";
 
-input.value="";
 
-return;
+        input.value = "";
+
+
+        return;
+
+    }
+
+
+    message.innerText =
+        "Uploading Excel file...";
+
+
+    let formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    formData.append(
+        "semester",
+        `Semester ${currentSemester}`
+    );
+
+
+    try{
+
+
+        let response =
+            await fetch(
+                "/api/upload_excel",
+                {
+
+                    method:"POST",
+
+                    body:
+                        formData
+
+                }
+            );
+
+
+        let result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            result.success === false
+        ){
+
+            throw new Error(
+                result.message ||
+                "Excel upload failed."
+            );
+
+        }
+
+
+        message.innerText =
+            result.message;
+
+
+        alert(
+            result.message
+        );
+
+
+        input.value = "";
+
+
+        loadStudents();
+
+
+    }
+    catch(error){
+
+        message.innerText =
+            "Upload failed: " +
+            error.message;
+
+
+        alert(
+            "Excel Upload Error:\n" +
+            error.message
+        );
+
+
+        input.value = "";
+
+    }
 
 }
 
 
-message.innerText =
-"Uploading Excel file...";
-
-
-let formData =
-new FormData();
-
-
-formData.append(
-"file",
-file
-);
-
-
-formData.append(
-"semester",
-`Semester ${currentSemester}`
-);
-
-
-try{
-
-let response =
-await fetch(
-"/api/upload_excel",
-{
-
-method:"POST",
-
-body:formData
-
-});
-
-
-let result =
-await response.json();
-
-
-if(
-!response.ok ||
-result.success===false
-){
-
-throw new Error(
-result.message ||
-"Excel upload failed."
-);
-
-}
-
-
-message.innerText =
-result.message;
-
-
-alert(
-result.message
-);
-
-
-input.value="";
-
-loadStudents();
-
-}
-catch(error){
-
-message.innerText =
-"Upload failed: " +
-error.message;
-
-
-alert(
-"Excel Upload Error:\n" +
-error.message
-);
-
-input.value="";
-
-}
-
-}
-
-
-/* ================= ANALYTICS ================= */
+/* ======================================================
+   ANALYTICS
+   ====================================================== */
 
 async function loadAnalytics(){
 
-try{
-
-let response =
-await fetch(
-`/api/analytics?semester=Semester%20${currentSemester}`
-);
+    try{
 
 
-if(response.status===401){
+        let response =
+            await fetch(
+                `/api/analytics?semester=Semester%20${currentSemester}`
+            );
 
-location.href="/login";
 
-return;
+        if(
+            response.status === 401
+        ){
+
+            location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        let data =
+            await response.json();
+
+
+        document
+            .getElementById("totalStudents")
+            .innerText =
+                data.total_students || 0;
+
+
+        document
+            .getElementById("averagePercentage")
+            .innerText =
+                num(
+                    data.average_percentage
+                )
+                .toFixed(2)
+                +
+                "%";
+
+
+        document
+            .getElementById("topPerformer")
+            .innerText =
+                data.top_performer || "-";
+
+
+        document
+            .getElementById("averageAttendance")
+            .innerText =
+                num(
+                    data.average_attendance
+                )
+                .toFixed(2)
+                +
+                "%";
+
+
+        drawCharts(
+            data
+        );
+
+
+    }
+    catch(error){
+
+        console.log(
+            "Analytics error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ======================================================
+   DRAW CHARTS
+   ====================================================== */
+
+function drawCharts(
+    data
+){
+
+    /* DESTROY OLD */
+
+    if(
+        gradeChart
+    ){
+
+        gradeChart.destroy();
+
+        gradeChart = null;
+
+    }
+
+
+    if(
+        subjectChart
+    ){
+
+        subjectChart.destroy();
+
+        subjectChart = null;
+
+    }
+
+
+    /* =================================================
+       PIE CHART
+       ================================================= */
+
+    let grades =
+        data.grades || {};
+
+
+    gradeChart =
+        new Chart(
+
+            document
+                .getElementById(
+                    "gradeChart"
+                ),
+
+            {
+
+                type:"pie",
+
+
+                data:{
+
+                    labels:
+                        Object.keys(
+                            grades
+                        ),
+
+
+                    datasets:[
+
+                        {
+
+                            data:
+                                Object.values(
+                                    grades
+                                )
+
+                        }
+
+                    ]
+
+                },
+
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+
+                    layout:{
+
+                        padding:3
+
+                    },
+
+
+                    plugins:{
+
+                        legend:{
+
+                            position:"bottom",
+
+
+                            labels:{
+
+                                boxWidth:8,
+
+                                boxHeight:8,
+
+                                padding:5,
+
+                                font:{
+
+                                    size:8
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    /* =================================================
+       BAR CHART
+       ================================================= */
+
+    let subjectData =
+        data.subjects || {};
+
+
+    subjectChart =
+        new Chart(
+
+            document
+                .getElementById(
+                    "subjectChart"
+                ),
+
+            {
+
+                type:"bar",
+
+
+                data:{
+
+                    labels:
+                        Object.keys(
+                            subjectData
+                        ),
+
+
+                    datasets:[
+
+                        {
+
+                            label:
+                                "Average Marks",
+
+
+                            data:
+                                Object.values(
+                                    subjectData
+                                )
+
+                        }
+
+                    ]
+
+                },
+
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+
+                    layout:{
+
+                        padding:3
+
+                    },
+
+
+                    plugins:{
+
+                        legend:{
+
+                            display:false
+
+                        }
+
+                    },
+
+
+                    scales:{
+
+                        x:{
+
+                            ticks:{
+
+                                font:{
+
+                                    size:7
+
+                                },
+
+
+                                maxRotation:35,
+
+                                minRotation:15
+
+                            }
+
+                        },
+
+
+                        y:{
+
+                            beginAtZero:true,
+
+                            max:100,
+
+
+                            ticks:{
+
+                                font:{
+
+                                    size:7
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
 
 }
 
 
-let data =
-await response.json();
-
-
-document
-.getElementById("totalStudents")
-.innerText =
-data.total_students || 0;
-
-
-document
-.getElementById("averagePercentage")
-.innerText =
-num(
-data.average_percentage
-)
-.toFixed(2)
-+
-"%";
-
-
-document
-.getElementById("topPerformer")
-.innerText =
-data.top_performer || "-";
-
-
-document
-.getElementById("averageAttendance")
-.innerText =
-num(
-data.average_attendance
-)
-.toFixed(2)
-+
-"%";
-
-
-drawCharts(data);
-
-}
-catch(error){
-
-console.log(error);
-
-}
-
-}
-
-
-/* ================= CHARTS ================= */
-
-function drawCharts(data){
-
-if(gradeChart)
-gradeChart.destroy();
-
-if(subjectChart)
-subjectChart.destroy();
-
-
-let grades =
-data.grades || {};
-
-let subjectData =
-data.subjects || {};
-
-
-/* PIE CHART */
-
-gradeChart =
-new Chart(
-document
-.getElementById("gradeChart"),
-
-{
-
-type:"doughnut",
-
-data:{
-
-labels:
-Object.keys(grades),
-
-datasets:[
-{
-
-data:
-Object.values(grades)
-
-}
-]
-
-},
-
-options:{
-
-responsive:true,
-
-maintainAspectRatio:false,
-
-plugins:{
-
-legend:{
-
-position:"bottom",
-
-labels:{
-
-boxWidth:8,
-
-font:{
-size:8
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-);
-
-
-/* BAR GRAPH */
-
-subjectChart =
-new Chart(
-document
-.getElementById("subjectChart"),
-
-{
-
-type:"bar",
-
-data:{
-
-labels:
-Object.keys(subjectData),
-
-datasets:[
-{
-
-label:
-"Average Marks",
-
-data:
-Object.values(subjectData)
-
-}
-]
-
-},
-
-options:{
-
-responsive:true,
-
-maintainAspectRatio:false,
-
-plugins:{
-
-legend:{
-display:false
-}
-
-},
-
-scales:{
-
-x:{
-
-ticks:{
-
-font:{
-size:7
-},
-
-maxRotation:35,
-
-minRotation:20
-
-}
-
-},
-
-y:{
-
-beginAtZero:true,
-
-max:100,
-
-ticks:{
-
-font:{
-size:7
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-);
-
-}
-
-
-/* ================= MODAL ================= */
+/* ======================================================
+   CLOSE MODAL
+   ====================================================== */
 
 function closeModal(){
 
-document
-.getElementById("studentModal")
-.style.display="none";
+    document
+        .getElementById(
+            "studentModal"
+        )
+        .style.display = "none";
 
 
-editingStudent=null;
+    editingStudent = null;
 
 
-document
-.getElementById("studentId")
-.readOnly=false;
+    document
+        .getElementById(
+            "studentId"
+        )
+        .readOnly = false;
 
 
-document
-.getElementById("studentForm")
-.reset();
+    document
+        .getElementById(
+            "studentForm"
+        )
+        .reset();
 
 }
 
+
+/* ======================================================
+   CLICK OUTSIDE MODAL
+   ====================================================== */
 
 window.addEventListener(
-"click",
-function(event){
+    "click",
+    function(event){
 
-let modal =
-document
-.getElementById("studentModal");
-
-if(event.target===modal){
-
-closeModal();
-
-}
-
-});
+        let modal =
+            document
+                .getElementById(
+                    "studentModal"
+                );
 
 
-/* ================= MOBILE ================= */
+        if(
+            event.target === modal
+        ){
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* ======================================================
+   MOBILE SIDEBAR
+   ====================================================== */
 
 function toggleSidebar(){
 
-document
-.getElementById("sidebar")
-.classList
-.toggle("open");
+    document
+        .getElementById(
+            "sidebar"
+        )
+        .classList
+        .toggle("open");
 
 }
 
 
-/* ================= HELPERS ================= */
+/* ======================================================
+   NUMBER
+   ====================================================== */
 
-function num(value){
+function num(
+    value
+){
 
-let number =
-parseFloat(value);
+    let number =
+        parseFloat(value);
 
-return isNaN(number)
-?
-0
-:
-number;
+
+    return isNaN(number)
+        ?
+        0
+        :
+        number;
 
 }
 
+
+/* ======================================================
+   SUBJECT VALUE
+   ====================================================== */
 
 function getSubjectValue(
-student,
-subject
+    student,
+    subject
 ){
 
-if(
-student &&
-student[subject] !== undefined
+    if(
+        student &&
+        student[subject] !== undefined
+    ){
+
+        return student[subject];
+
+    }
+
+
+    let target =
+        normalize(subject);
+
+
+    for(
+        let key in student
+    ){
+
+        if(
+            normalize(key) === target
+        ){
+
+            return student[key];
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ======================================================
+   NORMALIZE
+   ====================================================== */
+
+function normalize(
+    value
 ){
 
-return student[subject];
+    return String(
+        value || ""
+    )
+    .toLowerCase()
+    .replace(
+        /[^a-z0-9]/g,
+        ""
+    );
 
 }
 
 
-let target =
-normalize(subject);
+/* ======================================================
+   ESCAPE HTML
+   ====================================================== */
 
-
-for(
-let key in student
+function escapeHtml(
+    value
 ){
 
-if(
-normalize(key) === target
-){
+    return String(
+        value ?? ""
+    )
 
-return student[key];
+    .replace(
+        /&/g,
+        "&amp;"
+    )
 
-}
+    .replace(
+        /</g,
+        "&lt;"
+    )
 
-}
+    .replace(
+        />/g,
+        "&gt;"
+    )
 
+    .replace(
+        /"/g,
+        "&quot;"
+    )
 
-return "";
-
-}
-
-
-function normalize(value){
-
-return String(
-value || ""
-)
-.toLowerCase()
-.replace(
-/[^a-z0-9]/g,
-""
-);
-
-}
-
-
-function escapeHtml(value){
-
-return String(
-value ?? ""
-)
-
-.replace(
-/&/g,
-"&amp;"
-)
-
-.replace(
-/</g,
-"&lt;"
-)
-
-.replace(
-/>/g,
-"&gt;"
-)
-
-.replace(
-/"/g,
-"&quot;"
-)
-
-.replace(
-/'/g,
-"&#039;"
-);
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
+
+/* ======================================================
+   MESSAGE
+   ====================================================== */
 
 function showMessage(
-text,
-error=false
+    text,
+    error=false
 ){
 
-let element =
-document
-.getElementById(
-"uploadMessage"
-);
+    let element =
+        document
+            .getElementById(
+                "uploadMessage"
+            );
 
-element.innerText=text;
 
-element.style.color =
-error
-?
-"#dc2626"
-:
-"#16a34a";
+    element.innerText =
+        text;
+
+
+    element.style.color =
+        error
+        ?
+        "#dc2626"
+        :
+        "#16a34a";
 
 }
 
 </script>
+
 
 {% endif %}
 
