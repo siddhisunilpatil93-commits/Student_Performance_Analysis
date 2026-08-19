@@ -5,8 +5,8 @@ import os
 app = Flask(__name__)
 
 app.secret_key = os.environ.get(
-    'SECRET_KEY',
-    'student-performance-secret-key'
+    "SECRET_KEY",
+    "student-performance-secret-key"
 )
 
 BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -17,12 +17,12 @@ BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 # =========================================================
 
 SEMESTER_YEAR = {
-    'Semester 1': '1st Year',
-    'Semester 2': '1st Year',
-    'Semester 3': '2nd Year',
-    'Semester 4': '2nd Year',
-    'Semester 5': '3rd Year',
-    'Semester 6': '3rd Year'
+    "Semester 1": "1st Year",
+    "Semester 2": "1st Year",
+    "Semester 3": "2nd Year",
+    "Semester 4": "2nd Year",
+    "Semester 5": "3rd Year",
+    "Semester 6": "3rd Year"
 }
 
 
@@ -31,7 +31,7 @@ SEMESTER_YEAR = {
 # =========================================================
 
 SEMESTER_FILES = {
-    f'Semester {i}': f'semester_{i}.xlsx'
+    f"Semester {i}": f"semester_{i}.xlsx"
     for i in range(1, 7)
 }
 
@@ -42,43 +42,43 @@ SEMESTER_FILES = {
 
 SUBJECTS = {
 
-    'Semester 1': [
-        'Basic Mathematics',
-        'Communication Skills',
-        'Basic Science'
+    "Semester 1": [
+        "Basic Mathematics",
+        "Communication Skills",
+        "Basic Science"
     ],
 
-    'Semester 2': [
-        'Applied Mathematics',
-        'Basic Electrical and Engineering',
-        'Programming in C'
+    "Semester 2": [
+        "Applied Mathematics",
+        "Basic Electrical and Engineering",
+        "Programming in C"
     ],
 
-    'Semester 3': [
-        'Object Oriented Programming',
-        'Data Structure',
-        'Digital Techniques',
-        'Database Management System'
+    "Semester 3": [
+        "Object Oriented Programming",
+        "Data Structure",
+        "Digital Techniques",
+        "Database Management System"
     ],
 
-    'Semester 4': [
-        'Java Programming',
-        'Data Communication and Network',
-        'Microprocessor Programming',
-        'Environmental Education And Sustanability'
+    "Semester 4": [
+        "Java Programming",
+        "Data Communication and Network",
+        "Microprocessor Programming",
+        "Environmental Education And Sustanability"
     ],
 
-    'Semester 5': [
-        'Software Engineering',
-        'Opreting System',
-        'Data Analytics'
+    "Semester 5": [
+        "Software Engineering",
+        "Opreting System",
+        "Data Analytics"
     ],
 
-    'Semester 6': [
-        'Mobile Application Development',
-        'Machine Learning',
-        'Software Testing',
-        'Mangement'
+    "Semester 6": [
+        "Mobile Application Development",
+        "Machine Learning",
+        "Software Testing",
+        "Mangement"
     ]
 }
 
@@ -88,13 +88,13 @@ SUBJECTS = {
 # =========================================================
 
 LOGIN_USERNAME = os.environ.get(
-    'ADMIN_USERNAME',
-    'silicon'
+    "ADMIN_USERNAME",
+    "silicon"
 )
 
 LOGIN_PASSWORD = os.environ.get(
-    'ADMIN_PASSWORD',
-    'patil'
+    "ADMIN_PASSWORD",
+    "patil"
 )
 
 
@@ -114,24 +114,20 @@ def excel_path(s):
 
 
 def logged_in():
-    return session.get('logged_in') is True
+    return session.get("logged_in") is True
 
 
 def page_login_check():
-
     if not logged_in():
-        return redirect(url_for('login'))
-
+        return redirect(url_for("login"))
     return None
 
 
 def api_login_check():
-
     if not logged_in():
-
         return jsonify({
-            'success': False,
-            'message': 'Login required.'
+            "success": False,
+            "message": "Login required."
         }), 401
 
     return None
@@ -146,22 +142,22 @@ def calculate_grade(p):
     try:
         p = float(p)
     except Exception:
-        return 'F'
+        return "F"
 
     if p >= 90:
-        return 'A+'
+        return "A+"
     elif p >= 80:
-        return 'A'
+        return "A"
     elif p >= 70:
-        return 'B+'
+        return "B+"
     elif p >= 60:
-        return 'B'
+        return "B"
     elif p >= 50:
-        return 'C'
+        return "C"
     elif p >= 40:
-        return 'D'
+        return "D"
     else:
-        return 'F'
+        return "F"
 
 
 # =========================================================
@@ -179,7 +175,6 @@ def read_excel(s):
         return pd.DataFrame()
 
     try:
-
         df = pd.read_excel(path)
 
         if df is None:
@@ -194,8 +189,7 @@ def read_excel(s):
         return df
 
     except Exception as e:
-
-        print('Excel read error:', e)
+        print("Excel read error:", e)
         return pd.DataFrame()
 
 
@@ -208,128 +202,96 @@ def process_data(df, s):
     df = df.copy()
 
     required = [
-        'Student_ID',
-        'Name',
-        'Gender',
-        'Class',
-        'Attendance'
+        "Student_ID",
+        "Name",
+        "Gender",
+        "Class",
+        "Attendance"
     ]
 
     for c in required:
 
         if c not in df.columns:
 
-            if c == 'Attendance':
-
-                df[c] = pd.Series(
-                    0,
-                    index=df.index,
-                    dtype=float
-                )
-
+            if c == "Attendance":
+                df[c] = 0.0
             else:
-
-                df[c] = pd.Series(
-                    '',
-                    index=df.index,
-                    dtype=str
-                )
-
+                df[c] = ""
 
     # Student ID
-
-    df['Student_ID'] = (
-        df['Student_ID']
-        .fillna('')
+    df["Student_ID"] = (
+        df["Student_ID"]
+        .fillna("")
         .astype(str)
-        .str.replace(
-            r'\.0$',
-            '',
-            regex=True
-        )
+        .str.replace(r"\.0$", "", regex=True)
         .str.strip()
     )
 
-
-    # Text
-
-    for c in [
-        'Name',
-        'Gender',
-        'Class'
-    ]:
-
+    # Text fields
+    for c in ["Name", "Gender", "Class"]:
         df[c] = (
             df[c]
-            .fillna('')
+            .fillna("")
             .astype(str)
             .str.strip()
         )
 
-
     # Attendance
-
     raw_attendance = (
-        df['Attendance']
+        df["Attendance"]
         .astype(str)
         .str.strip()
     )
 
-    percent_mask = (
-        raw_attendance.str.endswith('%')
-    )
+    percent_mask = raw_attendance.str.endswith("%")
 
     clean_attendance = (
         raw_attendance
-        .str.replace(
-            '%',
-            '',
-            regex=False
-        )
+        .str.replace("%", "", regex=False)
     )
 
-    df['Attendance'] = pd.to_numeric(
+    df["Attendance"] = pd.to_numeric(
         clean_attendance,
-        errors='coerce'
+        errors="coerce"
     )
 
     fraction_mask = (
-        df['Attendance'].notna()
+        df["Attendance"].notna()
         &
-        df['Attendance'].between(0, 1)
+        df["Attendance"].between(0, 1)
         &
         ~percent_mask
     )
 
     df.loc[
         fraction_mask,
-        'Attendance'
+        "Attendance"
     ] = (
         df.loc[
             fraction_mask,
-            'Attendance'
+            "Attendance"
         ] * 100
     )
 
-    df['Attendance'] = (
-        df['Attendance']
+    df["Attendance"] = (
+        df["Attendance"]
         .fillna(0)
         .clip(0, 100)
         .round(2)
     )
 
-
     # Subjects
-
     subs = SUBJECTS.get(s, [])
 
     for c in subs:
 
-        if c in df.columns:
+        if c not in df.columns:
+            df[c] = 0.0
 
+        else:
             df[c] = pd.to_numeric(
                 df[c],
-                errors='coerce'
+                errors="coerce"
             )
 
             df[c] = (
@@ -339,55 +301,35 @@ def process_data(df, s):
                 .round(2)
             )
 
-        else:
-
-            df[c] = pd.Series(
-                0,
-                index=df.index,
-                dtype=float
-            )
-
-
     # Total / Percentage
-
     if subs:
 
-        df['Total'] = (
+        df["Total"] = (
             df[subs]
             .sum(axis=1)
             .round(2)
         )
 
-        df['Percentage'] = (
-            df['Total']
+        df["Percentage"] = (
+            df["Total"]
             / (len(subs) * 100)
             * 100
         ).round(2)
 
     else:
-
-        df['Total'] = 0.0
-        df['Percentage'] = 0.0
-
+        df["Total"] = 0.0
+        df["Percentage"] = 0.0
 
     # Attendance status
-
-    df['Attendance Status'] = (
-        df['Attendance']
-        .apply(
-            lambda x:
-            'Good'
-            if float(x) >= 75
-            else 'Bad'
-        )
+    df["Attendance Status"] = df["Attendance"].apply(
+        lambda x: "Good"
+        if float(x) >= 75
+        else "Bad"
     )
 
-
     # Grade
-
-    df['Grade'] = (
-        df['Percentage']
-        .apply(calculate_grade)
+    df["Grade"] = df["Percentage"].apply(
+        calculate_grade
     )
 
     return df
@@ -399,43 +341,27 @@ def process_data(df, s):
 
 def save_excel(df, s):
 
-    processed = process_data(
-        df,
-        s
-    )
+    processed = process_data(df, s)
 
     cols = (
         [
-            'Student_ID',
-            'Name',
-            'Gender',
-            'Class'
+            "Student_ID",
+            "Name",
+            "Gender",
+            "Class"
         ]
         + SUBJECTS[s]
-        + [
-            'Attendance'
-        ]
+        + ["Attendance"]
     )
 
     for c in cols:
 
         if c not in processed.columns:
 
-            if c == 'Attendance':
-
-                processed[c] = pd.Series(
-                    0,
-                    index=processed.index,
-                    dtype=float
-                )
-
+            if c == "Attendance":
+                processed[c] = 0.0
             else:
-
-                processed[c] = pd.Series(
-                    '',
-                    index=processed.index,
-                    dtype=str
-                )
+                processed[c] = ""
 
     processed[cols].to_excel(
         excel_path(s),
@@ -447,25 +373,22 @@ def save_excel(df, s):
 # LOGIN
 # =========================================================
 
-@app.route(
-    '/login',
-    methods=['GET', 'POST']
-)
+@app.route("/login", methods=["GET", "POST"])
 def login():
 
     if logged_in():
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
         username = request.form.get(
-            'username',
-            ''
+            "username",
+            ""
         ).strip()
 
         password = request.form.get(
-            'password',
-            ''
+            "password",
+            ""
         )
 
         if (
@@ -474,20 +397,20 @@ def login():
         ):
 
             session.clear()
-            session['logged_in'] = True
+            session["logged_in"] = True
 
             return redirect(
-                url_for('home')
+                url_for("home")
             )
 
         return render_template(
-            'index.html',
+            "index.html",
             login_page=True,
-            login_error='Invalid username or password.'
+            login_error="Invalid username or password."
         )
 
     return render_template(
-        'index.html',
+        "index.html",
         login_page=True
     )
 
@@ -496,13 +419,13 @@ def login():
 # LOGOUT
 # =========================================================
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
 
     session.clear()
 
     return redirect(
-        url_for('login')
+        url_for("login")
     )
 
 
@@ -510,7 +433,7 @@ def logout():
 # HOME
 # =========================================================
 
-@app.route('/')
+@app.route("/")
 def home():
 
     check = page_login_check()
@@ -519,7 +442,7 @@ def home():
         return check
 
     return render_template(
-        'index.html',
+        "index.html",
         login_page=False
     )
 
@@ -528,7 +451,7 @@ def home():
 # SUBJECT API
 # =========================================================
 
-@app.route('/api/subjects')
+@app.route("/api/subjects")
 def api_subjects():
 
     check = api_login_check()
@@ -537,34 +460,34 @@ def api_subjects():
         return check
 
     s = request.args.get(
-        'semester',
-        'Semester 1'
+        "semester",
+        "Semester 1"
     ).strip()
 
     if not valid_semester(s):
 
         return jsonify({
-            'success': False,
-            'message': 'Invalid semester'
+            "success": False,
+            "message": "Invalid semester"
         }), 400
 
     return jsonify({
 
-        'success': True,
+        "success": True,
 
-        'branch':
-            'Computer Engineering',
+        "branch":
+            "Computer Engineering",
 
-        'year':
+        "year":
             SEMESTER_YEAR[s],
 
-        'semester':
+        "semester":
             s,
 
-        'subjects': [
+        "subjects": [
             {
-                'code': x,
-                'name': x
+                "code": x,
+                "name": x
             }
             for x in SUBJECTS[s]
         ]
@@ -575,7 +498,7 @@ def api_subjects():
 # STUDENTS API
 # =========================================================
 
-@app.route('/api/students')
+@app.route("/api/students")
 def api_students():
 
     check = api_login_check()
@@ -584,8 +507,8 @@ def api_students():
         return check
 
     s = request.args.get(
-        'semester',
-        'Semester 1'
+        "semester",
+        "Semester 1"
     ).strip()
 
     if not valid_semester(s):
@@ -596,40 +519,37 @@ def api_students():
     if df.empty:
         return jsonify([])
 
-    df = process_data(
-        df,
-        s
-    )
+    df = process_data(df, s)
 
     cols = (
         [
-            'Student_ID',
-            'Name',
-            'Gender',
-            'Class'
+            "Student_ID",
+            "Name",
+            "Gender",
+            "Class"
         ]
         + SUBJECTS[s]
         + [
-            'Total',
-            'Percentage',
-            'Attendance',
-            'Attendance Status',
-            'Grade'
+            "Total",
+            "Percentage",
+            "Attendance",
+            "Attendance Status",
+            "Grade"
         ]
     )
 
     return jsonify(
         df[cols]
-        .fillna('')
-        .to_dict('records')
+        .fillna("")
+        .to_dict("records")
     )
 
 
 # =========================================================
-# SINGLE SEMESTER ANALYTICS
+# ANALYTICS
 # =========================================================
 
-@app.route('/api/analytics')
+@app.route("/api/analytics")
 def api_analytics():
 
     check = api_login_check()
@@ -638,23 +558,17 @@ def api_analytics():
         return check
 
     s = request.args.get(
-        'semester',
-        'Semester 1'
+        "semester",
+        "Semester 1"
     ).strip()
 
     empty = {
-
-        'total_students': 0,
-
-        'average_percentage': 0,
-
-        'top_performer': '-',
-
-        'average_attendance': 0,
-
-        'subjects': {},
-
-        'grades': {}
+        "total_students": 0,
+        "average_percentage": 0,
+        "top_performer": "-",
+        "average_attendance": 0,
+        "subjects": {},
+        "grades": {}
     }
 
     if not valid_semester(s):
@@ -665,76 +579,57 @@ def api_analytics():
     if df.empty:
         return jsonify(empty)
 
-    df = process_data(
-        df,
-        s
-    )
+    df = process_data(df, s)
 
     if df.empty:
         return jsonify(empty)
 
     try:
-
-        top_index = df[
-            'Percentage'
-        ].idxmax()
-
-        top = df.loc[
-            top_index,
-            'Name'
-        ]
-
+        top_index = df["Percentage"].idxmax()
+        top = df.loc[top_index, "Name"]
     except Exception:
-
-        top = '-'
+        top = "-"
 
     return jsonify({
 
-        'total_students':
+        "total_students":
             int(len(df)),
 
-        'average_percentage':
+        "average_percentage":
             round(
-                float(
-                    df['Percentage'].mean()
-                ),
+                float(df["Percentage"].mean()),
                 2
             ),
 
-        'top_performer':
+        "top_performer":
             str(top),
 
-        'average_attendance':
+        "average_attendance":
             round(
-                float(
-                    df['Attendance'].mean()
-                ),
+                float(df["Attendance"].mean()),
                 2
             ),
 
-        'subjects': {
-            x:
-            round(
-                float(
-                    df[x].mean()
-                ),
+        "subjects": {
+            x: round(
+                float(df[x].mean()),
                 2
             )
             for x in SUBJECTS[s]
         },
 
-        'grades':
-            df[
-                'Grade'
-            ].value_counts().to_dict()
+        "grades":
+            df["Grade"]
+            .value_counts()
+            .to_dict()
     })
 
 
 # =========================================================
-# COMBINED SEMESTER 1 + 2 ANALYTICS
+# COMBINED SEMESTER 1 + 2
 # =========================================================
 
-@app.route('/api/combined_analytics')
+@app.route("/api/combined_analytics")
 def combined_analytics():
 
     check = api_login_check()
@@ -742,76 +637,57 @@ def combined_analytics():
     if check:
         return check
 
-    semesters = [
-        'Semester 1',
-        'Semester 2'
-    ]
-
     result = {}
 
-    for s in semesters:
+    for s in ["Semester 1", "Semester 2"]:
 
         df = read_excel(s)
 
         result[s] = {
-            'subjects': {},
-            'grades': {},
-            'students': 0,
-            'percentage': 0,
-            'attendance': 0
+            "subjects": {},
+            "grades": {},
+            "students": 0,
+            "percentage": 0,
+            "attendance": 0
         }
 
         if df.empty:
             continue
 
-        df = process_data(
-            df,
-            s
-        )
+        df = process_data(df, s)
 
         if df.empty:
             continue
 
-        result[s]['students'] = int(
-            len(df)
-        )
+        result[s]["students"] = int(len(df))
 
-        result[s]['percentage'] = round(
-            float(
-                df['Percentage'].mean()
-            ),
+        result[s]["percentage"] = round(
+            float(df["Percentage"].mean()),
             2
         )
 
-        result[s]['attendance'] = round(
-            float(
-                df['Attendance'].mean()
-            ),
+        result[s]["attendance"] = round(
+            float(df["Attendance"].mean()),
             2
         )
 
-        result[s]['subjects'] = {
-
-            subject:
-            round(
-                float(
-                    df[subject].mean()
-                ),
+        result[s]["subjects"] = {
+            subject: round(
+                float(df[subject].mean()),
                 2
             )
-
             for subject in SUBJECTS[s]
         }
 
-        result[s]['grades'] = (
-            df['Grade']
+        result[s]["grades"] = (
+            df["Grade"]
             .value_counts()
             .to_dict()
         )
 
     return jsonify({
-        'success': True,
-        'semesters': result
+        "success": True,
+        "semesters": result
     })
 
 
@@ -820,8 +696,8 @@ def combined_analytics():
 # =========================================================
 
 @app.route(
-    '/api/upload_excel',
-    methods=['POST']
+    "/api/upload_excel",
+    methods=["POST"]
 )
 def upload_excel():
 
@@ -833,38 +709,33 @@ def upload_excel():
     try:
 
         s = request.form.get(
-            'semester',
-            ''
+            "semester",
+            ""
         ).strip()
 
-        f = request.files.get(
-            'file'
-        )
+        f = request.files.get("file")
 
         if not valid_semester(s):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Invalid semester selected.'
+                "success": False,
+                "message": "Invalid semester selected."
             }), 400
 
         if not f or not f.filename:
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Please select Excel file.'
+                "success": False,
+                "message": "Please select Excel file."
             }), 400
 
         if not f.filename.lower().endswith(
-            ('.xlsx', '.xls')
+            (".xlsx", ".xls")
         ):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Only Excel files are allowed.'
+                "success": False,
+                "message": "Only Excel files are allowed."
             }), 400
 
         df = pd.read_excel(f)
@@ -872,9 +743,8 @@ def upload_excel():
         if df.empty:
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Uploaded Excel is empty.'
+                "success": False,
+                "message": "Uploaded Excel is empty."
             }), 400
 
         df.columns = (
@@ -883,45 +753,31 @@ def upload_excel():
             .str.strip()
         )
 
-        for c in [
-            'Student_ID',
-            'Name'
-        ]:
+        for c in ["Student_ID", "Name"]:
 
             if c not in df.columns:
 
                 return jsonify({
-                    'success': False,
-                    'message':
-                        f'{c} column is required.'
+                    "success": False,
+                    "message": f"{c} column is required."
                 }), 400
 
-        save_excel(
-            df,
-            s
-        )
+        save_excel(df, s)
 
         return jsonify({
-
-            'success': True,
-
-            'message':
-                f'{s} Excel uploaded successfully.'
+            "success": True,
+            "message":
+                f"{s} Excel uploaded successfully."
         })
 
     except Exception as e:
 
-        print(
-            'Excel upload error:',
-            repr(e)
-        )
+        print("Excel upload error:", repr(e))
 
         return jsonify({
-
-            'success': False,
-
-            'message':
-                f'Excel upload failed: {e}'
+            "success": False,
+            "message":
+                f"Excel upload failed: {e}"
         }), 500
 
 
@@ -930,8 +786,8 @@ def upload_excel():
 # =========================================================
 
 @app.route(
-    '/api/add_student',
-    methods=['POST']
+    "/api/add_student",
+    methods=["POST"]
 )
 def add_student():
 
@@ -946,55 +802,54 @@ def add_student():
 
         s = str(
             d.get(
-                'semester',
-                'Semester 1'
+                "semester",
+                "Semester 1"
             )
         ).strip()
 
         sid = str(
             d.get(
-                'Student_ID',
-                ''
+                "Student_ID",
+                ""
             )
         ).strip()
 
         name = str(
             d.get(
-                'Name',
-                ''
+                "Name",
+                ""
             )
         ).strip()
 
         if not valid_semester(s):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Invalid semester.'
+                "success": False,
+                "message": "Invalid semester."
             }), 400
 
         if not sid or not name:
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Student ID and Name are required.'
+                "success": False,
+                "message":
+                    "Student ID and Name are required."
             })
 
         df = read_excel(s)
 
         if (
             not df.empty
-            and 'Student_ID' in df.columns
+            and "Student_ID" in df.columns
         ):
 
             ids = (
-                df['Student_ID']
-                .fillna('')
+                df["Student_ID"]
+                .fillna("")
                 .astype(str)
                 .str.replace(
-                    r'\.0$',
-                    '',
+                    r"\.0$",
+                    "",
                     regex=True
                 )
                 .str.strip()
@@ -1003,40 +858,21 @@ def add_student():
             if sid in ids.tolist():
 
                 return jsonify({
-                    'success': False,
-                    'message':
-                        'Student ID already exists.'
+                    "success": False,
+                    "message":
+                        "Student ID already exists."
                 })
 
         row = {
-
-            'Student_ID': sid,
-
-            'Name': name,
-
-            'Gender': d.get(
-                'Gender',
-                ''
-            ),
-
-            'Class': d.get(
-                'Class',
-                ''
-            ),
-
-            'Attendance': d.get(
-                'Attendance',
-                0
-            )
+            "Student_ID": sid,
+            "Name": name,
+            "Gender": d.get("Gender", ""),
+            "Class": d.get("Class", ""),
+            "Attendance": d.get("Attendance", 0)
         }
 
         row.update({
-
-            x: d.get(
-                x,
-                0
-            )
-
+            x: d.get(x, 0)
             for x in SUBJECTS[s]
         })
 
@@ -1048,27 +884,19 @@ def add_student():
             ignore_index=True
         )
 
-        save_excel(
-            df,
-            s
-        )
+        save_excel(df, s)
 
         return jsonify({
-
-            'success': True,
-
-            'message':
-                'Student added successfully.'
+            "success": True,
+            "message":
+                "Student added successfully."
         })
 
     except Exception as e:
 
         return jsonify({
-
-            'success': False,
-
-            'message':
-                str(e)
+            "success": False,
+            "message": str(e)
         }), 500
 
 
@@ -1077,8 +905,8 @@ def add_student():
 # =========================================================
 
 @app.route(
-    '/api/edit_student',
-    methods=['POST']
+    "/api/edit_student",
+    methods=["POST"]
 )
 def edit_student():
 
@@ -1092,104 +920,85 @@ def edit_student():
         d = request.get_json() or {}
 
         s = str(
-            d.get(
-                'semester',
-                ''
-            )
+            d.get("semester", "")
         ).strip()
 
         sid = str(
-            d.get(
-                'Student_ID',
-                ''
-            )
+            d.get("Student_ID", "")
         ).strip()
 
         if not valid_semester(s):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Invalid semester.'
+                "success": False,
+                "message": "Invalid semester."
             }), 400
 
         df = read_excel(s)
 
         if (
             df.empty
-            or 'Student_ID' not in df.columns
+            or "Student_ID" not in df.columns
         ):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Student not found.'
+                "success": False,
+                "message": "Student not found."
             })
 
-        df['Student_ID'] = (
-            df['Student_ID']
-            .fillna('')
+        df["Student_ID"] = (
+            df["Student_ID"]
+            .fillna("")
             .astype(str)
             .str.replace(
-                r'\.0$',
-                '',
+                r"\.0$",
+                "",
                 regex=True
             )
             .str.strip()
         )
 
         matches = df.index[
-            df['Student_ID'] == sid
+            df["Student_ID"] == sid
         ].tolist()
 
         if not matches:
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Student not found.'
+                "success": False,
+                "message": "Student not found."
             })
 
-        i = matches[0]
+        index = matches[0]
 
-        for c in (
+        editable_fields = (
             [
-                'Name',
-                'Gender',
-                'Class',
-                'Attendance'
+                "Name",
+                "Gender",
+                "Class",
+                "Attendance"
             ]
             + SUBJECTS[s]
-        ):
-
-            if c in d:
-
-                df.loc[
-                    i,
-                    c
-                ] = d[c]
-
-        save_excel(
-            df,
-            s
         )
 
+        for c in editable_fields:
+
+            if c in d:
+                df.loc[index, c] = d[c]
+
+        save_excel(df, s)
+
         return jsonify({
-
-            'success': True,
-
-            'message':
-                'Student updated successfully.'
+            "success": True,
+            "message":
+                "Student updated successfully."
         })
 
     except Exception as e:
 
         return jsonify({
-
-            'success': False,
-
-            'message':
-                str(e)
+            "success": False,
+            "message": str(e)
         }), 500
 
 
@@ -1198,8 +1007,8 @@ def edit_student():
 # =========================================================
 
 @app.route(
-    '/api/delete_student',
-    methods=['POST']
+    "/api/delete_student",
+    methods=["POST"]
 )
 def delete_student():
 
@@ -1213,25 +1022,18 @@ def delete_student():
         d = request.get_json() or {}
 
         s = str(
-            d.get(
-                'semester',
-                ''
-            )
+            d.get("semester", "")
         ).strip()
 
         sid = str(
-            d.get(
-                'Student_ID',
-                ''
-            )
+            d.get("Student_ID", "")
         ).strip()
 
         if not valid_semester(s):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Invalid semester.'
+                "success": False,
+                "message": "Invalid semester."
             }), 400
 
         df = read_excel(s)
@@ -1239,56 +1041,46 @@ def delete_student():
         if df.empty:
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Student not found.'
+                "success": False,
+                "message": "Student not found."
             })
 
-        df['Student_ID'] = (
-            df['Student_ID']
-            .fillna('')
+        df["Student_ID"] = (
+            df["Student_ID"]
+            .fillna("")
             .astype(str)
             .str.replace(
-                r'\.0$',
-                '',
+                r"\.0$",
+                "",
                 regex=True
             )
             .str.strip()
         )
 
         new_df = df[
-            df['Student_ID'] != sid
+            df["Student_ID"] != sid
         ].copy()
 
         if len(new_df) == len(df):
 
             return jsonify({
-                'success': False,
-                'message':
-                    'Student not found.'
+                "success": False,
+                "message": "Student not found."
             })
 
-        save_excel(
-            new_df,
-            s
-        )
+        save_excel(new_df, s)
 
         return jsonify({
-
-            'success': True,
-
-            'message':
-                'Student deleted successfully.'
+            "success": True,
+            "message":
+                "Student deleted successfully."
         })
 
     except Exception as e:
 
         return jsonify({
-
-            'success': False,
-
-            'message':
-                str(e)
+            "success": False,
+            "message": str(e)
         }), 500
 
 
@@ -1296,15 +1088,13 @@ def delete_student():
 # HEALTH
 # =========================================================
 
-@app.route('/health')
+@app.route("/health")
 def health():
 
     return jsonify({
-
-        'status': 'ok',
-
-        'application':
-            'Student Performance Analysis System'
+        "status": "ok",
+        "application":
+            "Student Performance Analysis System"
     })
 
 
@@ -1312,13 +1102,13 @@ def health():
 # RUN
 # =========================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     app.run(
-        host='0.0.0.0',
+        host="0.0.0.0",
         port=int(
             os.environ.get(
-                'PORT',
+                "PORT",
                 5000
             )
         )
