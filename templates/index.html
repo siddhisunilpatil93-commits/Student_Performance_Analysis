@@ -8,1123 +8,1723 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Student Performance Analysis System</title>
+<title>
+Student Performance Analysis System
+</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
 
-body{
-    background:#eef2ff;
-    color:#1e293b;
+body {
+    background: #eef2ff;
+    color: #1e293b;
 }
 
-/* ================= LOGIN ================= */
 
-.login-page{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#4f46e5,#9333ea,#ec4899);
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+.login-page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed,
+            #2563eb
+        );
 }
 
-.login-box{
-    width:390px;
-    max-width:92%;
-    background:white;
-    padding:35px;
-    border-radius:22px;
-    box-shadow:0 25px 70px rgba(0,0,0,.25);
+.login-box {
+
+    width: 390px;
+
+    max-width: 92%;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.25);
+
 }
 
-.login-box h1{
-    text-align:center;
-    color:#312e81;
-    margin-bottom:8px;
+.login-box h1 {
+
+    text-align: center;
+
+    color: #312e81;
+
+    margin-bottom: 8px;
+
 }
 
-.subtitle{
-    text-align:center;
-    color:#64748b;
-    margin-bottom:25px;
+.login-box .subtitle {
+
+    text-align: center;
+
+    color: #64748b;
+
+    margin-bottom: 28px;
+
 }
 
-.login-box label{
-    display:block;
-    margin-bottom:6px;
-    font-weight:bold;
+.login-box label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: bold;
+
 }
 
-.login-box input{
-    width:100%;
-    padding:13px;
-    margin-bottom:17px;
-    border:1px solid #cbd5e1;
-    border-radius:9px;
+.login-box input {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 17px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    outline: none;
+
 }
 
-.login-btn{
-    width:100%;
-    padding:13px;
-    border:0;
-    border-radius:9px;
-    background:#4f46e5;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
+.login-box input:focus {
+
+    border-color: #4f46e5;
+
 }
 
-.login-btn:hover{
-    background:#3730a3;
+.login-btn {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
 }
 
-.login-error{
-    background:#fee2e2;
-    color:#b91c1c;
-    padding:10px;
-    border-radius:8px;
-    margin-bottom:15px;
-    text-align:center;
+.login-btn:hover {
+
+    background: #3730a3;
+
 }
 
-/* ================= SIDEBAR ================= */
+.login-error {
 
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:250px;
-    height:100vh;
-    background:linear-gradient(180deg,#1e1b4b,#312e81,#4f46e5);
-    color:white;
-    padding:20px;
-    overflow-y:auto;
+    background: #fee2e2;
+
+    color: #b91c1c;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    margin-bottom: 15px;
+
+    text-align: center;
+
 }
 
-.logo{
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    padding:10px 0 25px;
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.sidebar {
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    width: 245px;
+
+    height: 100vh;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1e1b4b,
+            #312e81,
+            #3730a3
+        );
+
+    color: white;
+
+    padding: 20px;
+
+    overflow-y: auto;
+
+    box-shadow:
+        4px 0 20px
+        rgba(0,0,0,0.15);
+
 }
 
-.logo small{
-    display:block;
-    font-size:12px;
-    color:#c7d2fe;
-    margin-top:5px;
+.logo {
+
+    text-align: center;
+
+    font-size: 21px;
+
+    font-weight: bold;
+
+    padding: 12px 0 25px;
+
 }
 
-.side-title{
-    font-size:12px;
-    color:#c7d2fe;
-    margin:15px 0 8px;
+.logo small {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: #c7d2fe;
+
+    margin-top: 7px;
+
 }
 
-/* YEAR BUTTONS */
+.side-title {
 
-.year-btn{
-    width:100%;
-    padding:12px;
-    margin-bottom:8px;
-    border:0;
-    border-radius:9px;
-    background:#4338ca;
-    color:white;
-    cursor:pointer;
-    font-weight:bold;
-    text-align:left;
+    font-size: 12px;
+
+    color: #c7d2fe;
+
+    margin: 18px 0 8px;
+
+    font-weight: bold;
+
 }
 
-.year-btn:hover,
-.year-btn.active{
-    background:#818cf8;
+.year-button {
+
+    width: 100%;
+
+    padding: 11px;
+
+    margin-bottom: 7px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #4338ca;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    text-align: left;
+
 }
 
-/* SEMESTERS */
+.year-button:hover,
+.year-button.active {
 
-.semester-area{
-    display:none;
-    margin-bottom:10px;
+    background: #818cf8;
+
 }
 
-.semester-area.show{
-    display:block;
+.semester-area {
+
+    display: none;
+
+    padding-left: 8px;
+
+    margin-bottom: 8px;
+
 }
 
-.semester-btn{
-    width:100%;
-    padding:9px 12px;
-    margin-bottom:6px;
-    border:0;
-    border-radius:8px;
-    background:#3730a3;
-    color:white;
-    cursor:pointer;
-    text-align:left;
+.semester-area.show {
+
+    display: block;
+
+}
+
+.semester-btn {
+
+    width: 100%;
+
+    padding: 9px;
+
+    margin-bottom: 6px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #4f46e5;
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
 }
 
 .semester-btn:hover,
-.semester-btn.active{
-    background:#a78bfa;
+.semester-btn.active {
+
+    background: #a5b4fc;
+
+    color: #1e1b4b;
+
+    font-weight: bold;
+
 }
 
-.logout-btn{
-    width:100%;
-    margin-top:20px;
-    padding:12px;
-    border:0;
-    border-radius:8px;
-    background:#dc2626;
-    color:white;
-    cursor:pointer;
-    font-weight:bold;
+.logout-btn {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #dc2626;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
 }
 
-/* ================= MAIN ================= */
+.logout-btn:hover {
 
-.main{
-    margin-left:250px;
-    padding:22px;
+    background: #b91c1c;
+
 }
 
-/* HEADER */
 
-.header{
-    background:linear-gradient(
-        135deg,
-        #ffffff,
-        #eef2ff
-    );
-    border-radius:18px;
-    padding:22px;
-    margin-bottom:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-    box-shadow:0 5px 20px rgba(79,70,229,.12);
+/* =====================================================
+   MAIN
+   ===================================================== */
+
+.main {
+
+    margin-left: 245px;
+
+    padding: 22px;
+
 }
 
-.header h1{
-    font-size:25px;
-    color:#312e81;
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #eef2ff
+        );
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(79,70,229,0.10);
+
 }
 
-.header p{
-    color:#64748b;
-    margin-top:6px;
+.header h1 {
+
+    font-size: 25px;
+
+    color: #312e81;
+
 }
 
-.current-badge{
-    background:#4f46e5;
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    font-weight:bold;
+.header p {
+
+    color: #64748b;
+
+    margin-top: 6px;
+
 }
 
-/* INFO */
+.current-semester {
 
-.info-card{
-    background:linear-gradient(135deg,#4f46e5,#7c3aed);
-    color:white;
-    border-radius:16px;
-    padding:18px;
-    margin-bottom:18px;
-    box-shadow:0 8px 25px rgba(79,70,229,.2);
+    background: #4f46e5;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
 }
 
-.info-card h2{
-    margin-bottom:5px;
+
+/* =====================================================
+   INFO
+   ===================================================== */
+
+.info-card {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    color: white;
+
+    border-radius: 15px;
+
+    padding: 18px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(79,70,229,0.25);
+
 }
 
-/* CARDS */
+.info-card h2 {
 
-.cards{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:18px;
+    font-size: 21px;
+
+    margin-bottom: 6px;
+
 }
 
-.card{
-    padding:20px;
-    border-radius:16px;
-    color:white;
-    box-shadow:0 7px 20px rgba(0,0,0,.1);
+.info-card p {
+
+    color: #e0e7ff;
+
 }
 
-.card:nth-child(1){
-    background:linear-gradient(135deg,#2563eb,#06b6d4);
+
+/* =====================================================
+   CARDS
+   ===================================================== */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+
 }
 
-.card:nth-child(2){
-    background:linear-gradient(135deg,#7c3aed,#c026d3);
+.card {
+
+    background: white;
+
+    padding: 19px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,0.07);
+
+    border-left: 5px solid #4f46e5;
+
 }
 
-.card:nth-child(3){
-    background:linear-gradient(135deg,#059669,#10b981);
+.card:nth-child(2) {
+
+    border-left-color: #16a34a;
+
 }
 
-.card:nth-child(4){
-    background:linear-gradient(135deg,#ea580c,#f59e0b);
+.card:nth-child(3) {
+
+    border-left-color: #f59e0b;
+
 }
 
-.card-title{
-    font-size:13px;
-    opacity:.9;
+.card:nth-child(4) {
+
+    border-left-color: #ec4899;
+
 }
 
-.card-value{
-    font-size:24px;
-    font-weight:bold;
-    margin-top:8px;
+.card-title {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    font-weight: bold;
+
 }
 
-/* SECTION BUTTONS */
+.card-value {
 
-.section-buttons{
-    display:flex;
-    gap:10px;
-    margin-bottom:18px;
-    flex-wrap:wrap;
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: #312e81;
+
+    margin-top: 7px;
+
 }
 
-.section-btn{
-    border:0;
-    padding:11px 18px;
-    border-radius:9px;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+
+/* =====================================================
+   CHART BUTTONS
+   ===================================================== */
+
+.chart-tabs {
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 15px;
+
 }
 
-.graph-btn{
-    background:#2563eb;
+.chart-tab {
+
+    border: none;
+
+    padding: 10px 16px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    color: white;
+
+    background: #64748b;
+
+    font-weight: bold;
+
 }
 
-.search-btn{
-    background:#7c3aed;
+.chart-tab.active {
+
+    background: #4f46e5;
+
 }
 
-.student-btn{
-    background:#16a34a;
+.chart-tab:hover {
+
+    background: #3730a3;
+
 }
 
-/* CHARTS */
 
-.charts-row{
-    display:grid;
-    grid-template-columns:1.5fr 1fr;
-    gap:16px;
-    margin-bottom:18px;
+/* =====================================================
+   CHARTS
+   ===================================================== */
+
+.charts-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1fr;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+
 }
 
-.chart-card{
-    background:white;
-    border-radius:16px;
-    padding:17px;
-    box-shadow:0 4px 16px rgba(0,0,0,.06);
+.chart-card {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 16px;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,0.06);
+
 }
 
-.chart-card h3{
-    color:#312e81;
-    margin-bottom:10px;
+.chart-card h3 {
+
+    font-size: 16px;
+
+    color: #312e81;
+
+    margin-bottom: 10px;
+
 }
 
-.chart-box{
-    position:relative;
-    height:250px;
+.chart-box {
+
+    position: relative;
+
+    height: 260px;
+
 }
 
-.pie-box{
-    height:240px;
+.pie-box {
+
+    height: 260px;
+
 }
 
-/* COMBINED */
 
-.combined-title{
-    background:linear-gradient(
-        135deg,
-        #312e81,
-        #7c3aed
-    );
-    color:white;
-    padding:17px;
-    border-radius:15px 15px 0 0;
+/* =====================================================
+   COMBINED
+   ===================================================== */
+
+.combined-title {
+
+    background:
+        linear-gradient(
+            135deg,
+            #312e81,
+            #6366f1
+        );
+
+    color: white;
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    margin-top: 5px;
+
+    margin-bottom: 14px;
+
 }
 
-.combined-title h2{
-    font-size:18px;
+.combined-title h2 {
+
+    font-size: 18px;
+
 }
 
-/* SEARCH */
 
-.search-section{
-    background:white;
-    padding:17px;
-    border-radius:15px;
-    margin-bottom:18px;
+/* =====================================================
+   ACTIONS
+   ===================================================== */
+
+.actions {
+
+    background: white;
+
+    padding: 15px;
+
+    border-radius: 14px;
+
+    margin-bottom: 18px;
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,0.05);
+
 }
 
-.search-section h3{
-    color:#312e81;
-    margin-bottom:10px;
+.actions input[type="text"] {
+
+    flex: 1;
+
+    min-width: 220px;
+
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    outline: none;
+
 }
 
-.search-input{
-    width:100%;
-    padding:13px;
-    border:2px solid #c7d2fe;
-    border-radius:10px;
-    outline:none;
+.actions input:focus {
+
+    border-color: #6366f1;
+
 }
 
-.search-input:focus{
-    border-color:#4f46e5;
+.action-btn {
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 11px 16px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-weight: bold;
+
 }
 
-/* ACTIONS */
+.add-btn {
 
-.actions{
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    margin-bottom:18px;
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
+    background: #16a34a;
+
 }
 
-.action-btn{
-    border:none;
-    border-radius:8px;
-    padding:11px 16px;
-    cursor:pointer;
-    color:white;
-    font-weight:bold;
+.add-btn:hover {
+
+    background: #15803d;
+
 }
 
-.add-btn{
-    background:#16a34a;
+.upload-btn {
+
+    background: #2563eb;
+
 }
 
-.upload-btn{
-    background:#2563eb;
+.upload-btn:hover {
+
+    background: #1d4ed8;
+
 }
 
-.refresh-btn{
-    background:#7c3aed;
+.refresh-btn {
+
+    background: #7c3aed;
+
 }
 
-/* TABLE */
+.refresh-btn:hover {
 
-.table-card{
-    background:white;
-    border-radius:15px;
-    padding:15px;
-    overflow-x:auto;
+    background: #6d28d9;
+
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:1000px;
+
+/* =====================================================
+   TABLE
+   ===================================================== */
+
+.table-card {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 15px;
+
+    overflow-x: auto;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0,0,0,0.06);
+
 }
 
-th{
-    background:#312e81;
-    color:white;
-    padding:11px;
-    font-size:13px;
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 1000px;
+
 }
 
-td{
-    padding:9px;
-    border-bottom:1px solid #e2e8f0;
-    font-size:13px;
-    text-align:center;
+th {
+
+    background: #312e81;
+
+    color: white;
+
+    padding: 11px;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
 }
 
-tr:hover td{
-    background:#eef2ff;
+td {
+
+    padding: 9px;
+
+    border-bottom:
+        1px solid #e2e8f0;
+
+    font-size: 13px;
+
+    text-align: center;
+
 }
 
-.edit-btn{
-    background:#f59e0b;
-    color:white;
-    border:none;
-    padding:7px 10px;
-    border-radius:6px;
-    cursor:pointer;
-    margin-right:5px;
+tr:hover td {
+
+    background: #eef2ff;
+
 }
 
-.delete-btn{
-    background:#dc2626;
-    color:white;
-    border:none;
-    padding:7px 10px;
-    border-radius:6px;
-    cursor:pointer;
+.edit-btn {
+
+    background: #f59e0b;
+
+    color: white;
+
+    border: none;
+
+    padding: 7px 10px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
 }
 
-/* MODAL */
+.edit-btn:hover {
 
-.modal{
-    display:none;
-    position:fixed;
-    z-index:1000;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    background:rgba(15,23,42,.65);
-    justify-content:center;
-    align-items:center;
-    padding:15px;
+    background: #d97706;
+
 }
 
-.modal-content{
-    width:650px;
-    max-width:100%;
-    max-height:90vh;
-    overflow-y:auto;
-    background:white;
-    border-radius:18px;
-    padding:22px;
+.delete-btn {
+
+    background: #dc2626;
+
+    color: white;
+
+    border: none;
+
+    padding: 7px 10px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
 }
 
-.modal-content h2{
-    color:#312e81;
-    margin-bottom:15px;
+.delete-btn:hover {
+
+    background: #b91c1c;
+
 }
 
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    left: 0;
+
+    top: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background:
+        rgba(15,23,42,0.70);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 15px;
+
 }
 
-.form-group label{
-    display:block;
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:5px;
+.modal-content {
+
+    width: 650px;
+
+    max-width: 100%;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 17px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.30);
+
 }
 
-.form-group input{
-    width:100%;
-    padding:10px;
-    border:1px solid #cbd5e1;
-    border-radius:7px;
+.modal-content h2 {
+
+    color: #312e81;
+
+    margin-bottom: 18px;
+
 }
 
-.modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    margin-top:18px;
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
 }
 
-.save-btn{
-    background:#16a34a;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:7px;
-    cursor:pointer;
+.form-group label {
+
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    margin-bottom: 5px;
+
 }
 
-.cancel-btn{
-    background:#64748b;
-    color:white;
-    border:none;
-    padding:10px 18px;
-    border-radius:7px;
-    cursor:pointer;
+.form-group input {
+
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    outline: none;
+
 }
 
-/* MESSAGE */
+.form-group input:focus {
 
-.message{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#1e293b;
-    color:white;
-    padding:13px 18px;
-    border-radius:9px;
-    display:none;
-    z-index:2000;
+    border-color: #6366f1;
+
 }
 
-/* RESPONSIVE */
+.form-group input:disabled {
 
-@media(max-width:1100px){
+    background: #f1f5f9;
 
-    .cards{
-        grid-template-columns:repeat(2,1fr);
+    color: #64748b;
+
+}
+
+.modal-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+}
+
+.save-btn {
+
+    background: #16a34a;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+}
+
+.cancel-btn {
+
+    background: #64748b;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+}
+
+
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+.message {
+
+    position: fixed;
+
+    right: 20px;
+
+    bottom: 20px;
+
+    background: #1e293b;
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 9px;
+
+    display: none;
+
+    z-index: 2000;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,0.25);
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1100px) {
+
+    .cards {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
     }
 
-    .charts-row{
-        grid-template-columns:1fr;
+    .charts-row {
+
+        grid-template-columns: 1fr;
+
     }
+
 }
 
-@media(max-width:700px){
+@media (max-width: 700px) {
 
-    .sidebar{
-        position:relative;
-        width:100%;
-        height:auto;
+    .sidebar {
+
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+
     }
 
-    .main{
-        margin-left:0;
+    .main {
+
+        margin-left: 0;
+
     }
 
-    .cards{
-        grid-template-columns:1fr;
+    .cards {
+
+        grid-template-columns: 1fr;
+
     }
 
-    .form-grid{
-        grid-template-columns:1fr;
+    .form-grid {
+
+        grid-template-columns: 1fr;
+
     }
 
-    .header{
-        flex-direction:column;
-        align-items:flex-start;
+    .header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
     }
+
 }
 
 </style>
 
 </head>
 
+
 <body>
+
 
 {% if login_page %}
 
-<!-- LOGIN -->
+<!-- =====================================================
+     LOGIN
+     ===================================================== -->
 
 <div class="login-page">
 
-<div class="login-box">
+    <div class="login-box">
 
-<h1>Student Performance</h1>
+        <h1>
+            Student Performance
+        </h1>
 
-<p class="subtitle">
-Analysis System
-</p>
+        <p class="subtitle">
+            Analysis System
+        </p>
 
-{% if login_error %}
+        {% if login_error %}
 
-<div class="login-error">
-{{ login_error }}
+        <div class="login-error">
+            {{ login_error }}
+        </div>
+
+        {% endif %}
+
+        <form
+            method="POST"
+            action="/login"
+        >
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter username"
+                required
+            >
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                required
+            >
+
+            <button
+                class="login-btn"
+                type="submit"
+            >
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
 </div>
 
-{% endif %}
-
-<form method="POST" action="/login">
-
-<label>Username</label>
-
-<input
-type="text"
-name="username"
-placeholder="Enter username"
-required
->
-
-<label>Password</label>
-
-<input
-type="password"
-name="password"
-placeholder="Enter password"
-required
->
-
-<button class="login-btn" type="submit">
-Login
-</button>
-
-</form>
-
-</div>
-
-</div>
 
 {% else %}
 
-<!-- SIDEBAR -->
+
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
 
 <div class="sidebar">
 
-<div class="logo">
+    <div class="logo">
 
-Student Performance
+        Student Performance
 
-<small>
-Computer Engineering
-</small>
+        <small>
+            Computer Engineering
+        </small>
+
+    </div>
+
+
+    <div class="side-title">
+        SELECT YEAR
+    </div>
+
+
+    <button
+        class="year-button active"
+        onclick="selectYear('1st Year', this)"
+    >
+        📘 1st Year
+    </button>
+
+    <div
+        class="semester-area show"
+        id="year1Semesters"
+    >
+
+        <button
+            class="semester-btn active"
+            onclick="selectSemester('Semester 1', this)"
+        >
+            Semester 1
+        </button>
+
+        <button
+            class="semester-btn"
+            onclick="selectSemester('Semester 2', this)"
+        >
+            Semester 2
+        </button>
+
+    </div>
+
+
+    <button
+        class="year-button"
+        onclick="selectYear('2nd Year', this)"
+    >
+        📗 2nd Year
+    </button>
+
+    <div
+        class="semester-area"
+        id="year2Semesters"
+    >
+
+        <button
+            class="semester-btn"
+            onclick="selectSemester('Semester 3', this)"
+        >
+            Semester 3
+        </button>
+
+        <button
+            class="semester-btn"
+            onclick="selectSemester('Semester 4', this)"
+        >
+            Semester 4
+        </button>
+
+    </div>
+
+
+    <button
+        class="year-button"
+        onclick="selectYear('3rd Year', this)"
+    >
+        📕 3rd Year
+    </button>
+
+    <div
+        class="semester-area"
+        id="year3Semesters"
+    >
+
+        <button
+            class="semester-btn"
+            onclick="selectSemester('Semester 5', this)"
+        >
+            Semester 5
+        </button>
+
+        <button
+            class="semester-btn"
+            onclick="selectSemester('Semester 6', this)"
+        >
+            Semester 6
+        </button>
+
+    </div>
+
+
+    <button
+        class="logout-btn"
+        onclick="window.location.href='/logout'"
+    >
+        Logout
+    </button>
 
 </div>
 
-<div class="side-title">
-SELECT YEAR
-</div>
 
-<button
-class="year-btn active"
-onclick="selectYear('1st Year',this)"
->
-📘 1st Year
-</button>
-
-<div id="year1" class="semester-area show">
-
-<button
-class="semester-btn active"
-onclick="selectSemester('Semester 1',this)"
->
-Semester 1
-</button>
-
-<button
-class="semester-btn"
-onclick="selectSemester('Semester 2',this)"
->
-Semester 2
-</button>
-
-</div>
-
-<button
-class="year-btn"
-onclick="selectYear('2nd Year',this)"
->
-📗 2nd Year
-</button>
-
-<div id="year2" class="semester-area">
-
-<button
-class="semester-btn"
-onclick="selectSemester('Semester 3',this)"
->
-Semester 3
-</button>
-
-<button
-class="semester-btn"
-onclick="selectSemester('Semester 4',this)"
->
-Semester 4
-</button>
-
-</div>
-
-<button
-class="year-btn"
-onclick="selectYear('3rd Year',this)"
->
-📕 3rd Year
-</button>
-
-<div id="year3" class="semester-area">
-
-<button
-class="semester-btn"
-onclick="selectSemester('Semester 5',this)"
->
-Semester 5
-</button>
-
-<button
-class="semester-btn"
-onclick="selectSemester('Semester 6',this)"
->
-Semester 6
-</button>
-
-</div>
-
-<button
-class="logout-btn"
-onclick="window.location.href='/logout'"
->
-Logout
-</button>
-
-</div>
-
-
-<!-- MAIN -->
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
 
 <div class="main">
 
-<div class="header">
 
-<div>
+    <!-- HEADER -->
 
-<h1>
-Student Performance Analysis System
-</h1>
+    <div class="header">
 
-<p>
-MSBTE K-Scheme | Computer Engineering
-</p>
+        <div>
+
+            <h1>
+                Student Performance Analysis System
+            </h1>
+
+            <p>
+                MSBTE K-Scheme | Computer Engineering
+            </p>
+
+        </div>
+
+        <strong
+            class="current-semester"
+            id="currentSemester"
+        >
+            Semester 1
+        </strong>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="info-card">
+
+        <h2 id="yearText">
+            1st Year
+        </h2>
+
+        <p id="subjectText">
+            Semester 1 Subjects
+        </p>
+
+    </div>
+
+
+    <!-- CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                Total Students
+            </div>
+
+            <div
+                class="card-value"
+                id="totalStudents"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Average Percentage
+            </div>
+
+            <div
+                class="card-value"
+                id="averagePercentage"
+            >
+                0%
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Top Performer
+            </div>
+
+            <div
+                class="card-value"
+                id="topPerformer"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Average Attendance
+            </div>
+
+            <div
+                class="card-value"
+                id="averageAttendance"
+            >
+                0%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CHART BUTTONS
+         ================================================= -->
+
+    <div class="chart-tabs">
+
+        <button
+            class="chart-tab active"
+            onclick="showChartSection('separate')"
+            id="separateTab"
+        >
+            📊 Separate Semester Graph
+        </button>
+
+        <button
+            class="chart-tab"
+            onclick="showChartSection('combined')"
+            id="combinedTab"
+        >
+            📈 Combined Year Graph
+        </button>
+
+        <button
+            class="chart-tab"
+            onclick="scrollToSearch()"
+        >
+            🔎 Search Students
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         SEPARATE CHARTS
+         ================================================= -->
+
+    <div
+        id="separateCharts"
+    >
+
+        <div class="charts-row">
+
+            <div class="chart-card">
+
+                <h3>
+                    📊 Subject Performance
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="singleBarChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h3>
+                    🥧 Grade Distribution
+                </h3>
+
+                <div class="chart-box pie-box">
+
+                    <canvas
+                        id="singlePieChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         COMBINED CHARTS
+         ================================================= -->
+
+    <div
+        id="combinedCharts"
+        style="display:none;"
+    >
+
+        <div class="combined-title">
+
+            <h2 id="combinedTitle">
+                1st Year - Semester 1 + Semester 2 Combined Performance
+            </h2>
+
+        </div>
+
+
+        <div class="charts-row">
+
+            <div class="chart-card">
+
+                <h3>
+                    📈 Year-wise Subject Comparison
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="combinedBarChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h3>
+                    🥧 Year-wise Grade Distribution
+                </h3>
+
+                <div class="chart-box pie-box">
+
+                    <canvas
+                        id="combinedPieChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         SEARCH / ACTIONS
+         ================================================= -->
+
+    <div
+        class="actions"
+        id="searchSection"
+    >
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔎 Search by Student ID or Name..."
+            onkeyup="renderTable()"
+        >
+
+
+        <button
+            class="action-btn add-btn"
+            onclick="openAddModal()"
+        >
+            + Add Student
+        </button>
+
+
+        <label
+            class="action-btn upload-btn"
+            style="cursor:pointer;"
+        >
+
+            📁 Upload Excel
+
+            <input
+                type="file"
+                id="excelFile"
+                accept=".xlsx,.xls"
+                style="display:none;"
+                onchange="uploadExcel()"
+            >
+
+        </label>
+
+
+        <button
+            class="action-btn refresh-btn"
+            onclick="loadAll()"
+        >
+            🔄 Refresh
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         TABLE
+         ================================================= -->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead id="tableHead"></thead>
+
+            <tbody
+                id="studentTableBody"
+            ></tbody>
+
+        </table>
+
+    </div>
 
 </div>
+
+
+<!-- =====================================================
+     MODAL
+     ===================================================== -->
 
 <div
-class="current-badge"
-id="currentSemester"
->
-Semester 1
-</div>
-
-</div>
-
-
-<div class="info-card">
-
-<h2 id="yearText">
-1st Year
-</h2>
-
-<p id="subjectText">
-Semester 1 Subjects
-</p>
-
-</div>
-
-
-<!-- CARDS -->
-
-<div class="cards">
-
-<div class="card">
-
-<div class="card-title">
-Total Students
-</div>
-
-<div
-class="card-value"
-id="totalStudents"
->
-0
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Average Percentage
-</div>
-
-<div
-class="card-value"
-id="averagePercentage"
->
-0%
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Top Performer
-</div>
-
-<div
-class="card-value"
-id="topPerformer"
->
--
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-title">
-Average Attendance
-</div>
-
-<div
-class="card-value"
-id="averageAttendance"
->
-0%
-</div>
-
-</div>
-
-</div>
-
-
-<!-- SEPARATE BUTTONS -->
-
-<div class="section-buttons">
-
-<button
-class="section-btn graph-btn"
-onclick="scrollToGraphs()"
->
-📊 Graph Dashboard
-</button>
-
-<button
-class="section-btn search-btn"
-onclick="scrollToSearch()"
->
-🔎 Search Student
-</button>
-
-<button
-class="section-btn student-btn"
-onclick="openAddModal()"
->
-➕ Add Student
-</button>
-
-</div>
-
-
-<!-- CURRENT SEMESTER -->
-
-<div id="graphSection">
-
-<div class="combined-title">
-
-<h2 id="currentGraphTitle">
-Current Semester Performance
-</h2>
-
-</div>
-
-<div class="charts-row">
-
-<div class="chart-card">
-
-<h3>
-📊 Subject Performance
-</h3>
-
-<div class="chart-box">
-
-<canvas id="singleBarChart"></canvas>
-
-</div>
-
-</div>
-
-
-<div class="chart-card">
-
-<h3>
-🥧 Grade Distribution
-</h3>
-
-<div class="chart-box pie-box">
-
-<canvas id="singlePieChart"></canvas>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- COMBINED YEAR -->
-
-<div class="combined-title">
-
-<h2 id="combinedTitle">
-1st Year - Semester 1 + Semester 2 Combined Performance
-</h2>
-
-</div>
-
-<div class="charts-row">
-
-<div class="chart-card">
-
-<h3>
-📈 Semester Comparison
-</h3>
-
-<div class="chart-box">
-
-<canvas id="combinedBarChart"></canvas>
-
-</div>
-
-</div>
-
-
-<div class="chart-card">
-
-<h3>
-🥧 Combined Grade Distribution
-</h3>
-
-<div class="chart-box pie-box">
-
-<canvas id="combinedPieChart"></canvas>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- SEARCH -->
-
-<div id="searchSection"
-class="search-section">
-
-<h3>
-🔎 Search Student
-</h3>
-
-<input
-class="search-input"
-type="text"
-id="searchInput"
-placeholder="Search by Student ID or Name..."
-onkeyup="renderTable()"
+    class="modal"
+    id="studentModal"
 >
 
-</div>
+    <div class="modal-content">
+
+        <h2 id="modalTitle">
+            Add Student
+        </h2>
+
+        <div
+            class="form-grid"
+            id="formGrid"
+        ></div>
 
 
-<!-- ACTIONS -->
+        <div class="modal-actions">
 
-<div class="actions">
+            <button
+                class="cancel-btn"
+                onclick="closeModal()"
+            >
+                Cancel
+            </button>
 
-<button
-class="action-btn add-btn"
-onclick="openAddModal()"
->
-➕ Add Student
-</button>
+            <button
+                class="save-btn"
+                onclick="saveStudent()"
+            >
+                Save
+            </button>
 
-<label
-class="action-btn upload-btn"
-style="cursor:pointer;"
->
+        </div>
 
-📤 Upload Excel
-
-<input
-type="file"
-id="excelFile"
-accept=".xlsx,.xls"
-style="display:none;"
-onchange="uploadExcel()"
->
-
-</label>
-
-<button
-class="action-btn refresh-btn"
-onclick="loadAll()"
->
-🔄 Refresh
-</button>
-
-</div>
-
-
-<!-- TABLE -->
-
-<div class="table-card">
-
-<table>
-
-<thead id="tableHead"></thead>
-
-<tbody id="studentTableBody"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<!-- MODAL -->
-
-<div
-class="modal"
-id="studentModal"
->
-
-<div class="modal-content">
-
-<h2 id="modalTitle">
-Add Student
-</h2>
-
-<div
-class="form-grid"
-id="formGrid"
-></div>
-
-<div class="modal-actions">
-
-<button
-class="cancel-btn"
-onclick="closeModal()"
->
-Cancel
-</button>
-
-<button
-class="save-btn"
-onclick="saveStudent()"
->
-Save
-</button>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
 
 <div
-class="message"
-id="message"
+    class="message"
+    id="message"
 ></div>
 
 
 <script>
+
+
+// =========================================================
+// GLOBAL VARIABLES
+// =========================================================
 
 let currentSemester = "Semester 1";
 
@@ -1145,9 +1745,11 @@ let combinedBarChart = null;
 let combinedPieChart = null;
 
 
-/* ================= MESSAGE ================= */
+// =========================================================
+// MESSAGE
+// =========================================================
 
-function showMessage(text){
+function showMessage(text) {
 
     const box =
         document.getElementById("message");
@@ -1156,115 +1758,155 @@ function showMessage(text){
 
     box.style.display = "block";
 
-    setTimeout(function(){
-
-        box.style.display = "none";
-
-    },3000);
+    setTimeout(
+        () => {
+            box.style.display = "none";
+        },
+        3000
+    );
 }
 
 
-/* ================= YEAR ================= */
+// =========================================================
+// SELECT YEAR
+// =========================================================
 
-function selectYear(year,button){
+function selectYear(year, button) {
 
     currentYear = year;
 
-    document
-    .querySelectorAll(".year-btn")
-    .forEach(function(btn){
-
-        btn.classList.remove("active");
-
-    });
+    document.querySelectorAll(
+        ".year-button"
+    ).forEach(
+        btn => btn.classList.remove("active")
+    );
 
     button.classList.add("active");
 
 
-    document
-    .querySelectorAll(".semester-area")
-    .forEach(function(area){
-
-        area.classList.remove("show");
-
-    });
+    document.querySelectorAll(
+        ".semester-area"
+    ).forEach(
+        area => area.classList.remove("show")
+    );
 
 
-    if(year === "1st Year"){
+    if (year === "1st Year") {
 
         document
-        .getElementById("year1")
-        .classList.add("show");
+            .getElementById("year1Semesters")
+            .classList.add("show");
 
-        selectSemesterDirect("Semester 1");
+        selectSemester(
+            currentSemester === "Semester 2"
+                ? "Semester 2"
+                : "Semester 1",
+            document.querySelector(
+                currentSemester === "Semester 2"
+                    ? "#year1Semesters .semester-btn:nth-child(2)"
+                    : "#year1Semesters .semester-btn:nth-child(1)"
+            )
+        );
 
     }
 
-    else if(year === "2nd Year"){
+
+    else if (year === "2nd Year") {
 
         document
-        .getElementById("year2")
-        .classList.add("show");
+            .getElementById("year2Semesters")
+            .classList.add("show");
 
-        selectSemesterDirect("Semester 3");
+        selectSemester(
+            currentSemester === "Semester 4"
+                ? "Semester 4"
+                : "Semester 3",
+            document.querySelector(
+                currentSemester === "Semester 4"
+                    ? "#year2Semesters .semester-btn:nth-child(2)"
+                    : "#year2Semesters .semester-btn:nth-child(1)"
+            )
+        );
 
     }
 
-    else{
+
+    else if (year === "3rd Year") {
 
         document
-        .getElementById("year3")
-        .classList.add("show");
+            .getElementById("year3Semesters")
+            .classList.add("show");
 
-        selectSemesterDirect("Semester 5");
+        selectSemester(
+            currentSemester === "Semester 6"
+                ? "Semester 6"
+                : "Semester 5",
+            document.querySelector(
+                currentSemester === "Semester 6"
+                    ? "#year3Semesters .semester-btn:nth-child(2)"
+                    : "#year3Semesters .semester-btn:nth-child(1)"
+            )
+        );
 
     }
+
+
+    loadCombinedCharts();
+
 }
 
 
-/* ================= SEMESTER ================= */
+// =========================================================
+// SELECT SEMESTER
+// =========================================================
 
-function selectSemester(semester,button){
+function selectSemester(
+    semester,
+    button
+) {
 
     currentSemester = semester;
 
-    document
-    .querySelectorAll(".semester-btn")
-    .forEach(function(btn){
+    document.querySelectorAll(
+        ".semester-btn"
+    ).forEach(
+        btn => btn.classList.remove("active")
+    );
 
-        btn.classList.remove("active");
+    if (button) {
 
-    });
+        button.classList.add("active");
 
-    button.classList.add("active");
+    }
+
+    document.getElementById(
+        "currentSemester"
+    ).textContent = semester;
+
+    currentYear =
+        semester === "Semester 1" ||
+        semester === "Semester 2"
+            ? "1st Year"
+            :
+        semester === "Semester 3" ||
+        semester === "Semester 4"
+            ? "2nd Year"
+            :
+            "3rd Year";
+
+    document.getElementById(
+        "yearText"
+    ).textContent = currentYear;
 
     loadAll();
 }
 
 
-function selectSemesterDirect(semester){
+// =========================================================
+// LOAD ALL
+// =========================================================
 
-    currentSemester = semester;
-
-    document
-    .querySelectorAll(".semester-btn")
-    .forEach(function(btn){
-
-        btn.classList.remove("active");
-
-        if(btn.textContent.trim() === semester){
-            btn.classList.add("active");
-        }
-
-    });
-
-    loadAll();
-}
-
-
-/* ================= LOAD ALL ================= */
-
-async function loadAll(){
+async function loadAll() {
 
     await loadSubjects();
 
@@ -1272,39 +1914,37 @@ async function loadAll(){
 
     await loadAnalytics();
 
-    await loadYearAnalytics();
+    await loadCombinedCharts();
 
 }
 
 
-/* ================= SUBJECTS ================= */
+// =========================================================
+// LOAD SUBJECTS
+// =========================================================
 
-async function loadSubjects(){
+async function loadSubjects() {
 
-    try{
+    try {
 
         const response =
             await fetch(
-                "/api/subjects?semester="
-                + encodeURIComponent(currentSemester)
+                `/api/subjects?semester=${encodeURIComponent(currentSemester)}`
             );
 
         const data =
             await response.json();
 
-        if(!data.success){
+        if (!data.success) {
+
             return;
+
         }
 
         subjects =
             data.subjects.map(
-                x => x.name
+                item => item.name
             );
-
-        document.getElementById(
-            "currentSemester"
-        ).textContent =
-            currentSemester;
 
         document.getElementById(
             "yearText"
@@ -1314,28 +1954,32 @@ async function loadSubjects(){
         document.getElementById(
             "subjectText"
         ).textContent =
-            subjects.join(" | ");
+            `${currentSemester} Subjects: ${subjects.join(" | ")}`;
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Subject error:",
+            error
+        );
 
     }
 }
 
 
-/* ================= STUDENTS ================= */
+// =========================================================
+// LOAD STUDENTS
+// =========================================================
 
-async function loadStudents(){
+async function loadStudents() {
 
-    try{
+    try {
 
         const response =
             await fetch(
-                "/api/students?semester="
-                + encodeURIComponent(currentSemester)
+                `/api/students?semester=${encodeURIComponent(currentSemester)}`
             );
 
         students =
@@ -1345,17 +1989,22 @@ async function loadStudents(){
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Student error:",
+            error
+        );
 
     }
 }
 
 
-/* ================= TABLE ================= */
+// =========================================================
+// TABLE
+// =========================================================
 
-function renderTable(){
+function renderTable() {
 
     const head =
         document.getElementById(
@@ -1399,134 +2048,169 @@ function renderTable(){
     ];
 
 
-    const tr =
+    const headerRow =
         document.createElement("tr");
 
 
-    columns.forEach(function(col){
+    columns.forEach(
+        column => {
 
-        const th =
-            document.createElement("th");
+            const th =
+                document.createElement("th");
 
-        th.textContent = col;
+            th.textContent =
+                column;
 
-        tr.appendChild(th);
+            headerRow.appendChild(th);
 
-    });
+        }
+    );
 
 
-    head.appendChild(tr);
+    head.appendChild(
+        headerRow
+    );
 
 
     const search =
-        document
-        .getElementById("searchInput")
+        document.getElementById(
+            "searchInput"
+        )
         .value
         .toLowerCase()
         .trim();
 
 
     const filtered =
-        students.filter(function(student){
+        students.filter(
+            student => {
 
-            const id =
-                String(
-                    student.Student_ID || ""
-                ).toLowerCase();
+                const id =
+                    String(
+                        student.Student_ID || ""
+                    )
+                    .toLowerCase();
 
-            const name =
-                String(
-                    student.Name || ""
-                ).toLowerCase();
+                const name =
+                    String(
+                        student.Name || ""
+                    )
+                    .toLowerCase();
 
-            return (
-                id.includes(search)
-                ||
-                name.includes(search)
-            );
+                return (
+                    id.includes(search)
+                    ||
+                    name.includes(search)
+                );
 
-        });
-
-
-    filtered.forEach(function(student){
-
-        const row =
-            document.createElement("tr");
+            }
+        );
 
 
-        columns.forEach(function(col){
+    filtered.forEach(
+        student => {
 
-            const td =
-                document.createElement("td");
-
-
-            if(col === "Actions"){
-
-                const edit =
-                    document.createElement("button");
-
-                edit.textContent = "Edit";
-
-                edit.className = "edit-btn";
-
-                edit.onclick = function(){
-
-                    openEditModal(student);
-
-                };
+            const row =
+                document.createElement("tr");
 
 
-                const del =
-                    document.createElement("button");
+            columns.forEach(
+                column => {
 
-                del.textContent = "Delete";
+                    const td =
+                        document.createElement("td");
 
-                del.className = "delete-btn";
 
-                del.onclick = function(){
+                    if (column === "Actions") {
 
-                    deleteStudent(
-                        student.Student_ID
+                        const edit =
+                            document.createElement("button");
+
+                        edit.textContent =
+                            "Edit";
+
+                        edit.className =
+                            "edit-btn";
+
+                        edit.onclick =
+                            function() {
+
+                                openEditModal(
+                                    student
+                                );
+
+                            };
+
+
+                        const del =
+                            document.createElement("button");
+
+                        del.textContent =
+                            "Delete";
+
+                        del.className =
+                            "delete-btn";
+
+                        del.style.marginLeft =
+                            "5px";
+
+                        del.onclick =
+                            function() {
+
+                                deleteStudent(
+                                    student.Student_ID
+                                );
+
+                            };
+
+
+                        td.appendChild(
+                            edit
+                        );
+
+                        td.appendChild(
+                            del
+                        );
+
+                    }
+
+                    else {
+
+                        td.textContent =
+                            student[column] ?? "";
+
+                    }
+
+
+                    row.appendChild(
+                        td
                     );
 
-                };
+                }
+            );
 
 
-                td.appendChild(edit);
+            body.appendChild(
+                row
+            );
 
-                td.appendChild(del);
-
-            }
-
-            else{
-
-                td.textContent =
-                    student[col] ?? "";
-
-            }
-
-            row.appendChild(td);
-
-        });
-
-
-        body.appendChild(row);
-
-    });
+        }
+    );
 
 }
 
 
-/* ================= ANALYTICS ================= */
+// =========================================================
+// LOAD ANALYTICS
+// =========================================================
 
-async function loadAnalytics(){
+async function loadAnalytics() {
 
-    try{
+    try {
 
         const response =
             await fetch(
-                "/api/analytics?semester="
-                + encodeURIComponent(currentSemester)
+                `/api/analytics?semester=${encodeURIComponent(currentSemester)}`
             );
 
         const data =
@@ -1542,8 +2226,7 @@ async function loadAnalytics(){
         document.getElementById(
             "averagePercentage"
         ).textContent =
-            (data.average_percentage || 0)
-            + "%";
+            `${data.average_percentage || 0}%`;
 
 
         document.getElementById(
@@ -1555,13 +2238,13 @@ async function loadAnalytics(){
         document.getElementById(
             "averageAttendance"
         ).textContent =
-            (data.average_attendance || 0)
-            + "%";
+            `${data.average_attendance || 0}%`;
 
 
         createSingleBarChart(
             data.subjects || {}
         );
+
 
         createSinglePieChart(
             data.grades || {}
@@ -1569,26 +2252,29 @@ async function loadAnalytics(){
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Analytics error:",
+            error
+        );
 
     }
-
 }
 
 
-/* ================= SINGLE BAR ================= */
+// =========================================================
+// SINGLE BAR CHART
+// =========================================================
 
-function createSingleBarChart(data){
+function createSingleBarChart(data) {
 
     const canvas =
         document.getElementById(
             "singleBarChart"
         );
 
-
-    if(singleBarChart){
+    if (singleBarChart) {
 
         singleBarChart.destroy();
 
@@ -1600,14 +2286,14 @@ function createSingleBarChart(data){
             canvas,
             {
 
-                type:"bar",
+                type: "bar",
 
-                data:{
+                data: {
 
                     labels:
                         Object.keys(data),
 
-                    datasets:[
+                    datasets: [
 
                         {
 
@@ -1617,7 +2303,7 @@ function createSingleBarChart(data){
                             data:
                                 Object.values(data),
 
-                            borderWidth:1
+                            borderWidth: 1
 
                         }
 
@@ -1625,19 +2311,19 @@ function createSingleBarChart(data){
 
                 },
 
-                options:{
+                options: {
 
-                    responsive:true,
+                    responsive: true,
 
-                    maintainAspectRatio:false,
+                    maintainAspectRatio: false,
 
-                    scales:{
+                    scales: {
 
-                        y:{
+                        y: {
 
-                            beginAtZero:true,
+                            beginAtZero: true,
 
-                            max:100
+                            max: 100
 
                         }
 
@@ -1651,17 +2337,18 @@ function createSingleBarChart(data){
 }
 
 
-/* ================= SINGLE PIE ================= */
+// =========================================================
+// SINGLE PIE CHART
+// =========================================================
 
-function createSinglePieChart(data){
+function createSinglePieChart(data) {
 
     const canvas =
         document.getElementById(
             "singlePieChart"
         );
 
-
-    if(singlePieChart){
+    if (singlePieChart) {
 
         singlePieChart.destroy();
 
@@ -1669,6 +2356,7 @@ function createSinglePieChart(data){
 
 
     const grades = [
+
         "A+",
         "A",
         "B+",
@@ -1676,6 +2364,7 @@ function createSinglePieChart(data){
         "C",
         "D",
         "F"
+
     ];
 
 
@@ -1684,20 +2373,20 @@ function createSinglePieChart(data){
             canvas,
             {
 
-                type:"pie",
+                type: "pie",
 
-                data:{
+                data: {
 
-                    labels:grades,
+                    labels: grades,
 
-                    datasets:[
+                    datasets: [
 
                         {
 
                             data:
                                 grades.map(
-                                    g =>
-                                        data[g] || 0
+                                    grade =>
+                                        data[grade] || 0
                                 )
 
                         }
@@ -1706,17 +2395,18 @@ function createSinglePieChart(data){
 
                 },
 
-                options:{
+                options: {
 
-                    responsive:true,
+                    responsive: true,
 
-                    maintainAspectRatio:false,
+                    maintainAspectRatio: false,
 
-                    plugins:{
+                    plugins: {
 
-                        legend:{
+                        legend: {
 
-                            position:"bottom"
+                            position:
+                                "bottom"
 
                         }
 
@@ -1730,80 +2420,311 @@ function createSinglePieChart(data){
 }
 
 
-/* ================= YEAR ANALYTICS ================= */
+// =========================================================
+// COMBINED YEAR CHARTS
+// =========================================================
 
-async function loadYearAnalytics(){
+async function loadCombinedCharts() {
 
-    try{
+    try {
 
         const response =
             await fetch(
-                "/api/year_analytics?year="
-                + encodeURIComponent(currentYear)
+                `/api/year_analytics?year=${encodeURIComponent(currentYear)}`
             );
 
         const data =
             await response.json();
 
-        if(!data.success){
+
+        if (!data.success) {
+
             return;
+
         }
 
 
-        const semesters =
+        const semesterNames =
             Object.keys(
                 data.semesters
             );
 
 
-        if(semesters.length < 2){
-            return;
-        }
-
-
-        const sem1 =
+        const firstSemester =
             data.semesters[
-                semesters[0]
+                semesterNames[0]
             ];
 
-        const sem2 =
+        const secondSemester =
             data.semesters[
-                semesters[1]
+                semesterNames[1]
             ];
 
 
         document.getElementById(
             "combinedTitle"
         ).textContent =
-            currentYear
-            + " - "
-            + semesters[0]
-            + " + "
-            + semesters[1]
-            + " Combined Performance";
+            `${currentYear} - ${semesterNames[0]} + ${semesterNames[1]} Combined Performance`;
 
 
-        createCombinedBarChart(
-            sem1,
-            sem2,
-            semesters[0],
-            semesters[1]
-        );
+        // -------------------------------------------------
+        // BAR
+        // -------------------------------------------------
+
+        const labels = [
+
+            ...Object.keys(
+                firstSemester.subjects
+            ),
+
+            ...Object.keys(
+                secondSemester.subjects
+            )
+
+        ];
 
 
-        createCombinedPieChart(
-            sem1,
-            sem2,
-            semesters[0],
-            semesters[1]
-        );
+        const firstValues =
+            Object.values(
+                firstSemester.subjects
+            );
+
+
+        const secondValues =
+            Object.values(
+                secondSemester.subjects
+            );
+
+
+        const barLabels = [
+
+            ...Object.keys(
+                firstSemester.subjects
+            ).map(
+                subject =>
+                    `${semesterNames[0]} - ${subject}`
+            ),
+
+            ...Object.keys(
+                secondSemester.subjects
+            ).map(
+                subject =>
+                    `${semesterNames[1]} - ${subject}`
+            )
+
+        ];
+
+
+        const barCanvas =
+            document.getElementById(
+                "combinedBarChart"
+            );
+
+
+        if (combinedBarChart) {
+
+            combinedBarChart.destroy();
+
+        }
+
+
+        combinedBarChart =
+            new Chart(
+                barCanvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: barLabels,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    semesterNames[0],
+
+                                data: [
+
+                                    ...firstValues,
+
+                                    ...new Array(
+                                        secondValues.length
+                                    ).fill(null)
+
+                                ],
+
+                                borderWidth: 1
+
+                            },
+
+                            {
+
+                                label:
+                                    semesterNames[1],
+
+                                data: [
+
+                                    ...new Array(
+                                        firstValues.length
+                                    ).fill(null),
+
+                                    ...secondValues
+
+                                ],
+
+                                borderWidth: 1
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                max: 100
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+
+        // -------------------------------------------------
+        // COMBINED PIE
+        // -------------------------------------------------
+
+        const grades = [
+
+            "A+",
+            "A",
+            "B+",
+            "B",
+            "C",
+            "D",
+            "F"
+
+        ];
+
+
+        const firstGradeValues =
+            grades.map(
+                grade =>
+                    firstSemester.grades[grade] || 0
+            );
+
+
+        const secondGradeValues =
+            grades.map(
+                grade =>
+                    secondSemester.grades[grade] || 0
+            );
+
+
+        const pieCanvas =
+            document.getElementById(
+                "combinedPieChart"
+            );
+
+
+        if (combinedPieChart) {
+
+            combinedPieChart.destroy();
+
+        }
+
+
+        combinedPieChart =
+            new Chart(
+                pieCanvas,
+                {
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: grades,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    semesterNames[0],
+
+                                data:
+                                    firstGradeValues
+
+                            },
+
+                            {
+
+                                label:
+                                    semesterNames[1],
+
+                                data:
+                                    secondGradeValues
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position:
+                                    "bottom"
+
+                            },
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    `${semesterNames[0]} + ${semesterNames[1]}`
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
 
     }
 
-    catch(error){
+    catch (error) {
 
         console.error(
-            "Year analytics error:",
+            "Combined chart error:",
             error
         );
 
@@ -1812,257 +2733,98 @@ async function loadYearAnalytics(){
 }
 
 
-/* ================= COMBINED BAR ================= */
+// =========================================================
+// CHART SECTION
+// =========================================================
 
-function createCombinedBarChart(
-    sem1,
-    sem2,
-    sem1Name,
-    sem2Name
-){
+function showChartSection(section) {
 
-    const canvas =
+    const separate =
         document.getElementById(
-            "combinedBarChart"
+            "separateCharts"
+        );
+
+    const combined =
+        document.getElementById(
+            "combinedCharts"
+        );
+
+    const separateTab =
+        document.getElementById(
+            "separateTab"
+        );
+
+    const combinedTab =
+        document.getElementById(
+            "combinedTab"
         );
 
 
-    if(combinedBarChart){
+    if (section === "separate") {
 
-        combinedBarChart.destroy();
+        separate.style.display =
+            "block";
+
+        combined.style.display =
+            "none";
+
+        separateTab.classList.add(
+            "active"
+        );
+
+        combinedTab.classList.remove(
+            "active"
+        );
 
     }
 
+    else {
 
-    const labels = [
+        separate.style.display =
+            "none";
 
-        ...Object.keys(
-            sem1.subjects
-        ),
+        combined.style.display =
+            "block";
 
-        ...Object.keys(
-            sem2.subjects
-        )
-
-    ];
-
-
-    const sem1Values = [
-
-        ...Object.values(
-            sem1.subjects
-        ),
-
-        ...new Array(
-            Object.keys(
-                sem2.subjects
-            ).length
-        ).fill(null)
-
-    ];
-
-
-    const sem2Values = [
-
-        ...new Array(
-            Object.keys(
-                sem1.subjects
-            ).length
-        ).fill(null),
-
-        ...Object.values(
-            sem2.subjects
-        )
-
-    ];
-
-
-    combinedBarChart =
-        new Chart(
-            canvas,
-            {
-
-                type:"bar",
-
-                data:{
-
-                    labels:labels,
-
-                    datasets:[
-
-                        {
-
-                            label:sem1Name,
-
-                            data:sem1Values,
-
-                            borderWidth:1
-
-                        },
-
-                        {
-
-                            label:sem2Name,
-
-                            data:sem2Values,
-
-                            borderWidth:1
-
-                        }
-
-                    ]
-
-                },
-
-                options:{
-
-                    responsive:true,
-
-                    maintainAspectRatio:false,
-
-                    scales:{
-
-                        y:{
-
-                            beginAtZero:true,
-
-                            max:100
-
-                        }
-
-                    }
-
-                }
-
-            }
-
+        separateTab.classList.remove(
+            "active"
         );
+
+        combinedTab.classList.add(
+            "active"
+        );
+
+        loadCombinedCharts();
+
+    }
 
 }
 
 
-/* ================= COMBINED PIE ================= */
+// =========================================================
+// SEARCH SCROLL
+// =========================================================
 
-function createCombinedPieChart(
-    sem1,
-    sem2,
-    sem1Name,
-    sem2Name
-){
+function scrollToSearch() {
 
-    const canvas =
-        document.getElementById(
-            "combinedPieChart"
-        );
-
-
-    if(combinedPieChart){
-
-        combinedPieChart.destroy();
-
-    }
-
-
-    const grades = [
-        "A+",
-        "A",
-        "B+",
-        "B",
-        "C",
-        "D",
-        "F"
-    ];
-
-
-    const sem1Grades =
-        grades.map(function(g){
-
-            return sem1.grades[g] || 0;
-
+    document
+        .getElementById("searchSection")
+        .scrollIntoView({
+            behavior: "smooth"
         });
 
-
-    const sem2Grades =
-        grades.map(function(g){
-
-            return sem2.grades[g] || 0;
-
-        });
-
-
-    combinedPieChart =
-        new Chart(
-            canvas,
-            {
-
-                type:"pie",
-
-                data:{
-
-                    labels:grades,
-
-                    datasets:[
-
-                        {
-
-                            label:sem1Name,
-
-                            data:sem1Grades
-
-                        },
-
-                        {
-
-                            label:sem2Name,
-
-                            data:sem2Grades
-
-                        }
-
-                    ]
-
-                },
-
-                options:{
-
-                    responsive:true,
-
-                    maintainAspectRatio:false,
-
-                    plugins:{
-
-                        legend:{
-
-                            position:"bottom"
-
-                        },
-
-                        title:{
-
-                            display:true,
-
-                            text:
-                                sem1Name
-                                + " + "
-                                + sem2Name
-                                + " Grade Comparison"
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        );
+    document
+        .getElementById("searchInput")
+        .focus();
 
 }
 
 
-/* ================= ADD ================= */
+// =========================================================
+// ADD MODAL
+// =========================================================
 
-function openAddModal(){
+function openAddModal() {
 
     editingStudentId = null;
 
@@ -2083,14 +2845,16 @@ function openAddModal(){
 }
 
 
-/* ================= EDIT ================= */
+// =========================================================
+// EDIT MODAL
+// =========================================================
 
-function openEditModal(student){
+function openEditModal(student) {
 
     editingStudentId =
         String(
-            student.Student_ID
-        );
+            student.Student_ID || ""
+        ).trim();
 
 
     document.getElementById(
@@ -2099,7 +2863,9 @@ function openEditModal(student){
         "Edit Student";
 
 
-    createFormFields(student);
+    createFormFields(
+        student
+    );
 
 
     document.getElementById(
@@ -2110,15 +2876,16 @@ function openEditModal(student){
 }
 
 
-/* ================= FORM ================= */
+// =========================================================
+// FORM FIELDS
+// =========================================================
 
-function createFormFields(student){
+function createFormFields(student) {
 
     const grid =
         document.getElementById(
             "formGrid"
         );
-
 
     grid.innerHTML = "";
 
@@ -2140,77 +2907,110 @@ function createFormFields(student){
     ];
 
 
-    fields.forEach(function(field){
+    fields.forEach(
+        field => {
 
-        const group =
-            document.createElement("div");
+            const group =
+                document.createElement(
+                    "div"
+                );
 
-        group.className =
-            "form-group";
-
-
-        const label =
-            document.createElement("label");
-
-        label.textContent = field;
+            group.className =
+                "form-group";
 
 
-        const input =
-            document.createElement("input");
+            const label =
+                document.createElement(
+                    "label"
+                );
+
+            label.textContent =
+                field;
 
 
-        input.id =
-            "field_"
-            + field.replace(
-                /[^a-zA-Z0-9]/g,
-                "_"
+            const input =
+                document.createElement(
+                    "input"
+                );
+
+
+            const safeId =
+                field.replace(
+                    /[^a-zA-Z0-9]/g,
+                    "_"
+                );
+
+
+            input.id =
+                "field_" + safeId;
+
+
+            input.name =
+                field;
+
+
+            input.value =
+                student[field] !== undefined &&
+                student[field] !== null
+                    ? student[field]
+                    : "";
+
+
+            if (
+                field === "Student_ID"
+                &&
+                editingStudentId !== null
+            ) {
+
+                input.disabled = true;
+
+            }
+
+
+            if (
+                subjects.includes(field)
+                ||
+                field === "Attendance"
+            ) {
+
+                input.type =
+                    "number";
+
+                input.min =
+                    "0";
+
+                input.max =
+                    "100";
+
+                input.step =
+                    "0.01";
+
+            }
+
+
+            group.appendChild(
+                label
             );
 
+            group.appendChild(
+                input
+            );
 
-        input.value =
-            student[field] ?? "";
-
-
-        if(
-            field === "Student_ID"
-            &&
-            editingStudentId !== null
-        ){
-
-            input.disabled = true;
+            grid.appendChild(
+                group
+            );
 
         }
-
-
-        if(
-            subjects.includes(field)
-            ||
-            field === "Attendance"
-        ){
-
-            input.type = "number";
-
-            input.min = "0";
-
-            input.max = "100";
-
-        }
-
-
-        group.appendChild(label);
-
-        group.appendChild(input);
-
-        grid.appendChild(group);
-
-    });
+    );
 
 }
 
 
-/* ================= SAVE ================= */
+// =========================================================
+// SAVE STUDENT
+// =========================================================
 
-async function saveStudent(){
+async function saveStudent() {
 
     const fields = [
 
@@ -2237,35 +3037,53 @@ async function saveStudent(){
     };
 
 
-    fields.forEach(function(field){
+    fields.forEach(
+        field => {
 
-        const id =
-            "field_"
-            + field.replace(
-                /[^a-zA-Z0-9]/g,
-                "_"
-            );
-
-
-        const input =
-            document.getElementById(id);
+            const id =
+                "field_" +
+                field.replace(
+                    /[^a-zA-Z0-9]/g,
+                    "_"
+                );
 
 
-        if(input){
+            const input =
+                document.getElementById(
+                    id
+                );
 
-            data[field] =
-                input.value;
+
+            if (input) {
+
+                data[field] =
+                    input.value.trim();
+
+            }
 
         }
+    );
 
-    });
+
+    // IMPORTANT:
+    // During edit Student ID is disabled,
+    // so use original Student ID.
+
+    if (
+        editingStudentId !== null
+    ) {
+
+        data.Student_ID =
+            editingStudentId;
+
+    }
 
 
-    if(
+    if (
         !data.Student_ID
         ||
         !data.Name
-    ){
+    ) {
 
         showMessage(
             "Student ID and Name are required."
@@ -2278,22 +3096,25 @@ async function saveStudent(){
 
     const url =
         editingStudentId === null
-        ? "/api/add_student"
-        : "/api/edit_student";
+            ? "/api/add_student"
+            : "/api/edit_student";
 
 
-    try{
+    try {
 
         const response =
             await fetch(
                 url,
                 {
 
-                    method:"POST",
+                    method:
+                        "POST",
 
-                    headers:{
+                    headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body:
@@ -2313,9 +3134,14 @@ async function saveStudent(){
         );
 
 
-        if(result.success){
+        if (
+            result.success
+        ) {
 
             closeModal();
+
+            editingStudentId =
+                null;
 
             await loadAll();
 
@@ -2323,12 +3149,15 @@ async function saveStudent(){
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Save/Edit error:",
+            error
+        );
 
         showMessage(
-            "Something went wrong."
+            "Unable to save student."
         );
 
     }
@@ -2336,33 +3165,40 @@ async function saveStudent(){
 }
 
 
-/* ================= DELETE ================= */
+// =========================================================
+// DELETE STUDENT
+// =========================================================
 
-async function deleteStudent(studentId){
+async function deleteStudent(
+    studentId
+) {
 
-    if(
+    if (
         !confirm(
             "Are you sure you want to delete this student?"
         )
-    ){
+    ) {
 
         return;
 
     }
 
 
-    try{
+    try {
 
         const response =
             await fetch(
                 "/api/delete_student",
                 {
 
-                    method:"POST",
+                    method:
+                        "POST",
 
-                    headers:{
+                    headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
                     body:
@@ -2390,7 +3226,9 @@ async function deleteStudent(studentId){
         );
 
 
-        if(result.success){
+        if (
+            result.success
+        ) {
 
             await loadAll();
 
@@ -2398,9 +3236,12 @@ async function deleteStudent(studentId){
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Delete error:",
+            error
+        );
 
         showMessage(
             "Delete failed."
@@ -2411,9 +3252,11 @@ async function deleteStudent(studentId){
 }
 
 
-/* ================= UPLOAD ================= */
+// =========================================================
+// UPLOAD EXCEL
+// =========================================================
 
-async function uploadExcel(){
+async function uploadExcel() {
 
     const input =
         document.getElementById(
@@ -2421,11 +3264,11 @@ async function uploadExcel(){
         );
 
 
-    if(
+    if (
         !input.files
         ||
         !input.files.length
-    ){
+    ) {
 
         return;
 
@@ -2436,15 +3279,15 @@ async function uploadExcel(){
         input.files[0];
 
 
-    if(
-        !file.name
-        .toLowerCase()
-        .endsWith(".xlsx")
+    const filename =
+        file.name.toLowerCase();
+
+
+    if (
+        !filename.endsWith(".xlsx")
         &&
-        !file.name
-        .toLowerCase()
-        .endsWith(".xls")
-    ){
+        !filename.endsWith(".xls")
+    ) {
 
         showMessage(
             "Please select an Excel file."
@@ -2473,16 +3316,18 @@ async function uploadExcel(){
     );
 
 
-    try{
+    try {
 
         const response =
             await fetch(
                 "/api/upload_excel",
                 {
 
-                    method:"POST",
+                    method:
+                        "POST",
 
-                    body:formData
+                    body:
+                        formData
 
                 }
             );
@@ -2498,7 +3343,9 @@ async function uploadExcel(){
         );
 
 
-        if(result.success){
+        if (
+            result.success
+        ) {
 
             await loadAll();
 
@@ -2506,9 +3353,12 @@ async function uploadExcel(){
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error(
+            "Upload error:",
+            error
+        );
 
         showMessage(
             "Excel upload failed."
@@ -2522,47 +3372,53 @@ async function uploadExcel(){
 }
 
 
-/* ================= CLOSE ================= */
+// =========================================================
+// CLOSE MODAL
+// =========================================================
 
-function closeModal(){
+function closeModal() {
 
     document.getElementById(
         "studentModal"
     ).style.display =
         "none";
 
-}
-
-
-/* ================= SCROLL ================= */
-
-function scrollToGraphs(){
-
-    document.getElementById(
-        "graphSection"
-    ).scrollIntoView({
-        behavior:"smooth"
-    });
+    editingStudentId =
+        null;
 
 }
 
 
-function scrollToSearch(){
+// =========================================================
+// CLICK OUTSIDE MODAL
+// =========================================================
 
-    document.getElementById(
-        "searchSection"
-    ).scrollIntoView({
-        behavior:"smooth"
-    });
+window.onclick =
+    function(event) {
 
-}
+        const modal =
+            document.getElementById(
+                "studentModal"
+            );
+
+        if (
+            event.target === modal
+        ) {
+
+            closeModal();
+
+        }
+
+    };
 
 
-/* ================= INITIAL ================= */
+// =========================================================
+// INITIAL LOAD
+// =========================================================
 
 document.addEventListener(
     "DOMContentLoaded",
-    function(){
+    function() {
 
         loadAll();
 
@@ -2570,6 +3426,7 @@ document.addEventListener(
 );
 
 </script>
+
 
 {% endif %}
 
