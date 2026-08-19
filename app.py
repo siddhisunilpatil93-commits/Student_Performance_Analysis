@@ -13,7 +13,7 @@ BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 
 # =========================================================
-# SEMESTER → YEAR
+# SEMESTER -> YEAR
 # =========================================================
 
 SEMESTER_YEAR = {
@@ -27,7 +27,7 @@ SEMESTER_YEAR = {
 
 
 # =========================================================
-# SEMESTER EXCEL FILES
+# EXCEL FILES
 # =========================================================
 
 SEMESTER_FILES = {
@@ -99,7 +99,7 @@ LOGIN_PASSWORD = os.environ.get(
 
 
 # =========================================================
-# BASIC HELPERS
+# HELPERS
 # =========================================================
 
 def valid_semester(s):
@@ -145,28 +145,21 @@ def calculate_grade(p):
 
     try:
         p = float(p)
-
     except Exception:
         return 'F'
 
     if p >= 90:
         return 'A+'
-
     elif p >= 80:
         return 'A'
-
     elif p >= 70:
         return 'B+'
-
     elif p >= 60:
         return 'B'
-
     elif p >= 50:
         return 'C'
-
     elif p >= 40:
         return 'D'
-
     else:
         return 'F'
 
@@ -203,7 +196,6 @@ def read_excel(s):
     except Exception as e:
 
         print('Excel read error:', e)
-
         return pd.DataFrame()
 
 
@@ -214,10 +206,6 @@ def read_excel(s):
 def process_data(df, s):
 
     df = df.copy()
-
-    # -----------------------------------------------------
-    # REQUIRED COLUMNS
-    # -----------------------------------------------------
 
     required = [
         'Student_ID',
@@ -248,9 +236,7 @@ def process_data(df, s):
                 )
 
 
-    # -----------------------------------------------------
-    # STUDENT ID
-    # -----------------------------------------------------
+    # Student ID
 
     df['Student_ID'] = (
         df['Student_ID']
@@ -265,11 +251,13 @@ def process_data(df, s):
     )
 
 
-    # -----------------------------------------------------
-    # TEXT COLUMNS
-    # -----------------------------------------------------
+    # Text
 
-    for c in ['Name', 'Gender', 'Class']:
+    for c in [
+        'Name',
+        'Gender',
+        'Class'
+    ]:
 
         df[c] = (
             df[c]
@@ -279,22 +267,7 @@ def process_data(df, s):
         )
 
 
-    # -----------------------------------------------------
-    # ATTENDANCE
-    # -----------------------------------------------------
-    # FIX:
-    # Excel may contain:
-    #
-    # 89      -> 89%
-    # 96      -> 96%
-    #
-    # or Excel percentage values:
-    #
-    # 0.89    -> 89%
-    # 0.96    -> 96%
-    #
-    # This automatically handles both formats.
-    # -----------------------------------------------------
+    # Attendance
 
     raw_attendance = (
         df['Attendance']
@@ -302,10 +275,10 @@ def process_data(df, s):
         .str.strip()
     )
 
-    # Check if original value contains %
-    percent_mask = raw_attendance.str.endswith('%')
+    percent_mask = (
+        raw_attendance.str.endswith('%')
+    )
 
-    # Remove % sign
     clean_attendance = (
         raw_attendance
         .str.replace(
@@ -320,9 +293,6 @@ def process_data(df, s):
         errors='coerce'
     )
 
-    # Excel percentage format:
-    # 0.89 -> 89
-    # 0.96 -> 96
     fraction_mask = (
         df['Attendance'].notna()
         &
@@ -341,7 +311,6 @@ def process_data(df, s):
         ] * 100
     )
 
-    # Keep attendance between 0 and 100
     df['Attendance'] = (
         df['Attendance']
         .fillna(0)
@@ -350,9 +319,7 @@ def process_data(df, s):
     )
 
 
-    # -----------------------------------------------------
-    # SUBJECT MARKS
-    # -----------------------------------------------------
+    # Subjects
 
     subs = SUBJECTS.get(s, [])
 
@@ -381,9 +348,7 @@ def process_data(df, s):
             )
 
 
-    # -----------------------------------------------------
-    # TOTAL
-    # -----------------------------------------------------
+    # Total / Percentage
 
     if subs:
 
@@ -402,27 +367,23 @@ def process_data(df, s):
     else:
 
         df['Total'] = 0.0
-
         df['Percentage'] = 0.0
 
 
-    # -----------------------------------------------------
-    # ATTENDANCE STATUS
-    # -----------------------------------------------------
+    # Attendance status
 
-    df['Attendance Status'] = df[
-        'Attendance'
-    ].apply(
-        lambda x:
-        'Good'
-        if float(x) >= 75
-        else 'Bad'
+    df['Attendance Status'] = (
+        df['Attendance']
+        .apply(
+            lambda x:
+            'Good'
+            if float(x) >= 75
+            else 'Bad'
+        )
     )
 
 
-    # -----------------------------------------------------
-    # GRADE
-    # -----------------------------------------------------
+    # Grade
 
     df['Grade'] = (
         df['Percentage']
@@ -513,7 +474,6 @@ def login():
         ):
 
             session.clear()
-
             session['logged_in'] = True
 
             return redirect(
@@ -579,7 +539,7 @@ def api_subjects():
     s = request.args.get(
         'semester',
         'Semester 1'
-    )
+    ).strip()
 
     if not valid_semester(s):
 
@@ -626,7 +586,7 @@ def api_students():
     s = request.args.get(
         'semester',
         'Semester 1'
-    )
+    ).strip()
 
     if not valid_semester(s):
         return jsonify([])
@@ -666,7 +626,7 @@ def api_students():
 
 
 # =========================================================
-# ANALYTICS API
+# SINGLE SEMESTER ANALYTICS
 # =========================================================
 
 @app.route('/api/analytics')
@@ -680,7 +640,7 @@ def api_analytics():
     s = request.args.get(
         'semester',
         'Semester 1'
-    )
+    ).strip()
 
     empty = {
 
@@ -771,6 +731,91 @@ def api_analytics():
 
 
 # =========================================================
+# COMBINED SEMESTER 1 + 2 ANALYTICS
+# =========================================================
+
+@app.route('/api/combined_analytics')
+def combined_analytics():
+
+    check = api_login_check()
+
+    if check:
+        return check
+
+    semesters = [
+        'Semester 1',
+        'Semester 2'
+    ]
+
+    result = {}
+
+    for s in semesters:
+
+        df = read_excel(s)
+
+        result[s] = {
+            'subjects': {},
+            'grades': {},
+            'students': 0,
+            'percentage': 0,
+            'attendance': 0
+        }
+
+        if df.empty:
+            continue
+
+        df = process_data(
+            df,
+            s
+        )
+
+        if df.empty:
+            continue
+
+        result[s]['students'] = int(
+            len(df)
+        )
+
+        result[s]['percentage'] = round(
+            float(
+                df['Percentage'].mean()
+            ),
+            2
+        )
+
+        result[s]['attendance'] = round(
+            float(
+                df['Attendance'].mean()
+            ),
+            2
+        )
+
+        result[s]['subjects'] = {
+
+            subject:
+            round(
+                float(
+                    df[subject].mean()
+                ),
+                2
+            )
+
+            for subject in SUBJECTS[s]
+        }
+
+        result[s]['grades'] = (
+            df['Grade']
+            .value_counts()
+            .to_dict()
+        )
+
+    return jsonify({
+        'success': True,
+        'semesters': result
+    })
+
+
+# =========================================================
 # UPLOAD EXCEL
 # =========================================================
 
@@ -796,10 +841,6 @@ def upload_excel():
             'file'
         )
 
-        # -------------------------------------------------
-        # VALIDATE SEMESTER
-        # -------------------------------------------------
-
         if not valid_semester(s):
 
             return jsonify({
@@ -807,10 +848,6 @@ def upload_excel():
                 'message':
                     'Invalid semester selected.'
             }), 400
-
-        # -------------------------------------------------
-        # VALIDATE FILE
-        # -------------------------------------------------
 
         if not f or not f.filename:
 
@@ -830,10 +867,6 @@ def upload_excel():
                     'Only Excel files are allowed.'
             }), 400
 
-        # -------------------------------------------------
-        # READ UPLOADED EXCEL
-        # -------------------------------------------------
-
         df = pd.read_excel(f)
 
         if df.empty:
@@ -850,10 +883,6 @@ def upload_excel():
             .str.strip()
         )
 
-        # -------------------------------------------------
-        # REQUIRED COLUMNS
-        # -------------------------------------------------
-
         for c in [
             'Student_ID',
             'Name'
@@ -866,10 +895,6 @@ def upload_excel():
                     'message':
                         f'{c} column is required.'
                 }), 400
-
-        # -------------------------------------------------
-        # PROCESS AND SAVE
-        # -------------------------------------------------
 
         save_excel(
             df,
@@ -958,10 +983,6 @@ def add_student():
 
         df = read_excel(s)
 
-        # -------------------------------------------------
-        # DUPLICATE ID CHECK
-        # -------------------------------------------------
-
         if (
             not df.empty
             and 'Student_ID' in df.columns
@@ -987,41 +1008,31 @@ def add_student():
                         'Student ID already exists.'
                 })
 
-        # -------------------------------------------------
-        # CREATE ROW
-        # -------------------------------------------------
-
         row = {
 
-            'Student_ID':
-                sid,
+            'Student_ID': sid,
 
-            'Name':
-                name,
+            'Name': name,
 
-            'Gender':
-                d.get(
-                    'Gender',
-                    ''
-                ),
+            'Gender': d.get(
+                'Gender',
+                ''
+            ),
 
-            'Class':
-                d.get(
-                    'Class',
-                    ''
-                ),
+            'Class': d.get(
+                'Class',
+                ''
+            ),
 
-            'Attendance':
-                d.get(
-                    'Attendance',
-                    0
-                )
+            'Attendance': d.get(
+                'Attendance',
+                0
+            )
         }
 
         row.update({
 
-            x:
-            d.get(
+            x: d.get(
                 x,
                 0
             )
@@ -1282,7 +1293,7 @@ def delete_student():
 
 
 # =========================================================
-# HEALTH CHECK
+# HEALTH
 # =========================================================
 
 @app.route('/health')
@@ -1290,8 +1301,7 @@ def health():
 
     return jsonify({
 
-        'status':
-            'ok',
+        'status': 'ok',
 
         'application':
             'Student Performance Analysis System'
